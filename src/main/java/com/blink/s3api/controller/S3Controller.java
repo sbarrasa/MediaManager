@@ -1,0 +1,53 @@
+package com.blink.s3api.controller;
+
+import com.blink.s3api.repository.FileMetaRepository;
+import com.blink.s3api.service.MetadataService;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+
+@Controller
+public class S3Controller {
+
+    @Value("${aws.s3.bucket.name}")
+    private String bucket;
+
+    @Autowired
+    private MetadataService metadataService;
+
+    @Autowired
+    private FileMetaRepository fileMetaRepository;
+
+
+    @PostMapping("upload")
+    @ResponseBody
+    public String upload(@RequestParam("file") MultipartFile file) throws IOException {
+        return metadataService.upload(file);
+    }
+
+    @GetMapping("delete/{id}")
+    @ResponseBody
+    public String delete(@PathVariable String id) {
+        return metadataService.delete(id);
+    }
+
+
+    @GetMapping("download/{id}")
+    @ResponseBody
+    public void download(Model model, @PathVariable String id, HttpServletResponse response) throws
+            IOException {
+
+        //LINK: https://test-blink.s3.sa-east-1.amazonaws.com/8efd1b3a-8eab-4bb7-92a7-5930ead3f11f/HD-wallpaper-among-us-ghost-among-us-among-us-game-among-us-among-us-amongus-ghost-among-us-amongus.jpg
+
+        response.sendRedirect("https://" + bucket + ".s3.sa-east-1.amazonaws.com/" + fileMetaRepository.findById(id).get().getFileName());
+
+
+    }
+
+}
