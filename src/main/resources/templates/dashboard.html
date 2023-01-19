@@ -27,7 +27,7 @@
             <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Path</th>
+                <th scope="col">CRC32</th>
                 <th scope="col">Name</th>
                 <th scope="col">Download</th>
                 <th scope="col">Delete</th>
@@ -37,7 +37,7 @@
             <th:block th:each="file,iter : ${files}">
                 <tr>
                     <th scope="row">1</th>
-                    <td th:text="${file.filePath}"></td>
+                    <td th:text="${file.crc32}"></td>
                     <td th:text="${file.fileName}"></td>
                     <td><a
                             th:href="@{'/download/'+${file.id}}">Download</a></td>

@@ -9,7 +9,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "FILE_META")
-@Getter @Setter
+@Getter
+@Setter
 public class FileMeta {
     private static final long serialVersionUID = 1L;
 
@@ -20,16 +21,13 @@ public class FileMeta {
     @Column(name = "FILE_NAME")
     private String fileName;
 
-    @Column(name = "FILE_PATH")
-    private String filePath;
 
-    @Column(name = "VERSION")
-    private String version;
+    @Column(name = "CRC32")
+    private long crc32;
 
-    public FileMeta(String fileName, String filePath, String version) {
+    public FileMeta(String fileName, long crc32) {
         this.fileName = fileName;
-        this.filePath = filePath;
-        this.version = version;
+        this.crc32 = crc32;
     }
 
 

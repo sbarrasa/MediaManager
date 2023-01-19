@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.zip.CRC32;
 
 @Service
 @Slf4j
@@ -45,8 +46,12 @@ public class MetadataServiceImpl implements MetadataService {
         PutObjectResult putObjectResult = amazonS3Service.upload(
                 bucketName, fileName, Optional.of(metadata), file.getInputStream());
 
+        //calculate crc32
+        CRC32 crc32 = new CRC32();
+        crc32.update(file.getBytes());
+
         // Saving metadata to db
-        fileMetaRepository.save(new FileMeta(fileName, bucketName, putObjectResult.getMetadata().getVersionId()));
+        fileMetaRepository.save(new FileMeta(fileName, crc32.getValue()));
         return "https://" + bucketName + ".s3.sa-east-1.amazonaws.com/" + fileName;
     }
 
