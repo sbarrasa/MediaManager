@@ -1,6 +1,7 @@
 package com.blink.s3api.controller;
 
 import com.blink.s3api.repository.FileMetaRepository;
+import com.blink.s3api.service.AmazonS3Service;
 import com.blink.s3api.service.MetadataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class S3Controller {
@@ -21,6 +24,9 @@ public class S3Controller {
 
     @Autowired
     private MetadataService metadataService;
+
+    @Autowired
+    private AmazonS3Service amazonS3Service;
 
     @Autowired
     private FileMetaRepository fileMetaRepository;
@@ -39,7 +45,7 @@ public class S3Controller {
     }
 
 
-    @GetMapping("download/{id}")
+    @GetMapping("download/{filename}")
     @ResponseBody
     public void download(Model model, @PathVariable String id, HttpServletResponse response) throws
             IOException {
@@ -48,7 +54,15 @@ public class S3Controller {
 
         response.sendRedirect("https://" + bucket + ".s3.sa-east-1.amazonaws.com/" + fileMetaRepository.findById(id).get().getFileName());
 
-
     }
+
+    @GetMapping("listall")
+    @ResponseBody
+    public String listall(HttpServletResponse response) {
+        List<String> a = new ArrayList<>();
+        amazonS3Service.listAll().forEach(s3ObjectSummary -> a.add(s3ObjectSummary.getKey().toString() + " " + s3ObjectSummary.getSize() + " " + s3ObjectSummary.getLastModified() + "<br>"));
+        return a.toString();
+    }
+
 
 }

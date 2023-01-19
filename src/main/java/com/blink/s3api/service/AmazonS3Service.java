@@ -5,12 +5,15 @@ import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
 
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,6 +23,9 @@ public class AmazonS3Service {
 
     @Autowired
     private AmazonS3 amazonS3;
+
+    @Value("${aws.s3.bucket.name}")
+    private String bucketName;
 
 
     public PutObjectResult upload(
@@ -40,5 +46,9 @@ public class AmazonS3Service {
 
     public void delete(String bucket, String fileName) {
         amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
+    }
+
+    public List<S3ObjectSummary> listAll(){
+        return amazonS3.listObjects(bucketName).getObjectSummaries();
     }
 }

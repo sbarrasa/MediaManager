@@ -40,7 +40,8 @@ public class MetadataService {
         metadata.put("Content-Type", file.getContentType());
         metadata.put("Content-Length", String.valueOf(file.getSize()));
 
-        String fileName = String.format("%s", UUID.randomUUID() + "." +StringUtils.getFilenameExtension(file.getOriginalFilename()));
+        //String fileName = String.format("%s", UUID.randomUUID() + "." +StringUtils.getFilenameExtension(file.getOriginalFilename()));
+        String fileName = String.format("%s", file.getOriginalFilename());
 
         //calculate crc32
         CRC32 crc32 = new CRC32();
