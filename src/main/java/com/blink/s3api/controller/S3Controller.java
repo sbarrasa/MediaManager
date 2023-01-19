@@ -4,6 +4,7 @@ import com.blink.s3api.repository.FileMetaRepository;
 import com.blink.s3api.service.MetadataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,9 +26,9 @@ public class S3Controller {
     private FileMetaRepository fileMetaRepository;
 
 
-    @PostMapping("upload")
     @ResponseBody
-    public String upload(@RequestParam("file") MultipartFile file) throws IOException {
+    @RequestMapping(path = "/upload", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String upload(@RequestPart() MultipartFile file) throws IOException {
         return metadataService.upload(file);
     }
 

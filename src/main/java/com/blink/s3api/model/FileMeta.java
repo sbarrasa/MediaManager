@@ -22,6 +22,10 @@ public class FileMeta {
         this.crc32 = crc32;
     }
 
+	public FileMeta() {
+
+	}
+
 	public String getFileName() {
 		return fileName;
 	}
