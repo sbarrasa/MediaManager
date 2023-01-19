@@ -2,7 +2,9 @@ package com.blink.s3api.service;
 
 import com.blink.s3api.model.FileMeta;
 import com.blink.s3api.repository.FileMetaRepository;
-import lombok.extern.slf4j.Slf4j;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,10 +18,11 @@ import java.util.*;
 import java.util.zip.CRC32;
 
 @Service
-@Slf4j
 public class MetadataService {
 
-    @Autowired
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@Autowired
     private AmazonS3Service amazonS3Service;
 
     @Autowired
@@ -31,7 +34,7 @@ public class MetadataService {
     public String upload(MultipartFile file) throws IOException {
 
         if (file.isEmpty())
-            log.error("[Service] Cannot upload empty file");
+            logger.error("[Service] Cannot upload empty file");
 
         Map<String, String> metadata = new HashMap<>();
         metadata.put("Content-Type", file.getContentType());
@@ -45,18 +48,18 @@ public class MetadataService {
 
         // Uploading file to s3
         try {
-            log.info("[S3] Uploading file " + fileName + " with " + crc32.getValue() + " as CRC32");
+            logger.info("[S3] Uploading file " + fileName + " with " + crc32.getValue() + " as CRC32");
             amazonS3Service.upload(
                     bucketName, fileName, Optional.of(metadata), file.getInputStream());
         } catch (Exception e){
-            log.error("[S3] Error in s3 upload - check stacktrace!");
+            logger.error("[S3] Error in s3 upload - check stacktrace!");
             e.printStackTrace();
             return "FAILED: " + e.getMessage();
         }
 
 
         // Saving metadata to db
-        log.info("[DB] Saving file name and CRC32 into database..");
+        logger.info("[DB] Saving file name and CRC32 into database..");
         fileMetaRepository.save(new FileMeta(fileName, crc32.getValue()));
         return "https://" + bucketName + ".s3.sa-east-1.amazonaws.com/" + fileName;
     }
@@ -65,15 +68,15 @@ public class MetadataService {
     public String delete(String id) {
         FileMeta fileMeta;
         try {
-            log.info("[S3] Trying to delete file " + id);
+            logger.info("[S3] Trying to delete file " + id);
             fileMeta = fileMetaRepository.findById(id).orElseThrow(EntityNotFoundException::new);
             amazonS3Service.delete(bucketName, fileMeta.getFileName());
 
         } catch (EntityNotFoundException e){
-            log.warn("[S3] File " + id + " not found! - maybe a typo?");
+            logger.warn("[S3] File {} not found! - maybe a typo?", id );
             return "NOT_FOUND";
         }
-        log.info("[DB] Deleting file name and CRC32 from database..");
+        logger.info("[DB] Deleting file name and CRC32 from database..");
         fileMetaRepository.delete(fileMeta);
         return "OK";
     }

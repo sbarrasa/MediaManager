@@ -1,17 +1,11 @@
 package com.blink.s3api.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 
 
-@NoArgsConstructor
 @Entity
 @Table(name = "FILE_META")
-@Getter
-@Setter
 public class FileMeta {
     private static final long serialVersionUID = 1L;
 
@@ -27,6 +21,22 @@ public class FileMeta {
         this.fileName = fileName;
         this.crc32 = crc32;
     }
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public long getCrc32() {
+		return crc32;
+	}
+
+	public void setCrc32(long crc32) {
+		this.crc32 = crc32;
+	}
 
 
 }

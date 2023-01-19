@@ -4,7 +4,9 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
-import lombok.extern.slf4j.Slf4j;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +15,8 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-@Slf4j
 public class AmazonS3Service {
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private AmazonS3 amazonS3;
@@ -32,7 +34,7 @@ public class AmazonS3Service {
                 map.forEach(objectMetadata::addUserMetadata);
             }
         });
-        log.debug("Path: " + path + ", FileName:" + fileName);
+        logger.debug("Path: {}, FileName: {} ", path , fileName);
         return amazonS3.putObject(path, fileName, inputStream, objectMetadata);
     }
 
