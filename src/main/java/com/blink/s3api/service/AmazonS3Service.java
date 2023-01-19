@@ -6,6 +6,8 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
 
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.blink.s3api.repository.FileMetaRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +22,17 @@ import java.util.Optional;
 @Service
 public class AmazonS3Service {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	private static final String PATH = ".s3.sa-east-1.amazonaws.com/";
+			
+	@Autowired
+    private FileMetaRepository fileMetaRepository;
+	
+	@Value("${aws.s3.bucket.name}")
+    private static String BUCKET;
 
     @Autowired
     private AmazonS3 amazonS3;
-
-    @Value("${aws.s3.bucket.name}")
-    private String bucketName;
 
 
     public PutObjectResult upload(
@@ -49,6 +56,10 @@ public class AmazonS3Service {
     }
 
     public List<S3ObjectSummary> listAll(){
-        return amazonS3.listObjects(bucketName).getObjectSummaries();
+        return amazonS3.listObjects(BUCKET).getObjectSummaries();
     }
+
+	public String getFullPath(String id) {
+		return  "https://%s%s%s".formatted(BUCKET, PATH, fileMetaRepository.findById(id).get().getFileName());
+	}
 }

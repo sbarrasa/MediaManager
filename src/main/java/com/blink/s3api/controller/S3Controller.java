@@ -19,19 +19,13 @@ import java.util.List;
 @Controller
 public class S3Controller {
 
-    @Value("${aws.s3.bucket.name}")
-    private String bucket;
-
     @Autowired
     private MetadataService metadataService;
 
     @Autowired
     private AmazonS3Service amazonS3Service;
 
-    @Autowired
-    private FileMetaRepository fileMetaRepository;
-
-
+   
     @ResponseBody
     @RequestMapping(path = "/upload", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String upload(@RequestPart() MultipartFile file) throws IOException {
@@ -52,7 +46,7 @@ public class S3Controller {
 
         //LINK: https://test-blink.s3.sa-east-1.amazonaws.com/8efd1b3a-8eab-4bb7-92a7-5930ead3f11f/HD-wallpaper-among-us-ghost-among-us-among-us-game-among-us-among-us-amongus-ghost-among-us-amongus.jpg
 
-        response.sendRedirect("https://" + bucket + ".s3.sa-east-1.amazonaws.com/" + fileMetaRepository.findById(id).get().getFileName());
+        response.sendRedirect(amazonS3Service.getFullPath(id));
 
     }
 
