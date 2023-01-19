@@ -69,7 +69,7 @@ public class MetadataService {
         FileMeta fileMeta;
         logger.info("[S3] Trying to delete file " + id);
         fileMeta = fileMetaRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        amazonS3Service.delete(bucketName, fileMeta.getFileName());
+        amazonS3Service.delete(fileMeta.getFileName());
 
         logger.info("[DB] Deleting file name and CRC32 from database..");
         fileMetaRepository.delete(fileMeta);

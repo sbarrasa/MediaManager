@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 @Controller
@@ -47,14 +48,19 @@ public class S3Controller {
         //LINK: https://test-blink.s3.sa-east-1.amazonaws.com/8efd1b3a-8eab-4bb7-92a7-5930ead3f11f/HD-wallpaper-among-us-ghost-among-us-among-us-game-among-us-among-us-amongus-ghost-among-us-amongus.jpg
 
         response.sendRedirect(amazonS3Service.getFullPath(id));
+    //	return amazonS3Service.getMediaURL(id);
+    }
 
+    @GetMapping("listall_metadata")
+    @ResponseBody
+    public List<S3ObjectSummary> listallMetadata() {
+        return amazonS3Service.listAllMetadata();
     }
 
     @GetMapping("listall")
     @ResponseBody
-    public List<S3ObjectSummary> listall() {
+    public List<String> listall() {
         return amazonS3Service.listAll();
     }
-
 
 }
