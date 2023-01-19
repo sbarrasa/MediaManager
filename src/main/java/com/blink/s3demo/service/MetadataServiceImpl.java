@@ -43,7 +43,7 @@ public class MetadataServiceImpl implements MetadataService {
         String fileName = String.format("%s", UUID.randomUUID() + Util.getExtensionByStringHandling(file.getOriginalFilename()).get());
 
         // Uploading file to s3
-        PutObjectResult putObjectResult = amazonS3Service.upload(
+        amazonS3Service.upload(
                 bucketName, fileName, Optional.of(metadata), file.getInputStream());
 
         //calculate crc32
