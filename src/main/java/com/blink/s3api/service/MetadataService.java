@@ -66,20 +66,15 @@ public class MetadataService {
     }
 
 
-    public String delete(String id) {
+    public FileMeta delete(String id) {
         FileMeta fileMeta;
-        try {
-            logger.info("[S3] Trying to delete file " + id);
-            fileMeta = fileMetaRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-            amazonS3Service.delete(bucketName, fileMeta.getFileName());
+        logger.info("[S3] Trying to delete file " + id);
+        fileMeta = fileMetaRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        amazonS3Service.delete(bucketName, fileMeta.getFileName());
 
-        } catch (EntityNotFoundException e){
-            logger.warn("[S3] File {} not found! - maybe a typo?", id );
-            return "NOT_FOUND";
-        }
         logger.info("[DB] Deleting file name and CRC32 from database..");
         fileMetaRepository.delete(fileMeta);
-        return "OK";
+        return fileMeta;
     }
 
 
