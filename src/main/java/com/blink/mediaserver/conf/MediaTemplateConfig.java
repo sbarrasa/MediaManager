@@ -1,7 +1,5 @@
 package com.blink.mediaserver.conf;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
