@@ -12,23 +12,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.zip.CRC32;
 
-@Service
 public class S3Service implements MediaTemplate {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-//FIXIT: exteriorizar a MediaTemplate y generalizar como propertie com.blink.mediamanager.mediaserver.path     
+//TODO: exteriorizar a MediaTemplate y generalizar como propertie com.blink.mediamanager.mediaserver.path     
     private static final String PATH = ".s3.sa-east-1.amazonaws.com/";
 
 

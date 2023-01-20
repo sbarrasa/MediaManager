@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.zip.CRC32;
 
-import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 public interface MediaTemplate {
     default public String upload(File file) {
@@ -25,7 +24,11 @@ public interface MediaTemplate {
     }
     
     public void delete(String id);
-  
+    
+    default public void delete(List<String> ids) {
+        ids.forEach(id -> delete(id));
+    }
+    
     default public List<String> listAllFullPath(){
     	return listAllIDs()
                    .stream().map(id -> getFullPath(id)).collect(Collectors.toList());
