@@ -61,12 +61,8 @@ public class AmazonS3Service implements MediaService {
             metadata.addUserMetadata("CRC32", checksum);
             request.setMetadata(metadata);
             amazonS3.putObject(request);
-            return getFullPath(file.getName());
-        } else {
-
         }
-
-        return null;
+        return getFullPath(file.getName());
     }
 
     public List<String> upload(List<File> file) {
