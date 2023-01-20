@@ -70,22 +70,6 @@ public class S3Service implements MediaTemplate {
         }
     }
 
-    public static File toFile(MultipartFile multipartFile) {
-        File file = new File(multipartFile.getOriginalFilename());
-        try {
-        	file.createNewFile();
-            FileOutputStream fos = new FileOutputStream(file);
-            try {
-            	fos.write(multipartFile.getBytes());
-            }finally {
-            	fos.close(); 
-            }
-        } catch (IOException e) {
-            file = null;
-        }
-
-        return file;
-    }
 
 
 }
