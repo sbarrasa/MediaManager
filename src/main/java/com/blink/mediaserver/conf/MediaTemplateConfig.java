@@ -35,7 +35,7 @@ public class MediaTemplateConfig {
 	
 	@SuppressWarnings({ "static-access", "static-method" })
 	@Bean 
-	MediaTemplate getMediaTemplate(@Value("${com.blink.mediamanager.class}") String className) {
+	MediaTemplate mediaTemplate(@Value("${com.blink.mediamanager.class}") String className) {
 		try {
 			return (MediaTemplate) Class.forName(className).getDeclaredConstructor().newInstance();
 		} catch (Exception e) {
