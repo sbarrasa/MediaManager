@@ -89,7 +89,7 @@ public class AmazonS3Service implements MediaService {
 
 
     private boolean fileExistsInRemote(File file, String crc32) {
-        return amazonS3.getObject(BUCKET, file.getName()).getObjectMetadata().getRawMetadata().get("CRC32").equals(crc32);
+        return amazonS3.getObjectMetadata(BUCKET, file.getName()).getRawMetadata().get("CRC32").equals(crc32);
     }
 
     public File convert(MultipartFile file) {
