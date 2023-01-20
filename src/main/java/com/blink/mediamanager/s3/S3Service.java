@@ -64,27 +64,10 @@ public class S3Service implements MediaTemplate {
 
     public boolean fileExistsInRemote(File file, String crc32) {
         try {
-            return amazonS3.getObjectMetadata(BUCKET, file.getName()).getRawMetadata().get("CRC32").equals(crc32);
+            return amazonS3.getObjectMetadata(BUCKET, file.getName()).getUserMetadata().get("CRC32").equals(crc32);
         } catch (Exception e){
             return false;
         }
-    }
-
-    public static File toFile(MultipartFile multipartFile) {
-        File file = new File(multipartFile.getOriginalFilename());
-        try {
-        	file.createNewFile();
-            FileOutputStream fos = new FileOutputStream(file);
-            try {
-            	fos.write(multipartFile.getBytes());
-            }finally {
-            	fos.close(); 
-            }
-        } catch (IOException e) {
-            file = null;
-        }
-
-        return file;
     }
 
 

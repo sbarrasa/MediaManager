@@ -16,7 +16,7 @@ public interface MediaTemplate {
         if (!fileExistsInRemote(file, checksum)) {
         	Boolean uploaded = upload(file, checksum);
         	if(!uploaded)
-        		throw new MediaError("Can't upload %s".formatted(file.getName()));
+                throw new MediaError(String.format("Can't upload %s", file.getName()));
         		
         }
         return getFullPath(file.getName());
