@@ -52,7 +52,6 @@ public class AmazonS3Service implements MediaService {
     }
 
     public String upload(File file) {
-        //TODO Not Implemented yet
         String checksum = getCrc32(file);
 
         if (!fileExistsInRemote(file, checksum)) { //If file is not the same or not exists
@@ -66,7 +65,6 @@ public class AmazonS3Service implements MediaService {
     }
 
     public List<String> upload(List<File> file) {
-        //TODO Not Implemented yet
         List<String> res = new ArrayList<>();
         file.forEach(file1 -> {
             res.add(upload(file1));
