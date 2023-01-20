@@ -61,15 +61,15 @@ public class S3Service implements MediaTemplate {
         amazonS3.deleteObject(new DeleteObjectRequest(BUCKET, id));
     }
 
+	@Override
+	public String getRemoteChecksum(String id) {
+		try {
+			return amazonS3.getObjectMetadata(BUCKET, id).getRawMetadata().get("CRC32").toString();
+		}catch(Exception e) {
+			return null;
+		}
+	}
 
-    public boolean fileExistsInRemote(File file, String crc32) {
-        try {
-            return amazonS3.getObjectMetadata(BUCKET, file.getName()).getRawMetadata().get("CRC32").equals(crc32);
-        } catch (Exception e){
-            return false;
-        }
-    }
 
-
-
+ 
 }
