@@ -1,15 +1,18 @@
-package com.blink.s3api.conf;
+package com.blink.mediaserver.conf;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.blink.mediamanager.MediaTemplate;
+import com.blink.mediamanager.s3.S3Service;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 @Configuration
-public class AmazonConfig {
+public class S3Config {
 
     @Value("${aws.access.key.id}")
     private String accessKey;
@@ -29,5 +32,9 @@ public class AmazonConfig {
                 .withRegion(region)
                 .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
                 .build();
+    }
+    
+    @Bean MediaTemplate getMediaTemplate() {
+    	return new S3Service();
     }
 }

@@ -1,6 +1,5 @@
-package com.blink.s3api.controller;
+package com.blink.mediaserver.controller;
 
-import com.amazonaws.services.s3.model.S3ObjectSummary;import com.blink.s3api.service.AmazonS3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
@@ -8,47 +7,49 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.blink.mediamanager.MediaTemplate;
+import com.blink.mediamanager.s3.S3Service;
+
 import java.io.IOException;
 import java.util.List;
 
 @Controller
-public class S3Controller {
+public class MediaController {
 
     @Autowired
-    private AmazonS3Service amazonS3Service;
+    private MediaTemplate mediaTemplate;
 
 
     @ResponseBody
     @RequestMapping(path = "/upload", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String upload(@RequestPart() MultipartFile file) throws IOException {
-        return amazonS3Service.upload(amazonS3Service.convert(file));
+        return mediaTemplate.upload(S3Service.toFile(file)); //FIXIT: hacer que no necesite convetir con algo propio de spring
     }
 
     @GetMapping("delete/{id}")
     @ResponseBody
     public void delete(@PathVariable String id) {
-        amazonS3Service.delete(id);
+        mediaTemplate.delete(id);
     }
 
 
-    @GetMapping(value = "download/{filename}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @GetMapping(value = "get/{filename}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @ResponseBody
-    public FileSystemResource download(@PathVariable String id) {
+    public FileSystemResource get(@PathVariable String id) {
 
-        return new FileSystemResource(amazonS3Service.getFullPath(id));
-        //	return amazonS3Service.getMediaURL(id);
+        return new FileSystemResource(mediaTemplate.getFullPath(id));
     }
 
     @GetMapping("listall_metadata")
     @ResponseBody
-    public List<S3ObjectSummary> listallMetadata() {
-        return amazonS3Service.listAllMetadata();
+    public List<?> listallMetadata() {
+        return mediaTemplate.listAllMetadata(); 
     }
 
     @GetMapping("listall")
     @ResponseBody
     public List<String> listall() {
-        return amazonS3Service.listAll();
+        return mediaTemplate.listAllFullPath();
     }
 
 }

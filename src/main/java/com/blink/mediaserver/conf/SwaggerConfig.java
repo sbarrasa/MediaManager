@@ -1,4 +1,4 @@
-package com.blink.s3api.conf;
+package com.blink.mediaserver.conf;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
