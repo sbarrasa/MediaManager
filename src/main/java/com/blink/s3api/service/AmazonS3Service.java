@@ -4,86 +4,116 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.blink.media.MediaService;
-import com.blink.s3api.repository.FileMetaRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.InputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.zip.CRC32;
 
 @Service
 public class AmazonS3Service implements MediaService {
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	
-	private static final String PATH = ".s3.sa-east-1.amazonaws.com/";
-			
-	@Autowired
-    private FileMetaRepository fileMetaRepository;
-	
-	@Value("${aws.s3.bucket.name}")
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private static final String PATH = ".s3.sa-east-1.amazonaws.com/";
+
+
+    @Value("${aws.s3.bucket.name}")
     private String BUCKET;
 
     @Autowired
     private AmazonS3 amazonS3;
 
 
-    public String upload(
-            String path,
-            String fileName,
-            Optional<Map<String, String>> optionalMetaData,
-            InputStream inputStream) {
-        ObjectMetadata objectMetadata = new ObjectMetadata();
-
-        optionalMetaData.ifPresent(map -> {
-            if (!map.isEmpty()) {
-                map.forEach(objectMetadata::addUserMetadata);
-            }
-        });
-        logger.debug("Path: {}, FileName: {} ", path , fileName); 
-        amazonS3.putObject(path, fileName, inputStream, objectMetadata);
-        return getFullPath(fileName);
-    }
-
-   
-    public List<String> listAll(){
+    public List<String> listAll() {
         return listAllMetadata()
-        		.stream().map(s3 -> s3.getKey()).collect(Collectors.toList());
+                .stream().map(S3ObjectSummary::getKey).collect(Collectors.toList());
     }
 
-    public List<S3ObjectSummary> listAllMetadata(){
+    public List<S3ObjectSummary> listAllMetadata() {
         return amazonS3.listObjects(BUCKET).getObjectSummaries();
     }
 
-	public String getFullPath(String id) {
-		return  "https://%s%s%s".formatted(BUCKET, PATH, fileMetaRepository.findById(id).get().getFileName());
-	}
+    public String getFullPath(String id) {
+        return String.format("https://%s%s%s", BUCKET, PATH, id);
+    }
 
-	public String upload(File file) {
-		//TODO Not Implemented yet
-		return null;
-	}
+    public String upload(File file) {
+        //TODO Not Implemented yet
+        String checksum = getCrc32(file);
 
-	public String upload(List<File> file) {
-		//TODO Not Implemented yet
-		return null;
-	}
+        if (!fileExistsInRemote(file, checksum)) { //If file is not the same or not exists
+            PutObjectRequest request = new PutObjectRequest(BUCKET, file.getName(), file);
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.addUserMetadata("CRC32", checksum);
+            request.setMetadata(metadata);
+            amazonS3.putObject(request);
+            return getFullPath(file.getName());
+        } else {
 
-	public File download(String id) {
-		//TODO Not Implemented yet
-		return null;
-	}
+        }
 
-	public void delete(String id) {
-	     amazonS3.deleteObject(new DeleteObjectRequest(BUCKET, id));
-	}
+        return null;
+    }
+
+    public List<String> upload(List<File> file) {
+        //TODO Not Implemented yet
+        List<String> res = new ArrayList<>();
+        file.forEach(file1 -> {
+            res.add(upload(file1));
+        });
+        return res;
+    }
+
+    public File download(String id) {
+        //TODO Not Implemented yet
+        return null;
+    }
+
+    public void delete(String id) {
+        amazonS3.deleteObject(new DeleteObjectRequest(BUCKET, id));
+    }
+
+
+    private boolean fileExistsInRemote(File file, String crc32) {
+        return amazonS3.getObject(BUCKET, file.getName()).getObjectMetadata().getRawMetadata().get("CRC32").equals(crc32);
+    }
+
+    public File convert(MultipartFile file) {
+        File convFile = new File(file.getOriginalFilename());
+        try {
+            convFile.createNewFile();
+            FileOutputStream fos = new FileOutputStream(convFile);
+            fos.write(file.getBytes());
+            fos.close(); //IOUtils.closeQuietly(fos);
+        } catch (IOException e) {
+            convFile = null;
+        }
+
+        return convFile;
+    }
+
+    private String getCrc32(File file) {
+        CRC32 crc32 = new CRC32();
+        try {
+            crc32.update(Files.readAllBytes(file.toPath()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return String.valueOf(crc32.getValue());
+    }
+
 }

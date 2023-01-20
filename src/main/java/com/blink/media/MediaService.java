@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface MediaService {
     public String upload(File file);
-    public String upload(List<File> file);
+    public List<String> upload(List<File> file);
     
     public void delete(String id);
     public List<String> listAll();
