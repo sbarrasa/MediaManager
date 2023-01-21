@@ -11,10 +11,11 @@ import java.util.zip.CRC32;
 
 public interface MediaTemplate {
     default public String upload(File file) {
-        String checksum = MediaTemplate.getCrc32(file);
         String filename = file.getName();
 
-        if (!fileExistsInRemote(file, checksum)) {
+        if (!fileExistsInRemote(file)) {
+            String checksum = getChecksum(file);
+
         	Boolean uploaded = upload(file, checksum);
         	if(!uploaded)
                 throw new MediaError(String.format("Can't upload %s", filename));
@@ -25,7 +26,8 @@ public interface MediaTemplate {
 
     }
     
-    public void delete(String id);
+    
+	public void delete(String id);
     
     default public void delete(List<String> ids) {
         ids.forEach(this::delete);
@@ -43,7 +45,7 @@ public interface MediaTemplate {
       
     public String getFullPath(String id);
     
-    public static String getCrc32(File file) {
+    public static String getChecksum(File file) {
         CRC32 crc32 = new CRC32();
         try {
             crc32.update(Files.readAllBytes(file.toPath()));
@@ -52,7 +54,9 @@ public interface MediaTemplate {
         }
         return String.valueOf(crc32.getValue());
     }
-    
+
+    public String getRemoteChecksum(String id) ;	
+
     default public List<String> upload(List<File> files) {
         List<String> res = new ArrayList<>();
         files.forEach(file -> {
@@ -60,10 +64,20 @@ public interface MediaTemplate {
         });
         return res;
     }
+
     
-    public boolean fileExistsInRemote(File file, String crc32) ;
+
+    default public boolean fileExistsInRemote(File file) {
+        
+    	String remoteChecksum = getRemoteChecksum(file.getName());
+        String fileChecksum = getChecksum(file);
+        
+    	if(remoteChecksum == null)
+        	return false;
+        
+    	return remoteChecksum.equals(fileChecksum);
+    };
 
     public Boolean upload(File file, String checksum);
         
-  
 }

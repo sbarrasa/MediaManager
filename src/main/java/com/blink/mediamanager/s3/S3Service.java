@@ -59,16 +59,15 @@ public class S3Service implements MediaTemplate {
     }
 
 
-    public boolean fileExistsInRemote(File file, String crc32) {
-        try {
-
-            String a = String.valueOf(amazonS3.getObject(BUCKET, file.getName()).getObjectMetadata().getUserMetadata().get("crc32"));
-            return a.equals(String.valueOf(crc32));
-        } catch (Exception e){
-            return false;
-        }
-    }
-
+	@Override
+	public String getRemoteChecksum(String id) {
+		try {
+			return amazonS3.getObject(BUCKET, file.getName()).getObjectMetadata().getUserMetadata().get("crc32").toString();
+		}catch(Exception e) {
+			return null;
+		}
+	}
 
 
+ 
 }
