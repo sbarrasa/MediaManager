@@ -1,148 +1,86 @@
-2023-01-20 13:25:23,326 INFO com.blink.s3mediademo.MediaDemo [main] Starting MediaDemo using Java 16.0.1 on zaiperubuntu with PID 81598 (/home/zaiper/Blink/s3demo/target/classes started by zaiper in /home/zaiper/Blink/s3demo)
-2023-01-20 13:25:23,343 INFO com.blink.s3mediademo.MediaDemo [main] No active profile set, falling back to 1 default profile: "default"
-2023-01-20 13:25:27,832 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
-2023-01-20 13:25:27,833 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
-2023-01-20 13:25:28,606 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
-2023-01-20 13:25:32,392 INFO com.blink.s3mediademo.MediaDemo [main] Started MediaDemo in 11.299 seconds (JVM running for 12.841)
-2023-01-20 13:25:52,774 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [http-nio-8082-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-01-20 13:27:59,717 INFO com.blink.s3mediademo.MediaDemo [main] Starting MediaDemo using Java 16.0.1 on zaiperubuntu with PID 81778 (/home/zaiper/Blink/s3demo/target/classes started by zaiper in /home/zaiper/Blink/s3demo)
-2023-01-20 13:27:59,727 INFO com.blink.s3mediademo.MediaDemo [main] No active profile set, falling back to 1 default profile: "default"
-2023-01-20 13:28:03,922 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
-2023-01-20 13:28:03,923 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
-2023-01-20 13:28:04,294 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
-2023-01-20 13:28:32,111 INFO com.blink.s3mediademo.MediaDemo [main] Started MediaDemo in 33.922 seconds (JVM running for 36.245)
-2023-01-20 13:28:38,083 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [http-nio-8082-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-01-20 13:29:52,105 INFO com.blink.s3mediademo.MediaDemo [main] Starting MediaDemo using Java 16.0.1 on zaiperubuntu with PID 81953 (/home/zaiper/Blink/s3demo/target/classes started by zaiper in /home/zaiper/Blink/s3demo)
-2023-01-20 13:29:52,117 INFO com.blink.s3mediademo.MediaDemo [main] No active profile set, falling back to 1 default profile: "default"
-2023-01-20 13:29:55,923 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
-2023-01-20 13:29:55,925 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
-2023-01-20 13:29:56,321 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
-2023-01-20 13:30:07,765 INFO com.blink.s3mediademo.MediaDemo [main] Started MediaDemo in 17.209 seconds (JVM running for 19.669)
-2023-01-20 13:30:11,875 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [http-nio-8082-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-01-20 13:32:56,945 INFO com.blink.s3mediademo.MediaDemo [main] Starting MediaDemo using Java 16.0.1 on zaiperubuntu with PID 82161 (/home/zaiper/Blink/s3demo/target/classes started by zaiper in /home/zaiper/Blink/s3demo)
-2023-01-20 13:32:56,967 INFO com.blink.s3mediademo.MediaDemo [main] No active profile set, falling back to 1 default profile: "default"
-2023-01-20 13:33:00,860 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
-2023-01-20 13:33:00,861 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
-2023-01-20 13:33:01,244 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
-2023-01-20 13:33:10,273 INFO com.blink.s3mediademo.MediaDemo [main] Started MediaDemo in 14.903 seconds (JVM running for 17.113)
-2023-01-20 13:33:14,214 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [http-nio-8082-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-01-20 13:35:38,822 INFO com.blink.mediaserver.MediaService [main] Starting MediaService using Java 16.0.1 on zaiperubuntu with PID 82498 (/home/zaiper/Blink/s3demo/target/classes started by zaiper in /home/zaiper/Blink/s3demo)
-2023-01-20 13:35:38,841 INFO com.blink.mediaserver.MediaService [main] No active profile set, falling back to 1 default profile: "default"
-2023-01-20 13:35:42,626 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
-2023-01-20 13:35:42,627 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
-2023-01-20 13:35:42,969 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
-2023-01-20 13:35:46,767 INFO com.blink.mediaserver.MediaService [main] Started MediaService in 9.741 seconds (JVM running for 12.14)
-2023-01-20 13:39:30,399 INFO com.blink.mediaserver.MediaService [main] Starting MediaService using Java 16.0.1 on zaiperubuntu with PID 82904 (/home/zaiper/Blink/s3demo/target/classes started by zaiper in /home/zaiper/Blink/s3demo)
-2023-01-20 13:39:30,414 INFO com.blink.mediaserver.MediaService [main] No active profile set, falling back to 1 default profile: "default"
-2023-01-20 13:39:34,935 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
-2023-01-20 13:39:34,936 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
-2023-01-20 13:39:35,566 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
-2023-01-20 13:39:40,502 INFO com.blink.mediaserver.MediaService [main] Started MediaService in 11.724 seconds (JVM running for 14.365)
-2023-01-20 13:44:37,154 INFO com.blink.mediaserver.MediaServer [main] Starting MediaServer using Java 16.0.1 on zaiperubuntu with PID 83546 (/home/zaiper/Blink/s3demo/target/classes started by zaiper in /home/zaiper/Blink/s3demo)
-2023-01-20 13:44:37,169 INFO com.blink.mediaserver.MediaServer [main] No active profile set, falling back to 1 default profile: "default"
-2023-01-20 13:44:41,547 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
-2023-01-20 13:44:41,547 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
-2023-01-20 13:44:42,024 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
-2023-01-20 13:44:48,803 INFO com.blink.mediaserver.MediaServer [main] Started MediaServer in 13.198 seconds (JVM running for 16.182)
-2023-01-20 13:45:02,600 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [http-nio-8082-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-01-20 13:46:50,149 WARN com.amazonaws.util.Base64 [http-nio-8082-exec-6] JAXB is unavailable. Will fallback to SDK implementation which may be less performant.If you are using Java 9+, you will need to include javax.xml.bind:jaxb-api as a dependency.
-2023-01-20 13:52:27,572 INFO com.blink.mediaserver.MediaServer [main] Starting MediaServer using Java 16.0.1 on zaiperubuntu with PID 84371 (/home/zaiper/Blink/s3demo/target/classes started by zaiper in /home/zaiper/Blink/s3demo)
-2023-01-20 13:52:27,584 INFO com.blink.mediaserver.MediaServer [main] No active profile set, falling back to 1 default profile: "default"
-2023-01-20 13:52:31,372 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
-2023-01-20 13:52:31,373 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
-2023-01-20 13:52:31,738 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
-2023-01-20 13:52:35,839 INFO com.blink.mediaserver.MediaServer [main] Started MediaServer in 9.474 seconds (JVM running for 11.004)
-2023-01-20 13:53:44,829 INFO com.blink.mediaserver.MediaServer [main] Starting MediaServer using Java 16.0.1 on zaiperubuntu with PID 84537 (/home/zaiper/Blink/s3demo/target/classes started by zaiper in /home/zaiper/Blink/s3demo)
-2023-01-20 13:53:44,839 INFO com.blink.mediaserver.MediaServer [main] No active profile set, falling back to 1 default profile: "default"
-2023-01-20 13:53:48,591 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
-2023-01-20 13:53:48,592 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
-2023-01-20 13:53:48,906 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
-2023-01-20 13:53:53,002 INFO com.blink.mediaserver.MediaServer [main] Started MediaServer in 10.204 seconds (JVM running for 12.548)
-2023-01-20 13:53:57,889 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [http-nio-8082-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-01-20 13:56:06,826 WARN com.amazonaws.util.Base64 [http-nio-8082-exec-9] JAXB is unavailable. Will fallback to SDK implementation which may be less performant.If you are using Java 9+, you will need to include javax.xml.bind:jaxb-api as a dependency.
-2023-01-20 14:53:44,182 INFO com.blink.mediaserver.MediaServer [main] Starting MediaServer using Java 16.0.1 on zaiperubuntu with PID 86881 (/home/zaiper/Blink/s3demo/target/classes started by zaiper in /home/zaiper/Blink/s3demo)
-2023-01-20 14:53:44,198 INFO com.blink.mediaserver.MediaServer [main] No active profile set, falling back to 1 default profile: "default"
-2023-01-20 14:53:47,997 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
-2023-01-20 14:53:47,998 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
-2023-01-20 14:53:48,298 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
-2023-01-20 14:53:52,330 INFO com.blink.mediaserver.MediaServer [main] Started MediaServer in 9.851 seconds (JVM running for 12.18)
-2023-01-20 14:54:02,654 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [http-nio-8082-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-01-20 14:54:23,392 INFO com.blink.mediaserver.MediaServer [main] Starting MediaServer using Java 16.0.1 on zaiperubuntu with PID 86963 (/home/zaiper/Blink/s3demo/target/classes started by zaiper in /home/zaiper/Blink/s3demo)
-2023-01-20 14:54:23,404 INFO com.blink.mediaserver.MediaServer [main] No active profile set, falling back to 1 default profile: "default"
-2023-01-20 14:54:27,108 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
-2023-01-20 14:54:27,108 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
-2023-01-20 14:54:27,461 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
-2023-01-20 14:54:31,791 INFO com.blink.mediaserver.MediaServer [main] Started MediaServer in 9.841 seconds (JVM running for 12.237)
-2023-01-20 14:54:56,494 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [http-nio-8082-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
-2023-01-20 14:55:15,373 INFO com.blink.mediaserver.MediaServer [main] Starting MediaServer using Java 16.0.1 on zaiperubuntu with PID 87052 (/home/zaiper/Blink/s3demo/target/classes started by zaiper in /home/zaiper/Blink/s3demo)
-2023-01-20 14:55:15,389 INFO com.blink.mediaserver.MediaServer [main] No active profile set, falling back to 1 default profile: "default"
-2023-01-20 14:55:20,154 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
-2023-01-20 14:55:20,155 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
-2023-01-20 14:55:20,582 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
-2023-01-20 14:57:26,796 INFO com.blink.mediaserver.MediaServer [main] Starting MediaServer using Java 16.0.1 on zaiperubuntu with PID 87265 (/home/zaiper/Blink/s3demo/target/classes started by zaiper in /home/zaiper/Blink/s3demo)
-2023-01-20 14:57:26,814 INFO com.blink.mediaserver.MediaServer [main] No active profile set, falling back to 1 default profile: "default"
-2023-01-20 14:57:30,440 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
-2023-01-20 14:57:30,441 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
-2023-01-20 14:57:30,773 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
-2023-01-20 14:57:37,756 INFO org.apache.catalina.core.StandardService [main] Stopping service [Tomcat]
-2023-01-20 14:57:37,919 ERROR org.springframework.boot.SpringApplication [main] Application run failed
-org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'mediaController': Unsatisfied dependency expressed through field 'mediaTemplate'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'getMediaTemplate' defined in class path resource [com/blink/mediaserver/conf/MediaTemplateConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [com.blink.mediamanager.MediaTemplate]: Factory method 'getMediaTemplate' threw exception; nested exception is com.blink.mediamanager.MediaError: com.blink.mediamanager.s3.S3ServiceCulo
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:660)
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:640)
-	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:119)
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:399)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1431)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:619)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:955)
-	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918)
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583)
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:147)
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:731)
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:408)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307)
-	at org.springframework.boot.builder.SpringApplicationBuilder.run(SpringApplicationBuilder.java:164)
-	at com.blink.mediaserver.MediaServer.main(MediaServer.java:15)
-Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'getMediaTemplate' defined in class path resource [com/blink/mediaserver/conf/MediaTemplateConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [com.blink.mediamanager.MediaTemplate]: Factory method 'getMediaTemplate' threw exception; nested exception is com.blink.mediamanager.MediaError: com.blink.mediamanager.s3.S3ServiceCulo
-	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:658)
-	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:638)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1352)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1195)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:582)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
-	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:276)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1391)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1311)
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:657)
-	... 19 common frames omitted
-Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [com.blink.mediamanager.MediaTemplate]: Factory method 'getMediaTemplate' threw exception; nested exception is com.blink.mediamanager.MediaError: com.blink.mediamanager.s3.S3ServiceCulo
-	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:185)
-	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:653)
-	... 32 common frames omitted
-Caused by: com.blink.mediamanager.MediaError: com.blink.mediamanager.s3.S3ServiceCulo
-	at com.blink.mediaserver.conf.MediaTemplateConfig.getMediaTemplate(MediaTemplateConfig.java:42)
-	at com.blink.mediaserver.conf.MediaTemplateConfig$$EnhancerBySpringCGLIB$$d5da7a72.CGLIB$getMediaTemplate$1(<generated>)
-	at com.blink.mediaserver.conf.MediaTemplateConfig$$EnhancerBySpringCGLIB$$d5da7a72$$FastClassBySpringCGLIB$$7371f70.invoke(<generated>)
-	at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:244)
-	at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:331)
-	at com.blink.mediaserver.conf.MediaTemplateConfig$$EnhancerBySpringCGLIB$$d5da7a72.getMediaTemplate(<generated>)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:78)
-	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
-	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:154)
-	... 33 common frames omitted
-2023-01-20 14:58:51,429 INFO com.blink.mediaserver.MediaServer [main] Starting MediaServer using Java 16.0.1 on zaiperubuntu with PID 87372 (/home/zaiper/Blink/s3demo/target/classes started by zaiper in /home/zaiper/Blink/s3demo)
-2023-01-20 14:58:51,442 INFO com.blink.mediaserver.MediaServer [main] No active profile set, falling back to 1 default profile: "default"
-2023-01-20 14:58:55,164 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
-2023-01-20 14:58:55,164 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
-2023-01-20 14:58:55,449 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
-2023-01-20 14:58:59,823 INFO com.blink.mediaserver.MediaServer [main] Started MediaServer in 10.132 seconds (JVM running for 12.638)
+2023-01-21 17:53:32,642 INFO com.blink.mediaserver.MediaServer [main] Starting MediaServer using Java 11.0.16.1 on DESKTOP-V32B2V4 with PID 1820 (C:\Users\t3rry327\Desktop\Work\Testing\s3api\target\classes started by t3rry327 in C:\Users\t3rry327\Desktop\Work\Testing\s3api)
+2023-01-21 17:53:32,648 INFO com.blink.mediaserver.MediaServer [main] No active profile set, falling back to 1 default profile: "default"
+2023-01-21 17:53:33,934 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
+2023-01-21 17:53:33,934 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
+2023-01-21 17:53:34,114 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
+2023-01-21 17:53:35,397 INFO com.blink.mediaserver.MediaServer [main] Started MediaServer in 3.23 seconds (JVM running for 4.388)
+2023-01-21 17:53:56,377 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [http-nio-8082-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-01-21 17:54:52,665 WARN com.amazonaws.util.Base64 [http-nio-8082-exec-2] JAXB is unavailable. Will fallback to SDK implementation which may be less performant.If you are using Java 9+, you will need to include javax.xml.bind:jaxb-api as a dependency.
+2023-01-21 17:55:29,274 INFO com.blink.mediaserver.MediaServer [main] Starting MediaServer using Java 11.0.16.1 on DESKTOP-V32B2V4 with PID 3820 (C:\Users\t3rry327\Desktop\Work\Testing\s3api\target\classes started by t3rry327 in C:\Users\t3rry327\Desktop\Work\Testing\s3api)
+2023-01-21 17:55:29,276 INFO com.blink.mediaserver.MediaServer [main] No active profile set, falling back to 1 default profile: "default"
+2023-01-21 17:55:30,456 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
+2023-01-21 17:55:30,456 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
+2023-01-21 17:55:30,619 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
+2023-01-21 17:55:31,805 INFO com.blink.mediaserver.MediaServer [main] Started MediaServer in 2.936 seconds (JVM running for 3.969)
+2023-01-21 17:55:38,235 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [http-nio-8082-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-01-21 17:55:38,950 WARN com.amazonaws.util.Base64 [http-nio-8082-exec-1] JAXB is unavailable. Will fallback to SDK implementation which may be less performant.If you are using Java 9+, you will need to include javax.xml.bind:jaxb-api as a dependency.
+2023-01-21 17:56:19,481 INFO com.blink.mediaserver.MediaServer [main] Starting MediaServer using Java 11.0.16.1 on DESKTOP-V32B2V4 with PID 17200 (C:\Users\t3rry327\Desktop\Work\Testing\s3api\target\classes started by t3rry327 in C:\Users\t3rry327\Desktop\Work\Testing\s3api)
+2023-01-21 17:56:19,484 INFO com.blink.mediaserver.MediaServer [main] No active profile set, falling back to 1 default profile: "default"
+2023-01-21 17:56:20,647 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
+2023-01-21 17:56:20,648 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
+2023-01-21 17:56:20,809 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
+2023-01-21 17:56:21,985 INFO com.blink.mediaserver.MediaServer [main] Started MediaServer in 2.846 seconds (JVM running for 3.806)
+2023-01-21 17:56:23,321 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [http-nio-8082-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-01-21 17:56:23,908 WARN com.amazonaws.util.Base64 [http-nio-8082-exec-1] JAXB is unavailable. Will fallback to SDK implementation which may be less performant.If you are using Java 9+, you will need to include javax.xml.bind:jaxb-api as a dependency.
+2023-01-21 17:57:57,588 INFO com.blink.mediaserver.MediaServer [main] Starting MediaServer using Java 11.0.16.1 on DESKTOP-V32B2V4 with PID 1184 (C:\Users\t3rry327\Desktop\Work\Testing\s3api\target\classes started by t3rry327 in C:\Users\t3rry327\Desktop\Work\Testing\s3api)
+2023-01-21 17:57:57,590 INFO com.blink.mediaserver.MediaServer [main] No active profile set, falling back to 1 default profile: "default"
+2023-01-21 17:57:58,643 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
+2023-01-21 17:57:58,643 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
+2023-01-21 17:57:58,808 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
+2023-01-21 17:57:59,947 INFO com.blink.mediaserver.MediaServer [main] Started MediaServer in 2.699 seconds (JVM running for 3.652)
+2023-01-21 17:58:02,154 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [http-nio-8082-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-01-21 17:58:03,035 WARN com.amazonaws.util.Base64 [http-nio-8082-exec-1] JAXB is unavailable. Will fallback to SDK implementation which may be less performant.If you are using Java 9+, you will need to include javax.xml.bind:jaxb-api as a dependency.
+2023-01-21 18:05:37,152 INFO com.blink.mediaserver.MediaServer [main] Starting MediaServer using Java 11.0.16.1 on DESKTOP-V32B2V4 with PID 16752 (C:\Users\t3rry327\Desktop\Work\Testing\s3api\target\classes started by t3rry327 in C:\Users\t3rry327\Desktop\Work\Testing\s3api)
+2023-01-21 18:05:37,154 INFO com.blink.mediaserver.MediaServer [main] No active profile set, falling back to 1 default profile: "default"
+2023-01-21 18:05:38,326 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
+2023-01-21 18:05:38,326 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
+2023-01-21 18:05:38,512 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
+2023-01-21 18:05:39,819 INFO com.blink.mediaserver.MediaServer [main] Started MediaServer in 3.067 seconds (JVM running for 4.437)
+2023-01-21 18:05:55,455 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [http-nio-8082-exec-2] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-01-21 18:09:41,024 WARN com.amazonaws.util.Base64 [http-nio-8082-exec-2] JAXB is unavailable. Will fallback to SDK implementation which may be less performant.If you are using Java 9+, you will need to include javax.xml.bind:jaxb-api as a dependency.
+2023-01-21 18:09:46,721 INFO com.blink.mediaserver.MediaServer [main] Starting MediaServer using Java 11.0.16.1 on DESKTOP-V32B2V4 with PID 1676 (C:\Users\t3rry327\Desktop\Work\Testing\s3api\target\classes started by t3rry327 in C:\Users\t3rry327\Desktop\Work\Testing\s3api)
+2023-01-21 18:09:46,724 INFO com.blink.mediaserver.MediaServer [main] No active profile set, falling back to 1 default profile: "default"
+2023-01-21 18:09:47,977 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
+2023-01-21 18:09:47,978 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
+2023-01-21 18:09:48,160 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
+2023-01-21 18:09:49,788 INFO com.blink.mediaserver.MediaServer [main] Started MediaServer in 3.452 seconds (JVM running for 4.576)
+2023-01-21 18:09:53,536 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [http-nio-8082-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-01-21 18:12:26,346 WARN com.amazonaws.util.Base64 [http-nio-8082-exec-1] JAXB is unavailable. Will fallback to SDK implementation which may be less performant.If you are using Java 9+, you will need to include javax.xml.bind:jaxb-api as a dependency.
+2023-01-21 18:12:32,030 INFO com.blink.mediaserver.MediaServer [main] Starting MediaServer using Java 11.0.16.1 on DESKTOP-V32B2V4 with PID 21056 (C:\Users\t3rry327\Desktop\Work\Testing\s3api\target\classes started by t3rry327 in C:\Users\t3rry327\Desktop\Work\Testing\s3api)
+2023-01-21 18:12:32,033 INFO com.blink.mediaserver.MediaServer [main] No active profile set, falling back to 1 default profile: "default"
+2023-01-21 18:12:33,457 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
+2023-01-21 18:12:33,458 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
+2023-01-21 18:12:33,668 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
+2023-01-21 18:12:35,450 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [http-nio-8082-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-01-21 18:12:35,565 INFO com.blink.mediaserver.MediaServer [main] Started MediaServer in 3.946 seconds (JVM running for 5.071)
+2023-01-21 18:13:33,217 WARN com.amazonaws.util.Base64 [http-nio-8082-exec-1] JAXB is unavailable. Will fallback to SDK implementation which may be less performant.If you are using Java 9+, you will need to include javax.xml.bind:jaxb-api as a dependency.
+2023-01-21 18:13:38,813 INFO com.blink.mediaserver.MediaServer [main] Starting MediaServer using Java 11.0.16.1 on DESKTOP-V32B2V4 with PID 18608 (C:\Users\t3rry327\Desktop\Work\Testing\s3api\target\classes started by t3rry327 in C:\Users\t3rry327\Desktop\Work\Testing\s3api)
+2023-01-21 18:13:38,815 INFO com.blink.mediaserver.MediaServer [main] No active profile set, falling back to 1 default profile: "default"
+2023-01-21 18:13:39,997 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
+2023-01-21 18:13:39,997 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
+2023-01-21 18:13:40,173 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
+2023-01-21 18:13:41,944 INFO com.blink.mediaserver.MediaServer [main] Started MediaServer in 3.502 seconds (JVM running for 4.556)
+2023-01-21 18:13:44,119 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [http-nio-8082-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-01-21 18:14:40,477 WARN com.amazonaws.util.Base64 [http-nio-8082-exec-1] JAXB is unavailable. Will fallback to SDK implementation which may be less performant.If you are using Java 9+, you will need to include javax.xml.bind:jaxb-api as a dependency.
+2023-01-21 18:14:45,900 INFO com.blink.mediaserver.MediaServer [main] Starting MediaServer using Java 11.0.16.1 on DESKTOP-V32B2V4 with PID 15120 (C:\Users\t3rry327\Desktop\Work\Testing\s3api\target\classes started by t3rry327 in C:\Users\t3rry327\Desktop\Work\Testing\s3api)
+2023-01-21 18:14:45,902 INFO com.blink.mediaserver.MediaServer [main] No active profile set, falling back to 1 default profile: "default"
+2023-01-21 18:14:47,103 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
+2023-01-21 18:14:47,104 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
+2023-01-21 18:14:47,299 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
+2023-01-21 18:14:48,726 INFO com.blink.mediaserver.MediaServer [main] Started MediaServer in 3.201 seconds (JVM running for 4.234)
+2023-01-21 18:14:52,371 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [http-nio-8082-exec-3] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-01-21 18:15:25,484 WARN com.amazonaws.util.Base64 [http-nio-8082-exec-3] JAXB is unavailable. Will fallback to SDK implementation which may be less performant.If you are using Java 9+, you will need to include javax.xml.bind:jaxb-api as a dependency.
+2023-01-21 18:15:30,908 INFO com.blink.mediaserver.MediaServer [main] Starting MediaServer using Java 11.0.16.1 on DESKTOP-V32B2V4 with PID 3936 (C:\Users\t3rry327\Desktop\Work\Testing\s3api\target\classes started by t3rry327 in C:\Users\t3rry327\Desktop\Work\Testing\s3api)
+2023-01-21 18:15:30,911 INFO com.blink.mediaserver.MediaServer [main] No active profile set, falling back to 1 default profile: "default"
+2023-01-21 18:15:32,357 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
+2023-01-21 18:15:32,357 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
+2023-01-21 18:15:32,538 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
+2023-01-21 18:15:34,014 INFO com.blink.mediaserver.MediaServer [main] Started MediaServer in 3.501 seconds (JVM running for 4.52)
+2023-01-21 18:15:49,833 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [http-nio-8082-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-01-21 18:17:17,177 INFO com.blink.mediaserver.MediaServer [main] Starting MediaServer using Java 11.0.16.1 on DESKTOP-V32B2V4 with PID 14072 (C:\Users\t3rry327\Desktop\Work\Testing\s3api\target\classes started by t3rry327 in C:\Users\t3rry327\Desktop\Work\Testing\s3api)
+2023-01-21 18:17:17,180 INFO com.blink.mediaserver.MediaServer [main] No active profile set, falling back to 1 default profile: "default"
+2023-01-21 18:17:18,500 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
+2023-01-21 18:17:18,500 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
+2023-01-21 18:17:18,681 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
+2023-01-21 18:17:20,041 INFO com.blink.mediaserver.MediaServer [main] Started MediaServer in 3.303 seconds (JVM running for 4.442)
+2023-01-21 18:17:27,576 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [http-nio-8082-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'

@@ -12,26 +12,28 @@ import java.util.zip.CRC32;
 public interface MediaTemplate {
     default public String upload(File file) {
         String checksum = MediaTemplate.getCrc32(file);
+        String filename = file.getName();
 
         if (!fileExistsInRemote(file, checksum)) {
         	Boolean uploaded = upload(file, checksum);
         	if(!uploaded)
-                throw new MediaError(String.format("Can't upload %s", file.getName()));
+                throw new MediaError(String.format("Can't upload %s", filename));
         		
         }
-        return getFullPath(file.getName());
+        file.delete();
+        return getFullPath(filename);
 
     }
     
     public void delete(String id);
     
     default public void delete(List<String> ids) {
-        ids.forEach(id -> delete(id));
+        ids.forEach(this::delete);
     }
     
     default public List<String> listAllFullPath(){
     	return listAllIDs()
-                   .stream().map(id -> getFullPath(id)).collect(Collectors.toList());
+                   .stream().map(this::getFullPath).collect(Collectors.toList());
       
     }
     
