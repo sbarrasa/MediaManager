@@ -12,11 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,7 +47,7 @@ public class S3Service implements MediaTemplate {
     public Boolean upload(File file, String checksum) {
        PutObjectRequest request = new PutObjectRequest(BUCKET, file.getName(), file);
        ObjectMetadata metadata = new ObjectMetadata();
-       metadata.addUserMetadata("CRC32", checksum);
+       metadata.addUserMetadata("crc32", checksum);
        request.setMetadata(metadata);
        amazonS3.putObject(request);
        return true;
@@ -61,10 +58,11 @@ public class S3Service implements MediaTemplate {
         amazonS3.deleteObject(new DeleteObjectRequest(BUCKET, id));
     }
 
+
 	@Override
 	public String getRemoteChecksum(String id) {
 		try {
-			return amazonS3.getObjectMetadata(BUCKET, id).getRawMetadata().get("CRC32").toString();
+			return amazonS3.getObject(BUCKET, file.getName()).getObjectMetadata().getUserMetadata().get("crc32").toString();
 		}catch(Exception e) {
 			return null;
 		}
