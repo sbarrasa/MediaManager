@@ -62,7 +62,7 @@ public class S3Service implements MediaTemplate {
 	@Override
 	public String getRemoteChecksum(String id) {
 		try {
-			return amazonS3.getObject(BUCKET, file.getName()).getObjectMetadata().getUserMetadata().get("crc32").toString();
+			return amazonS3.getObject(BUCKET, id).getObjectMetadata().getUserMetadata().get("crc32");
 		}catch(Exception e) {
 			return null;
 		}
