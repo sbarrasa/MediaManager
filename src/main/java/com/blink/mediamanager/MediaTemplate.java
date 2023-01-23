@@ -21,7 +21,6 @@ public interface MediaTemplate {
                 throw new MediaError(String.format("Can't upload %s", filename));
         		
         }
-        file.delete();
         return getFullPath(filename);
 
     }
@@ -70,11 +69,12 @@ public interface MediaTemplate {
     default public boolean fileExistsInRemote(File file) {
         
     	String remoteChecksum = getRemoteChecksum(file.getName());
-        String fileChecksum = getChecksum(file);
         
     	if(remoteChecksum == null)
         	return false;
-        
+    	
+    	String fileChecksum = getChecksum(file);
+          
     	return remoteChecksum.equals(fileChecksum);
     };
 

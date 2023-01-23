@@ -26,10 +26,9 @@ public class MediaController {
         return mediaTemplate.upload(toFile(multipartFile));
     }
 
-    private File toFile(MultipartFile multipartFile) {
+    private static File toFile(MultipartFile multipartFile) {
         File file = new File(multipartFile.getOriginalFilename());
         try {
-            file.createNewFile();
             FileOutputStream fos = new FileOutputStream(file);
             try {
                 fos.write(multipartFile.getBytes());
