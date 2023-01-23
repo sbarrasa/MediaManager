@@ -26,10 +26,15 @@ public interface MediaTemplate {
     }
     
     
-	public void delete(String id);
+	public void delete(String id) throws MediaException;
     
     default public void delete(List<String> ids) {
-        ids.forEach(this::delete);
+        ids.forEach(id -> {
+			try {
+				delete(id);
+			} catch (MediaException e) {
+			}
+		});
     }
     
     default public List<String> listAllFullPath(){
@@ -79,5 +84,8 @@ public interface MediaTemplate {
     };
 
     public Boolean upload(File file, String checksum);
+    
+    public File get(String id);
+    
         
 }

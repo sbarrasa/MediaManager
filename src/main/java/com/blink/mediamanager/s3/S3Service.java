@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.blink.mediamanager.MediaException;
 import com.blink.mediamanager.MediaTemplate;
 
 import org.slf4j.Logger;
@@ -53,9 +54,10 @@ public class S3Service implements MediaTemplate {
        return true;
     }
 
-
-    public void delete(String id) {
-        amazonS3.deleteObject(new DeleteObjectRequest(BUCKET, id));
+    @Override
+    public void delete(String id) throws MediaException {
+        //FIXME levantar un MediaException cuando no existe el archivo
+    	amazonS3.deleteObject(new DeleteObjectRequest(BUCKET, id));
     }
 
 
