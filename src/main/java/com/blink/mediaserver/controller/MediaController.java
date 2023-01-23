@@ -59,7 +59,7 @@ public class MediaController {
     public ResponseEntity<?> get(@PathVariable String filename) {
     	UrlResource resource;
 		try {
-			resource = new UrlResource(mediaTemplate.getFullPath(filename));
+			resource = new UrlResource(mediaTemplate.getURL(filename));
 			if(!resource.exists())
 				return ResponseEntity.notFound().build();
 				

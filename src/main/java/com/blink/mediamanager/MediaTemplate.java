@@ -10,7 +10,9 @@ import java.util.zip.CRC32;
 
 
 public interface MediaTemplate {
-    default public String upload(File file) {
+	public static final String PROPERTY_PATH = "com.blink.mediamanager.mediaserver.path";
+
+	default public String upload(File file) {
         String filename = file.getName();
 
         if (!fileExistsInRemote(file)) {
@@ -21,7 +23,7 @@ public interface MediaTemplate {
                 throw new MediaError(String.format("Can't upload %s", filename));
         		
         }
-        return getFullPath(filename);
+        return getURL(filename);
 
     }
     
@@ -39,7 +41,7 @@ public interface MediaTemplate {
     
     default public List<String> listAllFullPath(){
     	return listAllIDs()
-                   .stream().map(this::getFullPath).collect(Collectors.toList());
+                   .stream().map(this::getURL).collect(Collectors.toList());
       
     }
     
@@ -47,7 +49,7 @@ public interface MediaTemplate {
     
     public List<?> listAllMetadata();
       
-    public String getFullPath(String id);
+    public String getURL(String id);
     
     public static String getChecksum(File file) {
         CRC32 crc32 = new CRC32();
@@ -86,7 +88,7 @@ public interface MediaTemplate {
 
     public Boolean upload(File file, String checksum);
     
-    public File getFile(String id);
+    public File getFile(String id) throws MediaException;
     
         
 }

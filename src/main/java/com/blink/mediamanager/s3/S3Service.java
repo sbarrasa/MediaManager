@@ -1,6 +1,7 @@
 package com.blink.mediamanager.s3;
 
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 
@@ -8,8 +9,6 @@ import com.blink.mediamanager.MediaException;
 import com.blink.mediamanager.MediaTemplate;
 
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -19,11 +18,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class S3Service implements MediaTemplate {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    //TODO: exteriorizar a MediaTemplate y generalizar como propertie com.blink.mediamanager.mediaserver.path
-    private static final String PATH = ".s3.sa-east-1.amazonaws.com/";
-
+	public static final String PROPERTY_BUCKET = "aws.s3.bucket.name";
+	
+    private String PATH; 
 
     @Value("${aws.s3.bucket.name}")
     private String BUCKET;
@@ -32,19 +30,23 @@ public class S3Service implements MediaTemplate {
     private AmazonS3 amazonS3;
 
 
+    @Override
     public List<String> listAllIDs() {
         return listAllMetadata()
                 .stream().map(o -> ((S3ObjectSummary) o).getKey()).collect(Collectors.toList());
     }
 
+    @Override
     public List<?> listAllMetadata() {
         return amazonS3.listObjects(BUCKET).getObjectSummaries();
     }
 
-    public String getFullPath(String id) {
-        return String.format("https://%s%s%s", BUCKET, PATH, id);
+    @Override
+    public String getURL(String id) {
+        return String.format("https://%s.%s/%s", BUCKET, PATH, id);
     }
 
+    @Override
     public Boolean upload(File file, String checksum) {
         PutObjectRequest request = new PutObjectRequest(BUCKET, file.getName(), file);
         ObjectMetadata metadata = new ObjectMetadata();
@@ -55,14 +57,14 @@ public class S3Service implements MediaTemplate {
     }
 
     @Override
-    public File getFile(String id) {
-        File file = null;
+    public File getFile(String id) throws MediaException {
+        File file = new File(id);
         try {
             S3Object s3Object = amazonS3.getObject(BUCKET, id);
-            file = new File(id);
+            
             FileUtils.copyInputStreamToFile(s3Object.getObjectContent(), file);
-        } catch (IOException e) {
-            return null;
+        } catch (SdkClientException | IOException e) {
+            throw new MediaException(e);
         }
         return file;
 
@@ -88,5 +90,30 @@ public class S3Service implements MediaTemplate {
         }
     }
 
+	public String getPATH() {
+		return PATH;
+	}
 
+	public S3Service setPATH(String PATH) {
+		this.PATH = PATH;
+		return this;
+	}
+
+	public String getBUCKET() {
+		return BUCKET;
+	}
+
+	public S3Service setBUCKET(String BUCKET) {
+		this.BUCKET = BUCKET;
+		return this;
+
+	}
+
+		
+	public S3Service() {
+		this.BUCKET = System.getProperty(PROPERTY_BUCKET);
+			
+		this.PATH = System.getProperty(PROPERTY_PATH);
+	}
+	
 }

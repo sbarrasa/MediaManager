@@ -10,6 +10,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 public class MediaServer {
 
     public static void main(String[] args) {
+    	
 		new SpringApplicationBuilder(MediaServer.class)
 			.properties(staticProperties())
 			.run(args);
