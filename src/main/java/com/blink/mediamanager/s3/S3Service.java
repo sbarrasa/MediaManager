@@ -70,7 +70,6 @@ public class S3Service implements MediaTemplate {
 
     @Override
     public void delete(String id) throws MediaException {
-        //FIXME levantar un MediaException cuando no existe el archivo
         try {
             amazonS3.deleteObject(new DeleteObjectRequest(BUCKET, id));
         } catch (AmazonServiceException e) {
@@ -78,8 +77,6 @@ public class S3Service implements MediaTemplate {
         }
 
     }
-
-    //TODO GET (ID) RETURN FILE
 
 
     @Override
