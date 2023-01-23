@@ -54,11 +54,18 @@ public class MediaController {
     }
 
     @GetMapping(value = "get/{filename}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    @ResponseBody
-    public ResponseEntity get(@PathVariable String filename) throws MalformedURLException {
-    	UrlResource resource = new UrlResource(mediaTemplate.getFullPath(filename));
-    	return ResponseEntity.ok()
-    			.body(resource);
+    @ResponseBody 
+    public ResponseEntity<?> get(@PathVariable String filename) {
+    	UrlResource resource;
+		try {
+			resource = new UrlResource(mediaTemplate.getFullPath(filename));
+			if(!resource.exists())
+				return ResponseEntity.notFound().build();
+				
+		} catch (MalformedURLException e) {
+			return ResponseEntity.unprocessableEntity().build();
+		}
+    	return ResponseEntity.ok(resource);
     }
 
     @GetMapping("listall_metadata")
