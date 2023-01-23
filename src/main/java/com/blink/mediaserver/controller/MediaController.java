@@ -1,5 +1,6 @@
 package com.blink.mediaserver.controller;
 
+import com.blink.mediamanager.MediaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
@@ -49,7 +50,7 @@ public class MediaController {
 
     @GetMapping("delete/{id}")
     @ResponseBody
-    public void delete(@PathVariable String id) {
+    public void delete(@PathVariable String id) throws MediaException {
         mediaTemplate.delete(id);
     }
 

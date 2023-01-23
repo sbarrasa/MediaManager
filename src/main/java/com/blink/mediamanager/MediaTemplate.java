@@ -32,7 +32,7 @@ public interface MediaTemplate {
         ids.forEach(id -> {
 			try {
 				delete(id);
-			} catch (MediaException e) {
+			} catch (MediaException ignored) {
 			}
 		});
     }
@@ -82,6 +82,7 @@ public interface MediaTemplate {
           
     	return remoteChecksum.equals(fileChecksum);
     };
+
 
     public Boolean upload(File file, String checksum);
     
