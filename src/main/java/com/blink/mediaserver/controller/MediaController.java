@@ -1,16 +1,20 @@
 package com.blink.mediaserver.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.blink.mediamanager.MediaTemplate;
 
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 
 @Controller
@@ -51,8 +55,10 @@ public class MediaController {
 
     @GetMapping(value = "get/{filename}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @ResponseBody
-    public String get(@PathVariable String filename) {
-        return mediaTemplate.getFullPath(filename);
+    public ResponseEntity get(@PathVariable String filename) throws MalformedURLException {
+    	UrlResource resource = new UrlResource(mediaTemplate.getFullPath(filename));
+    	return ResponseEntity.ok()
+    			.body(resource);
     }
 
     @GetMapping("listall_metadata")
