@@ -2,15 +2,17 @@ package com.blink.mediamanager.s3;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
 
 import com.blink.mediamanager.MediaException;
 import com.blink.mediamanager.MediaTemplate;
 
 import org.apache.commons.io.FileUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,18 +21,35 @@ import java.util.stream.Collectors;
 
 public class S3Service implements MediaTemplate {
 
-	public static final String PROPERTY_BUCKET = "aws.s3.bucket.name";
 	
     private String PATH; 
 
-    @Value("${aws.s3.bucket.name}")
     private String BUCKET;
 
-    @Autowired
     private AmazonS3 amazonS3;
 
 
-    @Override
+    public S3Service(String accessKey, 
+		    		String secretKey, 
+		    		String region, 
+		    		String bucket, 
+		    		String path) {
+
+    	this.BUCKET = bucket;
+    	this.PATH = path;
+    	
+    	AWSCredentials awsCredentials =
+                new BasicAWSCredentials(accessKey, secretKey);
+        
+    	amazonS3 = AmazonS3ClientBuilder
+                .standard()
+                .withRegion(region)
+                .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
+                .build();
+
+	}
+
+	@Override
     public List<String> listAllIDs() {
         return listAllMetadata()
                 .stream().map(o -> ((S3ObjectSummary) o).getKey()).collect(Collectors.toList());
@@ -90,30 +109,7 @@ public class S3Service implements MediaTemplate {
         }
     }
 
-	public String getPATH() {
-		return PATH;
-	}
-
-	public S3Service setPATH(String PATH) {
-		this.PATH = PATH;
-		return this;
-	}
-
-	public String getBUCKET() {
-		return BUCKET;
-	}
-
-	public S3Service setBUCKET(String BUCKET) {
-		this.BUCKET = BUCKET;
-		return this;
-
-	}
 
 		
-	public S3Service() {
-		this.BUCKET = System.getProperty(PROPERTY_BUCKET);
-			
-		this.PATH = System.getProperty(PROPERTY_PATH);
-	}
 	
 }
