@@ -86,7 +86,7 @@ public interface MediaTemplate {
 
     public Boolean upload(File file, String checksum);
     
-    public File get(String id);
+    public File getFile(String id);
     
         
 }

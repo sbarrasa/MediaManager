@@ -55,7 +55,7 @@ public class S3Service implements MediaTemplate {
     }
 
     @Override
-    public File get(String id) {
+    public File getFile(String id) {
         File file = null;
         try {
             S3Object s3Object = amazonS3.getObject(BUCKET, id);
