@@ -49,7 +49,7 @@ public class MediaController {
     }
 
 
-    @GetMapping("delete/{id}")
+    @DeleteMapping("delete/{id}")
     @ResponseBody
     public void delete(@PathVariable String id) throws MediaException {
         mediaTemplate.delete(id);
