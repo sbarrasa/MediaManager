@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.client.RestTemplate;
 
 import com.blink.mediamanager.MediaEndpoints;
@@ -34,7 +33,7 @@ public class MediaRestClient implements MediaTemplate{
 
 	@Override
 	public List<String> listAllIDs() {
-		return List.of(rest.getForObject( MediaEndpoints.LISTALL_IDS, String[].class));
+		return List.of(rest.getForObject( MediaEndpoints.LISTALL_IDS,  String[].class));
 	}
 
 	@Override

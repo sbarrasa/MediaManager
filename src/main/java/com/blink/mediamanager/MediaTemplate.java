@@ -12,6 +12,7 @@ import java.util.zip.CRC32;
 public interface MediaTemplate {
 	public static final String PROPERTY_PATH = "com.blink.mediamanager.mediaserver.path";
 
+	    
 	default public String upload(File file) {
         String filename = file.getName();
 
