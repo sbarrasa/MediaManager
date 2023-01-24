@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.blink.mediamanager.MediaTemplate;
+import com.blink.mediamanager.MediaEndpoints;
 
 
 import java.io.File;
@@ -25,7 +26,7 @@ public class MediaController {
     private MediaTemplate mediaTemplate;
 
     @ResponseBody
-    @RequestMapping(path = "/upload", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @RequestMapping(path = MediaEndpoints.UPLOAD, method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String upload(@RequestPart() MultipartFile multipartFile) throws IOException {
 
         return mediaTemplate.upload(toFile(multipartFile));
@@ -54,7 +55,7 @@ public class MediaController {
         mediaTemplate.delete(id);
     }
 
-    @GetMapping(value = "get/{filename}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @GetMapping(value = MediaEndpoints.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @ResponseBody 
     public ResponseEntity<?> get(@PathVariable String filename) {
     	UrlResource resource;
@@ -75,10 +76,16 @@ public class MediaController {
         return mediaTemplate.listAllMetadata();
     }
 
-    @GetMapping("listall")
+    @GetMapping(MediaEndpoints.LISTALL)
     @ResponseBody
     public List<String> listall() {
         return mediaTemplate.listAllFullPath();
+    }
+    
+    @GetMapping(MediaEndpoints.LISTALL_IDS)
+    @ResponseBody
+    public List<String> listall_ids() {
+        return mediaTemplate.listAllIDs();
     }
 
 }

@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.blink.mediamanager.MediaError;
 import com.blink.mediamanager.MediaTemplate;
-import com.blink.mediamanager.s3.S3Service;
+import com.blink.mediamanager.s3.MediaS3;
 
 @Configuration
 public class MediaTemplateConfig {
@@ -16,13 +16,13 @@ public class MediaTemplateConfig {
 	
 	@SuppressWarnings("static-method")
 	@Bean
-    public S3Service s3Service(@Value("${aws.access.key.id}") String accessKey,
+    public MediaS3 s3(@Value("${aws.access.key.id}") String accessKey,
     	    @Value("${aws.secret.access.key}") String secretKey,
     	    @Value("${aws.s3.region}") String region,
     	    @Value("${aws.s3.bucket.name}") String bucket,
     	    @Value("${com.blink.mediamanager.mediaserver.path}") String path) {
 
-		return new S3Service(accessKey, secretKey, region, bucket, path);
+		return new MediaS3(accessKey, secretKey, region, bucket, path);
 		
 	}
 	

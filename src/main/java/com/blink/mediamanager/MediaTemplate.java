@@ -16,9 +16,8 @@ public interface MediaTemplate {
         String filename = file.getName();
 
         if (!fileExistsInRemote(file)) {
-            String checksum = getChecksum(file);
 
-        	Boolean uploaded = upload(file, checksum);
+        	Boolean uploaded = uploadImpl(file);
         	if(!uploaded)
                 throw new MediaError(String.format("Can't upload %s", filename));
         		
@@ -51,7 +50,7 @@ public interface MediaTemplate {
       
     public String getURL(String id);
     
-    public static String getChecksum(File file) {
+    public default String getChecksum(File file) {
         CRC32 crc32 = new CRC32();
         try {
             crc32.update(Files.readAllBytes(file.toPath()));
@@ -77,16 +76,13 @@ public interface MediaTemplate {
         
     	String remoteChecksum = getRemoteChecksum(file.getName());
         
-    	if(remoteChecksum == null)
-        	return false;
-    	
     	String fileChecksum = getChecksum(file);
           
-    	return remoteChecksum.equals(fileChecksum);
+    	return fileChecksum.equals(remoteChecksum);
     };
 
 
-    public Boolean upload(File file, String checksum);
+    public Boolean uploadImpl(File file);
     
     public File getFile(String id) throws MediaException;
     

@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class S3Service implements MediaTemplate {
+public class MediaS3 implements MediaTemplate {
 
 	
     private String PATH; 
@@ -29,7 +29,7 @@ public class S3Service implements MediaTemplate {
     private AmazonS3 amazonS3;
 
 
-    public S3Service(String accessKey, 
+    public MediaS3(String accessKey, 
 		    		String secretKey, 
 		    		String region, 
 		    		String bucket, 
@@ -66,10 +66,10 @@ public class S3Service implements MediaTemplate {
     }
 
     @Override
-    public Boolean upload(File file, String checksum) {
+    public Boolean uploadImpl(File file) {
         PutObjectRequest request = new PutObjectRequest(BUCKET, file.getName(), file);
         ObjectMetadata metadata = new ObjectMetadata();
-        metadata.addUserMetadata("crc32", checksum);
+        metadata.addUserMetadata("crc32", getChecksum(file));
         request.setMetadata(metadata);
         amazonS3.putObject(request);
         return true;
