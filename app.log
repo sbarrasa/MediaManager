@@ -489,3 +489,17 @@ javax.servlet.ServletException: Could not resolve view with name 'images' in ser
 2023-01-25 11:09:37,049 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
 2023-01-25 11:09:38,254 INFO com.blink.mediaserver.MediaServer [main] Started MediaServer in 2.921 seconds (JVM running for 3.817)
 2023-01-25 11:09:49,337 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [http-nio-8082-exec-2] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-01-25 13:39:26,003 INFO com.blink.mediaserver.MediaServer [main] Starting MediaServer using Java 11.0.18 on DESKTOP-IAHSDFG with PID 17104 (C:\Users\t3rry327\IdeaProjects\mediaserver\target\classes started by t3rry327 in C:\Users\t3rry327\IdeaProjects\mediaserver)
+2023-01-25 13:39:26,006 INFO com.blink.mediaserver.MediaServer [main] No active profile set, falling back to 1 default profile: "default"
+2023-01-25 13:39:27,213 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
+2023-01-25 13:39:27,214 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
+2023-01-25 13:39:27,357 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
+2023-01-25 13:39:28,570 INFO com.blink.mediaserver.MediaServer [main] Started MediaServer in 2.986 seconds (JVM running for 3.887)
+2023-01-25 13:41:06,638 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [http-nio-8082-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-01-25 13:42:19,139 INFO com.blink.mediaserver.MediaServer [main] Starting MediaServer using Java 11.0.18 on DESKTOP-IAHSDFG with PID 820 (C:\Users\t3rry327\IdeaProjects\mediaserver\target\classes started by t3rry327 in C:\Users\t3rry327\IdeaProjects\mediaserver)
+2023-01-25 13:42:19,141 INFO com.blink.mediaserver.MediaServer [main] No active profile set, falling back to 1 default profile: "default"
+2023-01-25 13:42:20,226 INFO org.apache.catalina.core.StandardService [main] Starting service [Tomcat]
+2023-01-25 13:42:20,227 INFO org.apache.catalina.core.StandardEngine [main] Starting Servlet engine: [Apache Tomcat/9.0.70]
+2023-01-25 13:42:20,368 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [main] Initializing Spring embedded WebApplicationContext
+2023-01-25 13:42:22,049 INFO com.blink.mediaserver.MediaServer [main] Started MediaServer in 3.307 seconds (JVM running for 4.097)
+2023-01-25 13:42:27,360 INFO org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [http-nio-8082-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'

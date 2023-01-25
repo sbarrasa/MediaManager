@@ -1,6 +1,7 @@
 package com.blink.mediaserver.controller;
 
 import com.blink.mediamanager.MediaException;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
@@ -14,16 +15,13 @@ import com.blink.mediamanager.Media;
 import com.blink.mediamanager.MediaEndpoints;
 
 
-import java.io.File;
-import java.io.FileOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
 
-import javax.websocket.server.PathParam;
-
 @Controller
-public class MediaController implements MediaTemplate{
+public class MediaController implements MediaTemplate {
 
     @Autowired
     private MediaTemplate mediaTemplate;
@@ -35,51 +33,18 @@ public class MediaController implements MediaTemplate{
         return mediaTemplate.upload(new Media().setId(multipartFile.getOriginalFilename()).setStream(multipartFile.getInputStream()));
     }
 
-    private static File toFile(MultipartFile multipartFile) {
-        File file = new File(multipartFile.getOriginalFilename());
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            try {
-                fos.write(multipartFile.getBytes());
-            } finally {
-                fos.close();
-            }
-        } catch (IOException e) {
-            file = null;
-        }
-
-        return file;
-    }
-
-
-    @DeleteMapping(MediaEndpoints.DELETE+"/{id}")
+    @DeleteMapping(MediaEndpoints.DELETE + "/{id}")
     @ResponseBody
     @Override
     public void delete(@PathVariable String id) throws MediaException {
         mediaTemplate.delete(id);
     }
 
-    @GetMapping(value = "/get/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    @ResponseBody 
-    public ResponseEntity<?> getEntity(@PathVariable String id) {
-    	UrlResource resource;
-		try {
-			resource = new UrlResource(mediaTemplate.getURL(id));
-			if(!resource.exists())
-				return ResponseEntity.notFound().build();
-				
-		} catch (MalformedURLException e) {
-			return ResponseEntity.unprocessableEntity().build();
-		}
-    	return ResponseEntity.ok(resource);
-    }
-    
-
 
     @GetMapping(MediaEndpoints.LISTALL_METADATA)
     @ResponseBody
-	@Override
-	public List<?> listAllMetadata() {
+    @Override
+    public List<?> listAllMetadata() {
         return mediaTemplate.listAllMetadata();
     }
 
@@ -88,38 +53,52 @@ public class MediaController implements MediaTemplate{
     public List<String> listall() {
         return mediaTemplate.listAllFullPath();
     }
-    
+
     @GetMapping(MediaEndpoints.LISTALL_IDS)
     @ResponseBody
-	@Override
-	public List<String> listAllIDs() {
+    @Override
+    public List<String> listAllIDs() {
         return mediaTemplate.listAllIDs();
     }
 
 
-    @GetMapping(MediaEndpoints.REMOTE_URL+"/{id}")
+    @GetMapping(MediaEndpoints.REMOTE_URL + "/{id}")
     @ResponseBody
     @Override
-	public String getURL(@PathVariable String id) {
-		return mediaTemplate.getURL(id);
-	}
+    public String getURL(@PathVariable String id) {
+        return mediaTemplate.getURL(id);
+    }
 
-	@Override
-	public String getRemoteChecksum(String id) {
-		return mediaTemplate.getRemoteChecksum(id);
-	}
+    @Override
+    public String getRemoteChecksum(String id) {
+        return mediaTemplate.getRemoteChecksum(id);
+    }
 
-	@Override
-	public Boolean uploadImpl(Media media) {
-		return mediaTemplate.uploadImpl(media);
-	}
+    @Override
+    public Boolean uploadImpl(Media media) {
+        return mediaTemplate.uploadImpl(media);
+    }
 
-    @GetMapping(MediaEndpoints.GET+"{id}")
+    @GetMapping(MediaEndpoints.GET + "{id}")
     @ResponseBody
-	@Override
-	public Media get(@PathVariable String id) throws MediaException {
-		return mediaTemplate.get(id);
-	}
+    @Override
+    public Media get(@PathVariable String id) throws MediaException {
+        return mediaTemplate.get(id);
+    }
+
+    @GetMapping(MediaEndpoints.GET + "get/{id}")
+    @ResponseBody
+    public void get(@PathVariable String id, HttpServletResponse r) throws MediaException {
+
+        r.setHeader("Content-Disposition", "attachment; filename=" + id);
+        try {
+            IOUtils.copy(mediaTemplate.get(id).getStream(), r.getOutputStream());
+            r.getOutputStream().flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 
 
 
