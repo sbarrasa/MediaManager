@@ -97,6 +97,7 @@ public class MediaController implements MediaTemplate{
 
 
     @GetMapping(MediaEndpoints.REMOTE_URL+"/{id}")
+    @ResponseBody
     @Override
 	public String getURL(@PathVariable String id) {
 		return mediaTemplate.getURL(id);
