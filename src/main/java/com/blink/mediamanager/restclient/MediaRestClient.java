@@ -1,6 +1,8 @@
 package com.blink.mediamanager.restclient;
 
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +11,7 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import com.blink.mediamanager.Media;
 import com.blink.mediamanager.MediaEndpoints;
+import com.blink.mediamanager.MediaError;
 import com.blink.mediamanager.MediaException;
 import com.blink.mediamanager.MediaTemplate;
 
@@ -33,8 +36,8 @@ public class MediaRestClient implements MediaTemplate {
 	}
 
 	@Override
-	public List<String> listAllIDs() {
-		return List.of(rest.getForObject(MediaEndpoints.LISTALL_IDS, String[].class));
+	public List<String> listIDs() {
+		return List.of(rest.getForObject(MediaEndpoints.LIST_IDS, String[].class));
 	}
 
 	@Override
@@ -44,14 +47,17 @@ public class MediaRestClient implements MediaTemplate {
 	}
 
 	@Override
-	public String getURL(String id) {
-		return String.format(MediaEndpoints.GET, id);
+	public URL getURL(String id) {
+		try {
+			return new URL(String.format("%s%s%s", URI,  MediaEndpoints.GET , id));
+		} catch (MalformedURLException e) {
+			throw new MediaError(e);
+		}
 	}
 
 	@Override
 	public String getRemoteChecksum(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		return rest.getForObject(MediaEndpoints.REMOTE_CHECKSUM, String.class, id);
 	}
 
 	@Override
@@ -61,7 +67,7 @@ public class MediaRestClient implements MediaTemplate {
 
 	@Override
 	public Media get(String id) throws MediaException {
-		InputStream stream = rest.getForObject(MediaEndpoints.GET,InputStream.class, id);
+		InputStream stream = rest.getForObject("/get/",InputStream.class, id);
 		if (stream == null) 
 			return null;
 		

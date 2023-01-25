@@ -17,7 +17,7 @@ import com.blink.mediamanager.MediaEndpoints;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 @Controller
@@ -28,7 +28,7 @@ public class MediaController implements MediaTemplate {
 
     @ResponseBody
     @RequestMapping(path = MediaEndpoints.UPLOAD, method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String upload(@RequestPart() MultipartFile multipartFile) throws IOException {
+    public URL upload(@RequestPart() MultipartFile multipartFile) throws IOException {
 
         return mediaTemplate.upload(new Media().setId(multipartFile.getOriginalFilename()).setStream(multipartFile.getInputStream()));
     }
@@ -48,30 +48,25 @@ public class MediaController implements MediaTemplate {
         return mediaTemplate.listAllMetadata();
     }
 
-    @GetMapping(MediaEndpoints.LISTALL)
+    @GetMapping(MediaEndpoints.LIST_URLs)
     @ResponseBody
-    public List<String> listall() {
-        return mediaTemplate.listAllFullPath();
+    public List<URL> listURLs() {
+        return mediaTemplate.listURLs();
     }
 
-    @GetMapping(MediaEndpoints.LISTALL_IDS)
+    @GetMapping(MediaEndpoints.LIST_IDS)
     @ResponseBody
     @Override
-    public List<String> listAllIDs() {
-        return mediaTemplate.listAllIDs();
+    public List<String> listIDs() {
+        return mediaTemplate.listIDs();
     }
 
 
     @GetMapping(MediaEndpoints.REMOTE_URL + "/{id}")
     @ResponseBody
     @Override
-    public String getURL(@PathVariable String id) {
+    public URL getURL(@PathVariable String id) {
         return mediaTemplate.getURL(id);
-    }
-
-    @Override
-    public String getRemoteChecksum(String id) {
-        return mediaTemplate.getRemoteChecksum(id);
     }
 
     @Override
@@ -79,14 +74,14 @@ public class MediaController implements MediaTemplate {
         return mediaTemplate.uploadImpl(media);
     }
 
-    @GetMapping(MediaEndpoints.GET + "{id}")
+    @GetMapping("/get/{id}")
     @ResponseBody
     @Override
     public Media get(@PathVariable String id) throws MediaException {
         return mediaTemplate.get(id);
     }
 
-    @GetMapping(MediaEndpoints.GET + "get/{id}")
+    @GetMapping(MediaEndpoints.GET + "{id}")
     @ResponseBody
     public void get(@PathVariable String id, HttpServletResponse r) throws MediaException {
 
@@ -100,6 +95,14 @@ public class MediaController implements MediaTemplate {
 
     }
 
+    @GetMapping(MediaEndpoints.REMOTE_CHECKSUM + "{id}")
+    @ResponseBody
+    @Override
+    public String getRemoteChecksum(String id) {
+        return mediaTemplate.getRemoteChecksum(id);
+    }
+
+    
 
 
 }

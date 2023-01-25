@@ -1,6 +1,7 @@
 package com.blink.mediamanager;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -12,7 +13,7 @@ public interface MediaTemplate {
 
 	default public void upload(Media media, BiConsumer<Media, MediaStatus> callback) {
 		CompletableFuture.runAsync(() -> {
-			String link;
+			URL link;
 			try {
 				link = upload(media);
 				callback.accept(media, MediaStatus.ok(link));
@@ -25,11 +26,11 @@ public interface MediaTemplate {
 	default public void upload(List<Media> medias, BiConsumer<Media, MediaStatus> callback) {
 		CompletableFuture.runAsync(() -> {
 			medias.forEach(media -> {
-				String link;
+				URL url;
 				
 				try {
-					link = upload(media);
-					callback.accept(media, MediaStatus.ok(link));
+					url = upload(media);
+					callback.accept(media, MediaStatus.ok(url));
 				} catch (Exception e) {
 					callback.accept(media, MediaStatus.err(e));
 				}
@@ -37,7 +38,7 @@ public interface MediaTemplate {
 		});
 	}
 	
-	default public String upload(Media media) {
+	default public URL upload(Media media) {
 
 		if (!fileExistsInRemote(media)) {
 
@@ -50,8 +51,8 @@ public interface MediaTemplate {
 
 	}
 
-	default public List<String> upload(List<Media> medias) {
-		List<String> res = new ArrayList<>();
+	default public List<URL> upload(List<Media> medias) {
+		List<URL> res = new ArrayList<>();
 		medias.forEach(media -> {
 			res.add(upload(media));
 		});
@@ -69,16 +70,16 @@ public interface MediaTemplate {
 		});
 	}
 
-	default public List<String> listAllFullPath() {
-		return listAllIDs().stream().map(this::getURL).collect(Collectors.toList());
+	default public List<URL> listURLs() {
+		return listIDs().stream().map(this::getURL).collect(Collectors.toList());
 
 	}
 
-	public List<String> listAllIDs();
+	public List<String> listIDs();
 
 	public List<?> listAllMetadata();
 
-	public String getURL(String id);
+	public URL getURL(String id);
 
 	public default String getChecksum(Media media) {
 		CRC32 crc32 = new CRC32();

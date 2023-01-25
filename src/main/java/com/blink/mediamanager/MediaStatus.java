@@ -1,20 +1,22 @@
 package com.blink.mediamanager;
 
+import java.net.URL;
+
 public enum MediaStatus {
 	ok,
 	err;
 	
 	private Exception exception;
-	private String link;
+	private URL url;
 	
 
 	public Exception getException() {
 		return exception;
 	}
 
-	public static MediaStatus ok(String link) {
+	public static MediaStatus ok(URL url) {
 		MediaStatus m = ok;
-		m.link = link;
+		m.url = url;
 		return m;
 	}
 
@@ -22,5 +24,9 @@ public enum MediaStatus {
 		MediaStatus m = err;
 		m.exception = e;
 		return m;
+	}
+
+	public URL getUrl() {
+		return url;
 	}
 }

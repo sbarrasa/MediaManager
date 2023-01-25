@@ -9,9 +9,12 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
 import com.blink.mediamanager.Media;
+import com.blink.mediamanager.MediaError;
 import com.blink.mediamanager.MediaException;
 import com.blink.mediamanager.MediaTemplate;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,7 +49,7 @@ public class MediaS3 implements MediaTemplate {
 	}
 
 	@Override
-    public List<String> listAllIDs() {
+    public List<String> listIDs() {
         return listAllMetadata()
                 .stream().map(o -> ((S3ObjectSummary) o).getKey()).collect(Collectors.toList());
     }
@@ -57,8 +60,12 @@ public class MediaS3 implements MediaTemplate {
     }
 
     @Override
-    public String getURL(String id) {
-        return String.format("https://%s.%s/%s", BUCKET, PATH, id);
+    public URL getURL(String id) {
+        try {
+			return new URL(String.format("https://%s.%s/%s", BUCKET, PATH, id));
+		} catch (MalformedURLException e) {
+			throw new MediaError(e);
+		}
     }
 
     @Override
