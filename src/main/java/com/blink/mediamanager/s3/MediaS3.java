@@ -8,14 +8,10 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
-
+import com.blink.mediamanager.Media;
 import com.blink.mediamanager.MediaException;
 import com.blink.mediamanager.MediaTemplate;
 
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,26 +62,25 @@ public class MediaS3 implements MediaTemplate {
     }
 
     @Override
-    public Boolean uploadImpl(File file) {
-        PutObjectRequest request = new PutObjectRequest(BUCKET, file.getName(), file);
+    public Boolean uploadImpl(Media media) {
         ObjectMetadata metadata = new ObjectMetadata();
-        metadata.addUserMetadata("crc32", getChecksum(file));
-        request.setMetadata(metadata);
+        metadata.addUserMetadata("crc32", getChecksum(media));
+        PutObjectRequest request = new PutObjectRequest(BUCKET, media.getId(), media.getStream(), metadata);
+
         amazonS3.putObject(request);
         return true;
     }
 
     @Override
-    public File getFile(String id) throws MediaException {
-        File file = new File(id);
-        try {
-            S3Object s3Object = amazonS3.getObject(BUCKET, id);
+    public Media get(String id) throws MediaException {
+    	S3Object s3Object ;
+    	try {
+            s3Object = amazonS3.getObject(BUCKET, id);
             
-            FileUtils.copyInputStreamToFile(s3Object.getObjectContent(), file);
-        } catch (SdkClientException | IOException e) {
+        } catch (SdkClientException e) {
             throw new MediaException(e);
         }
-        return file;
+        return new Media(id, s3Object.getObjectContent());
 
     }
 

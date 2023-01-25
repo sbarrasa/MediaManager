@@ -1,8 +1,7 @@
 package com.blink.mediamanager;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,17 +10,16 @@ import java.util.zip.CRC32;
 
 public interface MediaTemplate  {
 	    
-	default public String upload(File file) {
-        String filename = file.getName();
+	default public String upload(Media media) {
 
-        if (!fileExistsInRemote(file)) {
+        if (!fileExistsInRemote(media)) {
 
-        	Boolean uploaded = uploadImpl(file);
+        	Boolean uploaded = uploadImpl(media);
         	if(!uploaded)
-                throw new MediaError(String.format("Can't upload %s", filename));
+                throw new MediaError(String.format("Can't upload %s", media.getId()));
         		
         }
-        return getURL(filename);
+        return getURL(media.getId());
 
     }
     
@@ -49,10 +47,10 @@ public interface MediaTemplate  {
       
     public String getURL(String id);
     
-    public default String getChecksum(File file) {
+    public default String getChecksum(Media media) {
         CRC32 crc32 = new CRC32();
         try {
-            crc32.update(Files.readAllBytes(file.toPath()));
+            crc32.update(media.getStream().readAllBytes());
         } catch (IOException e) {
             throw new MediaError(e);
         }
@@ -61,29 +59,29 @@ public interface MediaTemplate  {
 
     public String getRemoteChecksum(String id) ;	
 
-    default public List<String> upload(List<File> files) {
+    default public List<String> upload(List<Media> medias) {
         List<String> res = new ArrayList<>();
-        files.forEach(file -> {
-            res.add(upload(file));
+        medias.forEach(media -> {
+            res.add(upload(media));
         });
         return res;
     }
 
     
 
-    default public boolean fileExistsInRemote(File file) {
+    default public boolean fileExistsInRemote(Media media) {
         
-    	String remoteChecksum = getRemoteChecksum(file.getName());
+    	String remoteChecksum = getRemoteChecksum(media.getId());
         
-    	String fileChecksum = getChecksum(file);
+    	String fileChecksum = getChecksum(media);
           
     	return fileChecksum.equals(remoteChecksum);
     };
 
 
-    public Boolean uploadImpl(File file);
+    public Boolean uploadImpl(Media media);
     
-    public File getFile(String id) throws MediaException;
+    public Media get(String id) throws MediaException;
     
         
 }

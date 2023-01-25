@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
+import com.blink.mediamanager.Media;
 import com.blink.mediamanager.MediaEndpoints;
 import com.blink.mediamanager.MediaException;
 import com.blink.mediamanager.MediaTemplate;
@@ -57,24 +58,18 @@ public class MediaRestClient implements MediaTemplate {
 	}
 
 	@Override
-	public Boolean uploadImpl(File file) {
-		return rest.postForObject(MediaEndpoints.UPLOAD, file, Boolean.class);
+	public Boolean uploadImpl(Media media) {
+		return rest.postForObject(MediaEndpoints.UPLOAD, media, Boolean.class);
 	}
 
 	@Override
-	public File getFile(String id) throws MediaException {
-		InputStream inputStream = rest.getForObject(MediaEndpoints.GET,InputStream.class, id);
-		File file = new File(id);
-		try {
-			if (inputStream != null) {
-				FileUtils.copyInputStreamToFile(inputStream, file);
-				return file;
-			}
-		} catch (IOException e) {
-			throw new MediaException(e.getMessage());
-		}
-
-		return null;
+	public Media get(String id) throws MediaException {
+		InputStream stream = rest.getForObject(MediaEndpoints.GET,InputStream.class, id);
+		if (stream == null) 
+			return null;
+		
+		return new Media(id, stream);
+		
 	}
 
 }

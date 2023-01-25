@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.blink.mediamanager.MediaTemplate;
+import com.blink.mediamanager.Media;
 import com.blink.mediamanager.MediaEndpoints;
 
 
@@ -60,7 +61,7 @@ public class MediaController implements MediaTemplate{
 
     @GetMapping(value = "/get/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @ResponseBody 
-    public ResponseEntity<?> get(@PathVariable String id) {
+    public ResponseEntity<?> getEntity(@PathVariable String id) {
     	UrlResource resource;
 		try {
 			resource = new UrlResource(mediaTemplate.getURL(id));
@@ -109,14 +110,14 @@ public class MediaController implements MediaTemplate{
 	}
 
 	@Override
-	public Boolean uploadImpl(File file) {
-		return mediaTemplate.uploadImpl(file);
+	public Boolean uploadImpl(Media media) {
+		return mediaTemplate.uploadImpl(media);
 	}
 
     @GetMapping(MediaEndpoints.GET+"{id}")
 	@Override
-	public File getFile(@PathVariable String id) throws MediaException {
-		return mediaTemplate.getFile(id);
+	public Media get(@PathVariable String id) throws MediaException {
+		return mediaTemplate.get(id);
 	}
 
 
