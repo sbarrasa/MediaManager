@@ -32,7 +32,7 @@ public class MediaController implements MediaTemplate{
     @RequestMapping(path = MediaEndpoints.UPLOAD, method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String upload(@RequestPart() MultipartFile multipartFile) throws IOException {
 
-        return mediaTemplate.upload(toFile(multipartFile));
+        return mediaTemplate.upload(new Media().setId(multipartFile.getOriginalFilename()).setStream(multipartFile.getInputStream()));
     }
 
     private static File toFile(MultipartFile multipartFile) {
