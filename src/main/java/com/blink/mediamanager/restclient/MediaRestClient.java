@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import com.blink.mediamanager.MediaEndpoints;
 import com.blink.mediamanager.MediaException;
@@ -17,11 +18,11 @@ public class MediaRestClient implements MediaTemplate {
 	private RestTemplate rest;
 
 	@Value("${com.blink.mediamanager.rest.url}")
-	private String URL;
+	private String URI;
 
 	public MediaRestClient() {
 		rest = new RestTemplate();
-		//TODO: configurar el rest template 
+		rest.setUriTemplateHandler(new DefaultUriBuilderFactory(URI));
 	}
 
 	public MediaRestClient(RestTemplate rest) {
@@ -30,24 +31,23 @@ public class MediaRestClient implements MediaTemplate {
 
 	@Override
 	public void delete(String id) throws MediaException {
-		rest.delete(String.format("%s/%s/%s", URL, "delete/", id));
+		rest.delete(MediaEndpoints.DELETE, id);
 	}
 
 	@Override
 	public List<String> listAllIDs() {
-		return List.of(rest.getForObject(String.format("%s/%s", URL, MediaEndpoints.LISTALL_IDS), String[].class));
+		return List.of(rest.getForObject(MediaEndpoints.LISTALL_IDS, String[].class));
 	}
 
 	@Override
 	public List<?> listAllMetadata() {
 
-		return List.of(rest.getForObject(String.format("%s/%s", URL, MediaEndpoints.LISTALL), String[].class));
+		return List.of(rest.getForObject(MediaEndpoints.LISTALL_METADATA, String[].class));
 	}
 
 	@Override
 	public String getURL(String id) {
-
-		return String.format("%s/%s/%s", URL, "get/", id);
+		return String.format(MediaEndpoints.GET, id);
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class MediaRestClient implements MediaTemplate {
 
 	@Override
 	public File getFile(String id) throws MediaException {
-		InputStream inputStream = rest.getForObject(String.format("%s/%s/%s", URL, "get/", id), InputStream.class);
+		InputStream inputStream = rest.getForObject(MediaEndpoints.GET,InputStream.class, id);
 		File file = new File(id);
 		try {
 			if (inputStream != null) {

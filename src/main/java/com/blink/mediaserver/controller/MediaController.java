@@ -19,8 +19,10 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
 
+import javax.websocket.server.PathParam;
+
 @Controller
-public class MediaController {
+public class MediaController implements MediaTemplate{
 
     @Autowired
     private MediaTemplate mediaTemplate;
@@ -49,18 +51,19 @@ public class MediaController {
     }
 
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping(MediaEndpoints.DELETE+"/{id}")
     @ResponseBody
+    @Override
     public void delete(@PathVariable String id) throws MediaException {
         mediaTemplate.delete(id);
     }
 
-    @GetMapping(value = MediaEndpoints.GET, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @GetMapping(value = "/get/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @ResponseBody 
-    public ResponseEntity<?> get(@PathVariable String filename) {
+    public ResponseEntity<?> get(@PathVariable String id) {
     	UrlResource resource;
 		try {
-			resource = new UrlResource(mediaTemplate.getURL(filename));
+			resource = new UrlResource(mediaTemplate.getURL(id));
 			if(!resource.exists())
 				return ResponseEntity.notFound().build();
 				
@@ -69,10 +72,13 @@ public class MediaController {
 		}
     	return ResponseEntity.ok(resource);
     }
+    
 
-    @GetMapping("listall_metadata")
+
+    @GetMapping(MediaEndpoints.LISTALL_METADATA)
     @ResponseBody
-    public List<?> listallMetadata() {
+	@Override
+	public List<?> listAllMetadata() {
         return mediaTemplate.listAllMetadata();
     }
 
@@ -84,8 +90,34 @@ public class MediaController {
     
     @GetMapping(MediaEndpoints.LISTALL_IDS)
     @ResponseBody
-    public List<String> listall_ids() {
+	@Override
+	public List<String> listAllIDs() {
         return mediaTemplate.listAllIDs();
     }
+
+
+    @GetMapping(MediaEndpoints.REMOTE_URL+"/{id}")
+    @Override
+	public String getURL(@PathVariable String id) {
+		return mediaTemplate.getURL(id);
+	}
+
+	@Override
+	public String getRemoteChecksum(String id) {
+		return mediaTemplate.getRemoteChecksum(id);
+	}
+
+	@Override
+	public Boolean uploadImpl(File file) {
+		return mediaTemplate.uploadImpl(file);
+	}
+
+    @GetMapping(MediaEndpoints.GET+"{id}")
+	@Override
+	public File getFile(@PathVariable String id) throws MediaException {
+		return mediaTemplate.getFile(id);
+	}
+
+
 
 }
