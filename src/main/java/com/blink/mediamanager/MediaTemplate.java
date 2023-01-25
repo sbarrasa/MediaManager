@@ -22,6 +22,10 @@ public interface MediaTemplate {
 		});
 	}
 	
+	default public void upload(List<Media> medias, BiConsumer<Media, MediaStatus> callback) {
+		medias.forEach(media -> upload(media, callback));
+	}
+	
 	default public String upload(Media media) {
 
 		if (!fileExistsInRemote(media)) {
