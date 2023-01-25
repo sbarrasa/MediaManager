@@ -5,21 +5,22 @@ public enum MediaStatus {
 	err;
 	
 	private Exception exception;
+	private String link;
 	
-	private MediaStatus() {
-		
-	}
-	
-	MediaStatus(Exception e) {
-		this.setException(e);
-	}
 
 	public Exception getException() {
 		return exception;
 	}
 
-	public MediaStatus setException(Exception exception) {
-		this.exception = exception;
-		return null;
+	public static MediaStatus ok(String link) {
+		MediaStatus m = ok;
+		m.link = link;
+		return m;
+	}
+
+	public static MediaStatus err(Exception e) {
+		MediaStatus m = err;
+		m.exception = e;
+		return m;
 	}
 }

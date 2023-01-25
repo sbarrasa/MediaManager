@@ -12,11 +12,12 @@ public interface MediaTemplate {
 
 	default public void upload(Media media, BiConsumer<Media, MediaStatus> callback) {
 		CompletableFuture.runAsync(() -> {
+			String link;
 			try {
-				upload(media);
-				callback.accept(media, MediaStatus.ok);
+				link = upload(media);
+				callback.accept(media, MediaStatus.ok(link));
 			} catch (Exception e) {
-				callback.accept(media, MediaStatus.err.setException(e));
+				callback.accept(media, MediaStatus.err(e));
 			}
 		});
 	}
