@@ -11,10 +11,14 @@ import java.util.zip.CRC32;
 public interface MediaTemplate {
 
 	default public void upload(Media media, BiConsumer<Media, MediaStatus> callback) {
-		CompletableFuture.ejecutar(upload(media))
-			.cuandoTermineOk(callback.accept(media, MediaStatus.ok))
-			,cuandoTermineConError(callback.accept(media, MediaStatus.err(exception)));
-		
+		CompletableFuture.runAsync(() -> {
+			try {
+				upload(media);
+				callback.accept(media, MediaStatus.ok);
+			} catch (Exception e) {
+				callback.accept(media, MediaStatus.err.setException(e));
+			}
+		});
 	}
 	
 	default public String upload(Media media) {

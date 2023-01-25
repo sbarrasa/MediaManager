@@ -18,7 +18,8 @@ public enum MediaStatus {
 		return exception;
 	}
 
-	public void setException(Exception exception) {
+	public MediaStatus setException(Exception exception) {
 		this.exception = exception;
+		return null;
 	}
 }
