@@ -115,6 +115,7 @@ public class MediaController implements MediaTemplate{
 	}
 
     @GetMapping(MediaEndpoints.GET+"{id}")
+    @ResponseBody
 	@Override
 	public Media get(@PathVariable String id) throws MediaException {
 		return mediaTemplate.get(id);
