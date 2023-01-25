@@ -21,9 +21,20 @@ public interface MediaTemplate {
 			}
 		});
 	}
-	
+
 	default public void upload(List<Media> medias, BiConsumer<Media, MediaStatus> callback) {
-		medias.forEach(media -> upload(media, callback));
+		CompletableFuture.runAsync(() -> {
+			medias.forEach(media -> {
+				String link;
+				
+				try {
+					link = upload(media);
+					callback.accept(media, MediaStatus.ok(link));
+				} catch (Exception e) {
+					callback.accept(media, MediaStatus.err(e));
+				}
+			});
+		});
 	}
 	
 	default public String upload(Media media) {
