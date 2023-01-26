@@ -84,7 +84,7 @@ public class ImgResizer {
             ImageIO.write(resizedImage, "png", baos);
 			return new ByteArrayInputStream(baos.toByteArray());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new MediaError(e);
         }
 
     }
