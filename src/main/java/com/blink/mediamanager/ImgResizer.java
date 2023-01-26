@@ -75,7 +75,7 @@ public class ImgResizer {
     }
 
 
-    private BufferedImage resize(BufferedImage image, Integer width) {
+    private static BufferedImage resize(BufferedImage image, Integer width) {
         
             int height = (int) (image.getHeight() * ((double) width / image.getWidth()));
 
