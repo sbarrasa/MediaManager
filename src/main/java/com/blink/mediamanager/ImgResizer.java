@@ -21,11 +21,12 @@ public class ImgResizer {
     private boolean includeSource = true;
 
     public ImgResizer(Media mediaSource) {
-        this(mediaSource, List.of(thumbnailSize));
+       this(mediaSource, List.of(thumbnailSize));
     }
 
     public ImgResizer(Media mediaSource, List<Integer> widths) {
-        this.mediaSource = mediaSource;
+    	this.mediaSource = mediaSource;
+        
         setWidths(widths);
     }
 
@@ -57,7 +58,8 @@ public class ImgResizer {
     }
 
     public ImgResizer build() {
-        resizedMap = new HashMap<>();
+        BufferedImage image = toImg(mediaSource.getStream());
+    	this.resizedMap = new HashMap<>();
 
         if (includeSource)
             resizedMap.put(sourceSize, mediaSource);
@@ -65,7 +67,7 @@ public class ImgResizer {
         widths.forEach(width -> {
             Media mediaResized = new Media();
             mediaResized.setId(String.format(idResizedPattern, mediaSource.getId(), width));
-            mediaResized.setStream(resize(mediaSource.getStream(), width));
+            mediaResized.setStream(toStream(resize(image, width)));
 
             resizedMap.put(width, mediaResized);
         });
@@ -73,24 +75,39 @@ public class ImgResizer {
     }
 
 
-    private InputStream resize(InputStream sourceStream, Integer width) {
-        BufferedImage image = null;
-        try {
-            image = ImageIO.read(sourceStream);
+    private BufferedImage resize(BufferedImage image, Integer width) {
+        
             int height = (int) (image.getHeight() * ((double) width / image.getWidth()));
+
             BufferedImage resizedImage = new BufferedImage(width, height, image.getType());
             resizedImage.getGraphics().drawImage(image, 0, 0, width, height, null);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(resizedImage, "png", baos);
-			return new ByteArrayInputStream(baos.toByteArray());
-        } catch (IOException e) {
-            throw new MediaError(e);
-        }
-
+            
+            return resizedImage;
+            
     }
 
 
-    public boolean isIncludeSource() {
+    private static InputStream toStream(BufferedImage resizedImage) {
+    	ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        
+        try {
+			ImageIO.write(resizedImage, "png", baos);
+		} catch (IOException e) {
+			throw new MediaError(e);
+		}
+		return new ByteArrayInputStream(baos.toByteArray());
+	}
+
+
+	private BufferedImage toImg(InputStream sourceStream) {
+       try {
+    	 return ImageIO.read(sourceStream);
+	   } catch (IOException e) {
+	      throw new MediaError(String.format("%s is not an image", mediaSource.getId()));
+	   }
+	}
+
+	public boolean isIncludeSource() {
         return includeSource;
     }
 
@@ -98,4 +115,5 @@ public class ImgResizer {
         this.includeSource = includeSource;
         return this;
     }
+    
 }
