@@ -1,5 +1,10 @@
 package com.blink.mediamanager;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
@@ -68,12 +73,16 @@ public class ImgResizer {
 	}
 
 	
-	private InputStream resize(InputStream sourceStream, Integer width) {
-		/* TODO hacer la transformación del insputStream en imagen
-		 * cambiar el tamaño proporcional esgún el width enviado
-		 */
-		return null;
+	private InputStream resize(InputStream sourceStream, Integer width) throws IOException {
+		BufferedImage image = ImageIO.read(sourceStream);
+		int height = (int) (image.getHeight() * ((double) width / image.getWidth()));
+		BufferedImage resizedImage = new BufferedImage(width, height, image.getType());
+		resizedImage.getGraphics().drawImage(image, 0, 0, width, height, null);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write(resizedImage, "png", baos);
+		return new ByteArrayInputStream(baos.toByteArray());
 	}
+
 
 	public boolean isIncludeSource() {
 		return includeSource;
