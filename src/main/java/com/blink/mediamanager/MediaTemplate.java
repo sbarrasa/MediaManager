@@ -14,10 +14,10 @@ public interface MediaTemplate {
 
 	default public void upload(Media media, BiConsumer<Media, MediaStatus> callback) {
 		CompletableFuture.runAsync(() -> {
-			List<URL> urls ;
+			URL url;
 			try {
-				urls = upload(media);
-				callback.accept(media, MediaStatus.ok(urls));
+				url = upload(media);
+				callback.accept(media, MediaStatus.ok(url));
 			} catch (Exception e) {
 				callback.accept(media, MediaStatus.err(e));
 			}
@@ -27,7 +27,7 @@ public interface MediaTemplate {
 	default public void upload(List<Media> medias, BiConsumer<Media, MediaStatus> callback) {
 		CompletableFuture.runAsync(() -> {
 			medias.forEach(media -> {
-				List<URL> url;
+				URL url;
 				
 				try {
 					url = upload(media);
@@ -39,30 +39,23 @@ public interface MediaTemplate {
 		});
 	}
 	
-	default public List<URL> upload(Media media) {
-		List<URL> urls = new ArrayList<>();
-		
+	default public URL upload(Media media) {
 		if (!fileExistsInRemote(media)) {
 
 			Boolean uploaded = uploadImpl(media);
 			
 			if (!uploaded)
 				throw new MediaError(String.format("Can't upload %s", media.getId()));
-			
-			urls.add(getURL(media.getId()));
-			
-			if(media instanceof MediaResaizable)
-				urls.addAll(upload(((MediaResaizable)media).getMediasResized()));
-
+		
 		}
-		return urls;
+		return getURL(media.getId());
 
 	}
 
 	default public List<URL> upload(Collection<Media> medias) {
 		List<URL> res = new ArrayList<>();
 		medias.forEach(media -> {
-			res.addAll(upload(media));
+			res.add(upload(media));
 		});
 		return res;
 	}

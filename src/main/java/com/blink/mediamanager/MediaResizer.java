@@ -1,34 +1,68 @@
 package com.blink.mediamanager;
 
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MediaResizer {
-	public MediaResaizable mediaSource;
+	public static final Integer thumbnailSize = 100;
+	public static final String idResizedPattern = "%s_%d";
+	public Media mediaSource;
+	public Map<Integer, Media> resizedMap;
+	public List<Integer> widths;
 	
-	public MediaResizer(MediaResaizable mediaSource) {
-		this.mediaSource = mediaSource; 
+	public MediaResizer(Media mediaSource) {
+		this(mediaSource, List.of(thumbnailSize));
 	}
-	
-	public Map<Integer, Media> build(){
-		mediaSource.mediasMap = resizeAll();
-		return mediaSource.mediasMap ;
-	}
-
-	private Map<Integer, Media> resizeAll() {
-		mediaSource.mediasMap = new HashMap<>();
 		
-		mediaSource.getWidths().forEach(w -> {
-			Media mediaResized = new Media();
-			mediaResized.setId(mediaSource.getId()+w);
-			mediaResized.setStream(resize(mediaSource.getStream(), w));
-
-			mediaSource.mediasMap.put(w, mediaResized);
-		});
-		return mediaSource.mediasMap ;
+	public MediaResizer(Media mediaSource, List<Integer> widths) {
+		this.mediaSource = mediaSource; 
+		setWidths(widths);
 	}
 
+	public List<Integer> getWidths() {
+		return widths;
+	}
+
+	public MediaResizer setWidths(List<Integer> widths) {
+		this.widths = widths;
+		this.resizedMap = null;
+		return this;
+	}
+
+	public Media getThumbnail() {
+		return getResizedMap().get(thumbnailSize);
+	}
+	
+	public Collection<Media> getResized(){
+		
+		return getResizedMap().values();
+	}
+
+	public Map<Integer, Media> getResizedMap(){
+		if(resizedMap == null) 
+			build();
+		
+		return resizedMap;
+
+	}
+
+	public MediaResizer build(){
+		resizedMap = new HashMap<>();
+		
+		widths.forEach(width -> {
+			Media mediaResized = new Media();
+			mediaResized.setId(String.format(idResizedPattern, mediaSource.getId(),width));
+			mediaResized.setStream(resize(mediaSource.getStream(), width));
+
+			resizedMap.put(width, mediaResized);
+		});
+		return this;
+	}
+
+	
 	private InputStream resize(InputStream sourceStream, Integer width) {
 		/* TODO hacer la transformación del insputStream en imagen
 		 * cambiar el tamaño proporcional esgún el width enviado

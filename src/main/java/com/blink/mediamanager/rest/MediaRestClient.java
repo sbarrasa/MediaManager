@@ -1,4 +1,4 @@
-package com.blink.mediamanager.restclient;
+package com.blink.mediamanager.rest;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -10,7 +10,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import com.blink.mediamanager.Media;
-import com.blink.mediamanager.MediaEndpoints;
 import com.blink.mediamanager.MediaError;
 import com.blink.mediamanager.MediaException;
 import com.blink.mediamanager.MediaTemplate;

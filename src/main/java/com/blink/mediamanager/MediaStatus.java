@@ -8,16 +8,16 @@ public enum MediaStatus {
 	err;
 	
 	private Exception exception;
-	private List<URL> urls;
+	private URL url;
 	
 
 	public Exception getException() {
 		return exception;
 	}
 
-	public static MediaStatus ok(List<URL> urls) {
+	public static MediaStatus ok(URL url) {
 		MediaStatus m = ok;
-		m.urls = urls;
+		m.url = url;
 		return m;
 	}
 
@@ -27,7 +27,7 @@ public enum MediaStatus {
 		return m;
 	}
 
-	public List<URL> getUrls() {
-		return urls;
+	public URL getUrl() {
+		return url;
 	}
 }

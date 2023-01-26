@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.blink.mediamanager.MediaTemplate;
+import com.blink.mediamanager.rest.MediaEndpoints;
 import com.blink.mediamanager.Media;
-import com.blink.mediamanager.MediaEndpoints;
 import com.blink.mediamanager.MediaError;
 
 import javax.servlet.http.HttpServletResponse;
@@ -28,7 +28,7 @@ public class MediaController implements MediaTemplate {
 
     @ResponseBody
     @RequestMapping(path = MediaEndpoints.UPLOAD, method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public List<URL> upload(@RequestPart() MultipartFile multipartFile) throws IOException {
+    public URL upload(@RequestPart() MultipartFile multipartFile) throws IOException {
 
         return mediaTemplate.upload(new Media().setId(multipartFile.getOriginalFilename()).setStream(multipartFile.getInputStream()));
     }

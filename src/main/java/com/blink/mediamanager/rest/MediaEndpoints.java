@@ -1,4 +1,4 @@
-package com.blink.mediamanager;
+package com.blink.mediamanager.rest;
 
 public class MediaEndpoints {
 	public static final String LIST_URLs = "/listall";
