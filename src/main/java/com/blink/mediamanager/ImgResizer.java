@@ -12,6 +12,8 @@ public class ImgResizer {
 	public Media mediaSource;
 	public Map<Integer, Media> resizedMap;
 	public List<Integer> widths;
+	private final Integer sourceSize = -1;
+	private boolean includeSource = true;
 	
 	public ImgResizer(Media mediaSource) {
 		this(mediaSource, List.of(thumbnailSize));
@@ -33,15 +35,15 @@ public class ImgResizer {
 	}
 
 	public Media getThumbnail() {
-		return getResizedMap().get(thumbnailSize);
-	}
-	
-	public Collection<Media> getResized(){
-		
-		return getResizedMap().values();
+		return getMap().get(thumbnailSize);
 	}
 
-	public Map<Integer, Media> getResizedMap(){
+	
+	public Collection<Media> getAll(){
+		return getMap().values();
+	}
+
+	public Map<Integer, Media> getMap(){
 		if(resizedMap == null) 
 			build();
 		
@@ -51,6 +53,9 @@ public class ImgResizer {
 
 	public ImgResizer build(){
 		resizedMap = new HashMap<>();
+		
+		if(includeSource )
+			resizedMap.put(sourceSize , mediaSource);
 		
 		widths.forEach(width -> {
 			Media mediaResized = new Media();
@@ -68,5 +73,14 @@ public class ImgResizer {
 		 * cambiar el tamaño proporcional esgún el width enviado
 		 */
 		return null;
+	}
+
+	public boolean isIncludeSource() {
+		return includeSource;
+	}
+
+	public ImgResizer setIncludeSource(boolean includeSource) {
+		this.includeSource = includeSource;
+		return this;
 	}
 }
