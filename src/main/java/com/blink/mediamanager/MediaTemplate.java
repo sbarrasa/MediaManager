@@ -3,6 +3,7 @@ package com.blink.mediamanager;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
@@ -13,10 +14,10 @@ public interface MediaTemplate {
 
 	default public void upload(Media media, BiConsumer<Media, MediaStatus> callback) {
 		CompletableFuture.runAsync(() -> {
-			URL link;
+			List<URL> urls ;
 			try {
-				link = upload(media);
-				callback.accept(media, MediaStatus.ok(link));
+				urls = upload(media);
+				callback.accept(media, MediaStatus.ok(urls));
 			} catch (Exception e) {
 				callback.accept(media, MediaStatus.err(e));
 			}
@@ -26,7 +27,7 @@ public interface MediaTemplate {
 	default public void upload(List<Media> medias, BiConsumer<Media, MediaStatus> callback) {
 		CompletableFuture.runAsync(() -> {
 			medias.forEach(media -> {
-				URL url;
+				List<URL> url;
 				
 				try {
 					url = upload(media);
@@ -38,23 +39,30 @@ public interface MediaTemplate {
 		});
 	}
 	
-	default public URL upload(Media media) {
-
+	default public List<URL> upload(Media media) {
+		List<URL> urls = new ArrayList<>();
+		
 		if (!fileExistsInRemote(media)) {
 
 			Boolean uploaded = uploadImpl(media);
+			
 			if (!uploaded)
 				throw new MediaError(String.format("Can't upload %s", media.getId()));
+			
+			urls.add(getURL(media.getId()));
+			
+			if(media instanceof MediaResaizable)
+				urls.addAll(upload(((MediaResaizable)media).getMediasResized()));
 
 		}
-		return getURL(media.getId());
+		return urls;
 
 	}
 
-	default public List<URL> upload(List<Media> medias) {
+	default public List<URL> upload(Collection<Media> medias) {
 		List<URL> res = new ArrayList<>();
 		medias.forEach(media -> {
-			res.add(upload(media));
+			res.addAll(upload(media));
 		});
 		return res;
 	}

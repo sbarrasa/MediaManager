@@ -96,7 +96,7 @@ public class MediaS3 implements MediaTemplate {
         try {
             amazonS3.deleteObject(new DeleteObjectRequest(BUCKET, id));
         } catch (AmazonServiceException e) {
-            throw new MediaException(e.getMessage());
+            throw new MediaException(e);
         }
 
     }

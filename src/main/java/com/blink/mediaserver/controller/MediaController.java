@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.blink.mediamanager.MediaTemplate;
 import com.blink.mediamanager.Media;
 import com.blink.mediamanager.MediaEndpoints;
-
+import com.blink.mediamanager.MediaError;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class MediaController implements MediaTemplate {
 
     @ResponseBody
     @RequestMapping(path = MediaEndpoints.UPLOAD, method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public URL upload(@RequestPart() MultipartFile multipartFile) throws IOException {
+    public List<URL> upload(@RequestPart() MultipartFile multipartFile) throws IOException {
 
         return mediaTemplate.upload(new Media().setId(multipartFile.getOriginalFilename()).setStream(multipartFile.getInputStream()));
     }
@@ -90,7 +90,7 @@ public class MediaController implements MediaTemplate {
             IOUtils.copy(mediaTemplate.get(id).getStream(), r.getOutputStream());
             r.getOutputStream().flush();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new MediaException(e);
         }
 
     }
