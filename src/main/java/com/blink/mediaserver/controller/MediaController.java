@@ -17,6 +17,7 @@ import com.blink.mediamanager.MediaError;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -81,18 +82,15 @@ public class MediaController implements MediaTemplate {
         return mediaTemplate.get(id);
     }
 
-    @GetMapping(MediaEndpoints.GET + "{id}")
+    @GetMapping(value=(MediaEndpoints.GET + "{id}"), produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @ResponseBody
-    public void get(@PathVariable String id, HttpServletResponse r) throws MediaException {
+    public ResponseEntity<?> getEntity(@PathVariable String id) {
+        UrlResource resource;
+        resource = new UrlResource(mediaTemplate.getURL(id));
+        if(!resource.exists())
+            return ResponseEntity.notFound().build();
 
-        r.setHeader("Content-Disposition", "attachment; filename=" + id);
-        try {
-            IOUtils.copy(mediaTemplate.get(id).getStream(), r.getOutputStream());
-            r.getOutputStream().flush();
-        } catch (IOException e) {
-            throw new MediaException(e);
-        }
-
+        return ResponseEntity.ok(resource);
     }
 
     @GetMapping(MediaEndpoints.REMOTE_CHECKSUM + "{id}")
