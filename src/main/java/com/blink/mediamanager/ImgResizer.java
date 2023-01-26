@@ -6,18 +6,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MediaResizer {
+public class ImgResizer {
 	public static final Integer thumbnailSize = 100;
 	public static final String idResizedPattern = "%s_%d";
 	public Media mediaSource;
 	public Map<Integer, Media> resizedMap;
 	public List<Integer> widths;
 	
-	public MediaResizer(Media mediaSource) {
+	public ImgResizer(Media mediaSource) {
 		this(mediaSource, List.of(thumbnailSize));
 	}
 		
-	public MediaResizer(Media mediaSource, List<Integer> widths) {
+	public ImgResizer(Media mediaSource, List<Integer> widths) {
 		this.mediaSource = mediaSource; 
 		setWidths(widths);
 	}
@@ -26,7 +26,7 @@ public class MediaResizer {
 		return widths;
 	}
 
-	public MediaResizer setWidths(List<Integer> widths) {
+	public ImgResizer setWidths(List<Integer> widths) {
 		this.widths = widths;
 		this.resizedMap = null;
 		return this;
@@ -49,7 +49,7 @@ public class MediaResizer {
 
 	}
 
-	public MediaResizer build(){
+	public ImgResizer build(){
 		resizedMap = new HashMap<>();
 		
 		widths.forEach(width -> {
