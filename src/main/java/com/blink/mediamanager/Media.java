@@ -5,6 +5,8 @@ import java.io.InputStream;
 public class Media {
 	private String id;
 	private InputStream stream;
+
+	private long length;
 	
 	public Media() {
 		
@@ -14,7 +16,16 @@ public class Media {
 		this.id = id;
 		this.stream = stream;
 	}
-		
+
+	public long getLength() {
+		return length;
+	}
+
+	public Media setLength(long length) {
+		this.length = length;
+		return this;
+	}
+
 	public InputStream getStream() {
 		
 		return stream;

@@ -31,7 +31,7 @@ public class MediaController implements MediaTemplate {
     @RequestMapping(path = MediaEndpoints.UPLOAD, method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public URL upload(@RequestPart() MultipartFile multipartFile) throws IOException {
 
-        return mediaTemplate.upload(new Media().setId(multipartFile.getOriginalFilename()).setStream(multipartFile.getInputStream()));
+        return mediaTemplate.upload(new Media().setId(multipartFile.getOriginalFilename()).setStream(multipartFile.getInputStream()).setLength(multipartFile.getSize()));
     }
 
     @DeleteMapping(MediaEndpoints.DELETE + "/{id}")
