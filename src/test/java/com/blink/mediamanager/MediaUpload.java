@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.List;
-import java.util.Properties;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -25,13 +25,15 @@ public class MediaUpload {
 	private static final String s3Path = "s3.sa-east-1.amazonaws.com";
 	private static MediaTemplate mediaTemplate;
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	private final List<Integer> sizes = List.of(ImgResizer.thumbnailSize, 400, 800);
+	private final List<Integer> sizes =  List.of(ImageResizer.sourceSize, ImageResizer.thumbnailSize, 400, 800);
 	
 	
 	public MediaUpload() throws IOException {
 		((ch.qos.logback.classic.Logger)LoggerFactory
 			.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME))
 			.setLevel(ch.qos.logback.classic.Level.INFO);
+
+		mediaTemplate = new MediaS3(accessKey, secretKey, region, bucket, s3Path );
 		
 	}
 	
@@ -39,33 +41,28 @@ public class MediaUpload {
 	@Test
 	public void upload() throws IOException {
 		
-		Stream<Path> files = Files.list(Path.of(localPath));
-		files.forEach(path -> {
-			
-			logger.info("Processing {}",path.getFileName());
-			InputStream stream;
-			try {
-				stream = new FileInputStream(path.toFile());
-				ImgWithResize media = new ImgWithResize(path.getFileName().toString(), stream, sizes);
-				getMediaTemplate().upload(media, this::callback);
-				getMediaTemplate().upload(media.getResizes(), this::callback);
+		try (Stream<Path> files = Files.list(Path.of(localPath))) {
+			files.forEach(path -> {
 				
+				logger.info("Processing {}",path.getFileName());
+				InputStream stream;
+				try {
+					stream = new FileInputStream(path.toFile());
+					Media media = new Media(path.getFileName().toString(), stream);
+					Collection<Media> medias = new ImageResizer(media, sizes).getAll();
+					mediaTemplate.upload(medias, this::callback);
+					
+					
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
 				
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
 			
-		
-		});
+			});
+		}
 		
 	}
 	
-	private MediaTemplate getMediaTemplate() {
-		if(mediaTemplate== null)
-			mediaTemplate = new MediaS3(accessKey, secretKey, region, bucket, s3Path );
-		
-		return mediaTemplate;
-	}
 	
 	private void callback(Media media, MediaStatus status) {
 		switch(status) {

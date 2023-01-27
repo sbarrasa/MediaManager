@@ -41,8 +41,13 @@ public interface MediaTemplate {
 	
 	default public URL upload(Media media) {
 		if (!fileExistsInRemote(media)) {
-
-			Boolean uploaded = uploadImpl(media);
+			Boolean uploaded ;
+			
+			try {
+				uploaded = uploadImpl(media);
+			}catch(Exception e) {
+				uploaded = false;
+			}
 			
 			if (!uploaded)
 				throw new MediaError(String.format("Can't upload %s", media.getId()));

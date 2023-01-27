@@ -11,20 +11,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ImgResizer {
-    public static final Integer thumbnailSize = 100;
-    public static final String idResizedPattern = "%s_%d";
+public class ImageResizer {
     public Media mediaSource;
     public Map<Integer, Media> resizedMap;
     public List<Integer> widths;
-    private final Integer sourceSize = -1;
-    private boolean includeSource = true;
-
-    public ImgResizer(Media mediaSource) {
-       this(mediaSource, List.of(thumbnailSize));
+    public static Integer thumbnailSize = 100;
+    public static final Integer sourceSize = -1;
+    public static final List<Integer> defaultSizes = List.of(sourceSize, thumbnailSize);
+    public String ID_POINT = ".";
+    public String ID_PATTERN = "_";
+    
+    public ImageResizer(Media mediaSource) {
+       this(mediaSource, defaultSizes);
     }
 
-    public ImgResizer(Media mediaSource, List<Integer> widths) {
+    public ImageResizer(Media mediaSource, List<Integer> widths) {
     	this.mediaSource = mediaSource;
         
         setWidths(widths);
@@ -34,7 +35,7 @@ public class ImgResizer {
         return widths;
     }
 
-    public ImgResizer setWidths(List<Integer> widths) {
+    public ImageResizer setWidths(List<Integer> widths) {
         this.widths = widths;
         this.resizedMap = null;
         return this;
@@ -57,16 +58,14 @@ public class ImgResizer {
 
     }
 
-    public ImgResizer build() {
+    public ImageResizer build() {
         BufferedImage image = toImg(mediaSource.getStream());
     	this.resizedMap = new HashMap<>();
 
-        if (includeSource)
-            resizedMap.put(sourceSize, mediaSource);
-
+       
         widths.forEach(width -> {
             Media mediaResized = new Media();
-            mediaResized.setId(String.format(idResizedPattern, mediaSource.getId(), width));
+            mediaResized.setId(buildId(mediaSource.getId(), width));
             mediaResized.setStream(toStream(resize(image, width)));
 
             resizedMap.put(width, mediaResized);
@@ -75,14 +74,17 @@ public class ImgResizer {
     }
 
 
-    private static BufferedImage resize(BufferedImage image, Integer width) {
-        
-            int height = (int) (image.getHeight() * ((double) width / image.getWidth()));
 
-            BufferedImage resizedImage = new BufferedImage(width, height, image.getType());
-            resizedImage.getGraphics().drawImage(image, 0, 0, width, height, null);
-            
-            return resizedImage;
+	private static BufferedImage resize(BufferedImage image, Integer width) {
+        if(width == sourceSize)
+        	return image;
+        
+        int height = (int) (image.getHeight() * ((double) width / image.getWidth()));
+
+        BufferedImage resizedImage = new BufferedImage(width, height, image.getType());
+        resizedImage.getGraphics().drawImage(image, 0, 0, width, height, null);
+        
+        return resizedImage;
             
     }
 
@@ -107,13 +109,18 @@ public class ImgResizer {
 	   }
 	}
 
-	public boolean isIncludeSource() {
-        return includeSource;
-    }
+    private String buildId(String id, Integer width) {
+    	if(width == sourceSize)
+    		return id;
+    	
+    	int pointPos = id.indexOf(ID_POINT);
+    	
+    	if(pointPos <= 0)
+    		return id + ID_PATTERN + width;
+    	
+    	return id.substring(0,pointPos ) + ID_PATTERN + width + id.substring(pointPos);
 
-    public ImgResizer setIncludeSource(boolean includeSource) {
-        this.includeSource = includeSource;
-        return this;
-    }
+ 	}
+	
     
 }
