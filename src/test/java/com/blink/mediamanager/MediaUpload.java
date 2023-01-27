@@ -60,14 +60,19 @@ public class MediaUpload {
 			
 			});
 		}
-		
+		logger.info("End upload");
 	}
 	
 	
 	private void callback(Media media, MediaStatus status) {
 		switch(status) {
-			case ok: logger.info("Finished upload {} Ok, URL={}", media.getId(), status.getUrl());
-			case err: logger.info("Finished upload {} with error: {}", media.getId(), status.getException().getMessage());
+			case ok: 
+				logger.info("Finished upload {} Ok, URL={}", media.getId(), status.getUrl());
+				break;
+			case err: 
+				logger.info("Finished upload {} with error: {}", media.getId(), status.getException().getMessage());
+				break;
+
 		}
 	}
 }
