@@ -12,6 +12,7 @@ public class ImgWithResize extends Media {
 	public ImgWithResize(String id, InputStream stream, List<Integer> sizes) {
 		super(id, stream);
 		resizer = new ImgResizer(this, sizes);
+		resizer.setIncludeSource(false);
 	}
 	
 	public Collection<Media> getResizes() {

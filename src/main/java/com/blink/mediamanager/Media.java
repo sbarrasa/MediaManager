@@ -32,5 +32,8 @@ public class Media {
 		return this;
 	}
 
+	public String toString() {
+		return id;
+	}
 	
 }

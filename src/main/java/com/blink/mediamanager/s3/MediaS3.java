@@ -27,6 +27,7 @@ public class MediaS3 implements MediaTemplate {
 
     private AmazonS3 amazonS3;
 
+    
     public MediaS3() {
     	this( System.getProperty("aws.access.key.id"),
     		  System.getProperty("aws.secret.access.key"),

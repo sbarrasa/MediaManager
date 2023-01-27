@@ -7,12 +7,12 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.blink.mediamanager.s3.MediaS3;
 
 
@@ -27,12 +27,12 @@ public class MediaUpload {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final List<Integer> sizes = List.of(ImgResizer.thumbnailSize, 400, 800);
 	
-	public MediaUpload() {
-		System.setProperty("logging.level.org.springframework",  "WARN");
-		System.setProperty("logging.level.com.mkyong", "DEBUG");
-		System.setProperty("logging.pattern.file", "%d %p %c{1.} [%t] %m%n");
-		System.setProperty("logging.pattern.console", "%d{yyyy/MM/dd HH:mm:ss.SSS} [%t] %logger{5} %level: %msg%n");
-
+	
+	public MediaUpload() throws IOException {
+		((ch.qos.logback.classic.Logger)LoggerFactory
+			.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME))
+			.setLevel(ch.qos.logback.classic.Level.INFO);
+		
 	}
 	
 	@SuppressWarnings("static-method")
@@ -69,8 +69,8 @@ public class MediaUpload {
 	
 	private void callback(Media media, MediaStatus status) {
 		switch(status) {
-			case ok: logger.info("Finished upload {} URL {}", media.getId(), status.getUrl());
-			case err: logger.info("Finished upload {} URL {}", media.getId(), status.getException().getMessage());
+			case ok: logger.info("Finished upload {} Ok, URL={}", media.getId(), status.getUrl());
+			case err: logger.info("Finished upload {} with error: {}", media.getId(), status.getException().getMessage());
 		}
 	}
 }
