@@ -27,6 +27,13 @@ public class MediaS3 implements MediaTemplate {
 
     private AmazonS3 amazonS3;
 
+    public MediaS3() {
+    	this( System.getProperty("aws.access.key.id"),
+    		  System.getProperty("aws.secret.access.key"),
+    		  System.getProperty("aws.s3.region"),
+    		  System.getProperty("aws.s3.bucket.name"),
+    		  System.getProperty("com.blink.mediamanager.mediaserver.path"));
+    }
 
     public MediaS3(String accessKey, 
 		    		String secretKey, 
@@ -92,13 +99,8 @@ public class MediaS3 implements MediaTemplate {
     }
 
     @Override
-    public void delete(String id) throws MediaException {
-        try {
-            amazonS3.deleteObject(new DeleteObjectRequest(BUCKET, id));
-        } catch (AmazonServiceException e) {
-            throw new MediaException(e);
-        }
-
+    public void delete(String id) {
+       amazonS3.deleteObject(new DeleteObjectRequest(BUCKET, id));
     }
 
 

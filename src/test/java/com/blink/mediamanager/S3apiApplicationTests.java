@@ -1,4 +1,4 @@
-package com.blink.s3api;
+package com.blink.mediamanager;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

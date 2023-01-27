@@ -24,7 +24,7 @@ public interface MediaTemplate {
 		});
 	}
 
-	default public void upload(List<Media> medias, BiConsumer<Media, MediaStatus> callback) {
+	default public void upload(Collection<Media> medias, BiConsumer<Media, MediaStatus> callback) {
 		CompletableFuture.runAsync(() -> {
 			medias.forEach(media -> {
 				URL url;
@@ -60,14 +60,11 @@ public interface MediaTemplate {
 		return res;
 	}
 
-	public void delete(String id) throws MediaException;
+	public void delete(String id) ;
 
 	default public void delete(List<String> ids) {
 		ids.forEach(id -> {
-			try {
-				delete(id);
-			} catch (MediaException ignored) {
-			}
+			delete(id);
 		});
 	}
 

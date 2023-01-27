@@ -37,7 +37,7 @@ public class MediaController implements MediaTemplate {
     @DeleteMapping(MediaEndpoints.DELETE + "/{id}")
     @ResponseBody
     @Override
-    public void delete(@PathVariable String id) throws MediaException {
+    public void delete(@PathVariable String id) {
         mediaTemplate.delete(id);
     }
 

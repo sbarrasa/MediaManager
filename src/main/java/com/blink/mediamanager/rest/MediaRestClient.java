@@ -30,7 +30,7 @@ public class MediaRestClient implements MediaTemplate {
 	}
 
 	@Override
-	public void delete(String id) throws MediaException {
+	public void delete(String id) {
 		rest.delete(MediaEndpoints.DELETE, id);
 	}
 
