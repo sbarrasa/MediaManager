@@ -51,13 +51,9 @@ public class MediaUpload {
 					Media media = new Media(path.getFileName().toString(), stream);
 					Collection<Media> medias = new ImageResizer(media, sizes).getAll();
 					medias.forEach(mediaL -> {
-					try {
-
 						mediaTemplate.upload(mediaL);
 							
-					} catch (MediaException e) {
-							logger.error("Error {}",mediaL.getId());
-										}
+						logger.info("{}: {}", mediaL.getId(), mediaL.getStatus().getMsg());
 					});
 //					mediaTemplate.upload(medias, this::callback);
 					
@@ -72,13 +68,13 @@ public class MediaUpload {
 	}
 	
 	
-	private void callback(Media media, MediaStatus status) {
-		switch(status) {
+	private void callback(Media media) {
+		switch(media.getStatus()) {
 			case ok: 
-				logger.info("Finished upload {} Ok, URL={}", media.getId(), status.getUrl());
+				logger.info("Finished upload {} Ok, URL={}", media.getId(), media.getUrl());
 				break;
 			case err: 
-				logger.info("Finished upload {} with error: {}", media.getId(), status.getException().getMessage());
+				logger.info("Finished upload {} with error: {}", media.getId(), media.getStatus().getException().getMessage());
 				break;
 
 		}

@@ -60,8 +60,8 @@ public class MediaRestClient implements MediaTemplate {
 	}
 
 	@Override
-	public Boolean uploadImpl(Media media) {
-		return rest.postForObject(MediaEndpoints.UPLOAD, media, Boolean.class);
+	public Media uploadImpl(Media media) {
+		return rest.postForObject(MediaEndpoints.UPLOAD, media, Media.class);
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package com.blink.mediaserver.controller;
 
 import com.blink.mediamanager.MediaException;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
@@ -30,8 +29,8 @@ public class MediaController implements MediaTemplate {
     @ResponseBody
     @RequestMapping(path = MediaEndpoints.UPLOAD, method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public URL upload(@RequestPart() MultipartFile multipartFile) throws IOException, MediaException {
-
-        return mediaTemplate.upload(new Media().setId(multipartFile.getOriginalFilename()).setStream(multipartFile.getInputStream()).setLength(multipartFile.getSize()));
+    	Media media = mediaTemplate.upload(new Media().setId(multipartFile.getOriginalFilename()).setStream(multipartFile.getInputStream()).setLength(multipartFile.getSize()));
+    	return media.getUrl();
     }
 
     @DeleteMapping(MediaEndpoints.DELETE + "/{id}")
@@ -71,7 +70,7 @@ public class MediaController implements MediaTemplate {
     }
 
     @Override
-    public Boolean uploadImpl(Media media) {
+    public Media uploadImpl(Media media) throws MediaException {
         return mediaTemplate.uploadImpl(media);
     }
 

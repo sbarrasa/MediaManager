@@ -77,15 +77,14 @@ public class MediaS3 implements MediaTemplate {
     }
 
     @Override
-    public Boolean uploadImpl(Media media) {
+    public Media uploadImpl(Media media) {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.addUserMetadata("crc32", getChecksum(media));
         metadata.setContentLength(media.getLength());
         PutObjectRequest request = new PutObjectRequest(BUCKET, media.getId(), media.getStream(), metadata);
 
-
         amazonS3.putObject(request);
-        return true;
+        return media;
     }
 
     @Override

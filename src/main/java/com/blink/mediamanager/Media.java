@@ -1,11 +1,14 @@
 package com.blink.mediamanager;
 
 import java.io.InputStream;
+import java.net.URL;
 
 public class Media {
 	private String id;
 	private InputStream stream;
-
+	private MediaStatus status;
+	private URL url;
+	
 	private long length;
 	
 	public Media() {
@@ -45,6 +48,22 @@ public class Media {
 
 	public String toString() {
 		return id;
+	}
+
+	public MediaStatus getStatus() {
+		return status;
+	}
+
+	void setStatus(MediaStatus status) {
+		this.status = status;
+	}
+
+	public URL getUrl() {
+		return url;
+	}
+
+	void setUrl(URL url) {
+		this.url = url;
 	}
 	
 }

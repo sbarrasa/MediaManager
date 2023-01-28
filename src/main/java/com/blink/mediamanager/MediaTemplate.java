@@ -7,67 +7,51 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.zip.CRC32;
 
 public interface MediaTemplate {
 
-	default public void upload(Media media, BiConsumer<Media, MediaStatus> callback) {
+	default public void upload(Media media, Consumer<Media> callback) {
 		CompletableFuture.runAsync(() -> {
 			URL url;
 			try {
-				url = upload(media);
-				callback.accept(media, MediaStatus.ok(url));
+				upload(media);
+				callback.accept(media);
 			} catch (Exception e) {
-				callback.accept(media, MediaStatus.err(e));
+				callback.accept(media);
 			}
 		});
 	}
 
-	default public void upload(Collection<Media> medias, BiConsumer<Media, MediaStatus> callback) {
+	default public void upload(Collection<Media> medias, Consumer<Media> callback) {
 		CompletableFuture.runAsync(() -> {
 			medias.forEach(media -> {
-				URL url;
-				
-				try {
-					url = upload(media);
-					callback.accept(media, MediaStatus.ok(url));
-				} catch (Exception e) {
-					callback.accept(media, MediaStatus.err(e));
-				}
+				upload(media);
+				callback.accept(media); 
 			});
 		});
 	}
 	
-	default public URL upload(Media media) throws MediaException {
-		if (!fileExistsInRemote(media)) {
-			Boolean uploaded ;
-			
+	default public Media upload(Media media) {
+		if (!mediaInRemote(media)) {
 			try {
-				uploaded = uploadImpl(media);
+				uploadImpl(media);
+				media.setUrl(getURL(media.getId()));
+				media.setStatus(MediaStatus.ok);
 			}catch(Exception e) {
-				uploaded = false;
+				media.setStatus(MediaStatus.err(e));
 			}
-			
-			if (!uploaded)
-				throw new MediaException(String.format("Can't upload %s", media.getId()));
 		
 		}
-		return getURL(media.getId());
+		return media;
 
 	}
 
-	default public List<URL> upload(Collection<Media> medias) {
-		List<URL> res = new ArrayList<>();
-		medias.forEach(media -> {
-			try {
-				res.add(upload(media));
-			} catch (MediaException e) {
-				System.err.println(e.getMessage());
-			}
-		});
-		return res;
+	default public Collection<Media> upload(Collection<Media> medias) {
+		medias.forEach(media -> upload(media));
+		return medias;
 	}
 
 	default public void delete(Media media) {
@@ -107,7 +91,7 @@ public interface MediaTemplate {
 
 	public String getRemoteChecksum(String id);
 
-	default public boolean fileExistsInRemote(Media media) {
+	default public boolean mediaInRemote(Media media) {
 
 		String remoteChecksum = getRemoteChecksum(media.getId());
 
@@ -116,7 +100,7 @@ public interface MediaTemplate {
 		return fileChecksum.equals(remoteChecksum);
 	};
 
-	public Boolean uploadImpl(Media media);
+	public Media uploadImpl(Media media) throws MediaException;
 
 	public Media get(String id) throws MediaException;
 
