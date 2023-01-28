@@ -1,6 +1,7 @@
 package com.blink.mediamanager;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,7 +40,7 @@ public interface MediaTemplate {
 		});
 	}
 	
-	default public URL upload(Media media) {
+	default public URL upload(Media media) throws MediaException {
 		if (!fileExistsInRemote(media)) {
 			Boolean uploaded ;
 			
@@ -50,7 +51,7 @@ public interface MediaTemplate {
 			}
 			
 			if (!uploaded)
-				throw new MediaError(String.format("Can't upload %s", media.getId()));
+				throw new MediaException(String.format("Can't upload %s", media.getId()));
 		
 		}
 		return getURL(media.getId());
@@ -60,17 +61,27 @@ public interface MediaTemplate {
 	default public List<URL> upload(Collection<Media> medias) {
 		List<URL> res = new ArrayList<>();
 		medias.forEach(media -> {
-			res.add(upload(media));
+			try {
+				res.add(upload(media));
+			} catch (MediaException e) {
+				System.err.println(e.getMessage());
+			}
 		});
 		return res;
 	}
 
+	default public void delete(Media media) {
+		delete(media.getId());
+	}
+
 	public void delete(String id) ;
 
-	default public void delete(List<String> ids) {
-		ids.forEach(id -> {
-			delete(id);
-		});
+	default public void delete(List<Media> medias) {
+		medias.forEach( media -> delete(media));
+	}
+
+	default public void deleteIDs(List<String> ids) {
+		ids.forEach( id -> delete(id));
 	}
 
 	default public List<URL> listURLs() {

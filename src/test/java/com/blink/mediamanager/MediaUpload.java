@@ -50,11 +50,19 @@ public class MediaUpload {
 					stream = new FileInputStream(path.toFile());
 					Media media = new Media(path.getFileName().toString(), stream);
 					Collection<Media> medias = new ImageResizer(media, sizes).getAll();
-					mediaTemplate.upload(medias, this::callback);
+					medias.forEach(mediaL -> {
+						try {
+
+						mediaTemplate.upload(mediaL);
+							
+					} catch (MediaException e) {
+							logger.error("Error {}",mediaL.getId());
+										}
+					});
+//					mediaTemplate.upload(medias, this::callback);
 					
-					
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
+				} catch (Exception e) {
+					logger.error("Error {}",path);
 				}
 				
 			

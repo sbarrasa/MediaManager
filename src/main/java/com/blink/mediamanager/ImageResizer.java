@@ -41,16 +41,16 @@ public class ImageResizer {
         return this;
     }
 
-    public Media getThumbnail() {
+    public Media getThumbnail() throws MediaException {
         return getMap().get(thumbnailSize);
     }
 
 
-    public Collection<Media> getAll() {
+    public Collection<Media> getAll() throws MediaException {
         return getMap().values();
     }
 
-    public Map<Integer, Media> getMap() {
+    public Map<Integer, Media> getMap() throws MediaException {
         if (resizedMap == null)
             build();
 
@@ -58,7 +58,7 @@ public class ImageResizer {
 
     }
 
-    public ImageResizer build() {
+    public ImageResizer build() throws MediaException {
         BufferedImage image = toImg(mediaSource.getStream());
     	this.resizedMap = new HashMap<>();
 
@@ -101,11 +101,11 @@ public class ImageResizer {
 	}
 
 
-	private BufferedImage toImg(InputStream sourceStream) {
+	private BufferedImage toImg(InputStream sourceStream) throws MediaException {
        try {
     	 return ImageIO.read(sourceStream);
 	   } catch (IOException e) {
-	      throw new MediaError(String.format("%s is not an image", mediaSource.getId()));
+	      throw new MediaException(String.format("%s is not an image", mediaSource.getId()));
 	   }
 	}
 
