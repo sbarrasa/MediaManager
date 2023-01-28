@@ -51,7 +51,7 @@ public class MediaUpload {
 					Media media = new Media(path.getFileName().toString(), stream);
 					Collection<Media> medias = new ImageResizer(media, sizes).getAll();
 					medias.forEach(mediaL -> {
-						try {
+					try {
 
 						mediaTemplate.upload(mediaL);
 							
