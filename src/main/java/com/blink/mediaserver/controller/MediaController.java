@@ -28,8 +28,8 @@ public class MediaController implements MediaTemplate {
 
     @ResponseBody
     @RequestMapping(path = MediaEndpoints.UPLOAD, method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public URL upload(@RequestPart() MultipartFile multipartFile) throws IOException, MediaException {
-    	Media media = mediaTemplate.upload(new Media().setId(multipartFile.getOriginalFilename()).setStream(multipartFile.getInputStream()).setLength(multipartFile.getSize()));
+    public URL upload(@RequestPart() MultipartFile multipartFile) throws IOException {
+    	Media media = mediaTemplate.upload(new Media().setId(multipartFile.getOriginalFilename()).setStream(multipartFile.getInputStream()));
     	return media.getUrl();
     }
 
