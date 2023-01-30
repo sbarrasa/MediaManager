@@ -70,11 +70,12 @@ public class ImageResizer {
 	
 	            try {
 					mediaResized.setStream(toStream(resize(image, width)));
-		            resizedMap.put(width, mediaResized);
-		        	
+		         	
 	            } catch (MediaException e) {
+	            	mediaResized.setStatus(MediaStatus.err(e));
 				}
-	
+	         	resizedMap.put(width, mediaResized);
+		   		   
 	        });
 		} catch (MediaException e) {
 			mediaSource.setStatus( MediaStatus.err(e));
