@@ -21,14 +21,16 @@ public class ImageResizer {
     public String ID_POINT = ".";
     public String ID_PATTERN = "_";
     
-    public ImageResizer(Media mediaSource) {
+    public ImageResizer(Media mediaSource) throws MediaException {
        this(mediaSource, defaultSizes);
     }
 
-    public ImageResizer(Media mediaSource, List<Integer> widths) {
+    public ImageResizer(Media mediaSource, List<Integer> widths) throws MediaException {
     	this.mediaSource = mediaSource;
         
         setWidths(widths);
+        build();
+
     }
 
     public List<Integer> getWidths() {

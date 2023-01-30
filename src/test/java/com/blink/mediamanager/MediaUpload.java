@@ -38,7 +38,8 @@ public class MediaUpload {
 
 	@Test
 	public void upload() throws IOException {
-
+		logger.info("Preparing upload");
+		
 		try (Stream<Path> files = Files.list(Path.of(localPath))) {
 			Collection<Media> medias = new ArrayList<>();
 			
@@ -52,7 +53,6 @@ public class MediaUpload {
 					try {
 						medias.addAll(new ImageResizer(media, sizes).getResizes());
 					} catch (MediaException e) {
-						media.setStatus(MediaStatus.err(e));
 						medias.add(media);
 					}
 	
@@ -62,9 +62,9 @@ public class MediaUpload {
 
 			});
 			
-			CompletableFuture<?> future = mediaTemplate.upload(medias, this::callback);
+			CompletableFuture<Collection<Media>> future = mediaTemplate.upload(medias, this::callback);
 			logger.info("End prepare upload");
-					
+			
 			future.join();
 			
 		}
@@ -72,19 +72,14 @@ public class MediaUpload {
 	}
 
 	private void callback(Media media) {
-		switch (media.getStatus()) {
-		case ok:
-			logger.info("Finished upload {} Ok, URL={}", media.getId(), media.getUrl());
-			break;
+		switch(media.getStatus()) {
 		case err:
-			logger.info("Finished upload {} with error: {}", media.getId(),
-					media.getStatus().getException().getMessage());
+			logger.info("{} {}", media.getId(), media.getStatus().getMsg());
 			break;
-		default:
-			logger.info("Unknown finish {} ", media.getId());
-
+		case remoteUploaded:
+			logger.info("{} {} URL={}", media.getId(), media.getStatus(), media.getUrl());
 			break;
-
 		}
+	
 	}
 }

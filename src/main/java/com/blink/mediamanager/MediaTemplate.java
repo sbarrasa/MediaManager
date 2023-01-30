@@ -18,28 +18,17 @@ public interface MediaTemplate {
 		});
 	}
 
-	default public CompletableFuture<Collection<Media>> upload(Collection<Media> medias, Consumer<Media> callback) {
-		return CompletableFuture.supplyAsync(() ->  {
-			
-			medias.forEach(media -> {
-				if(media.getStatus() == MediaStatus.ok)
-					upload(media);
-				
-				callback.accept(media);
-			});
-			return medias;
-		});
-	}
 	
 	default public Media upload(Media media) {
 		media.setUrl(getURL(media.getId()));
 
-		if (!mediaInRemote(media)) {
-		
+		if (mediaInRemote(media)) {
+			media.setStatus(MediaStatus.remoteUnchanged);
+		}else {	
 			try {
-				if(media.getStatus() == MediaStatus.ok) 
-					uploadImpl(media);
-				
+				uploadImpl(media);
+				media.setStatus(MediaStatus.remoteUploaded);
+						
 			}catch(Exception e) {
 				media.setStatus(MediaStatus.err(e));
 			}
@@ -52,6 +41,18 @@ public interface MediaTemplate {
 	default public Collection<Media> upload(Collection<Media> medias) {
 		medias.forEach(media -> upload(media));
 		return medias;
+	}
+
+	default public CompletableFuture<Collection<Media>> upload(Collection<Media> medias, Consumer<Media> callback) {
+		return CompletableFuture.supplyAsync(() ->  {
+			
+			medias.forEach(media -> {
+				upload(media);
+				
+				callback.accept(media);
+			});
+			return medias;
+		});
 	}
 
 	default public void delete(Media media) {
@@ -95,8 +96,9 @@ public interface MediaTemplate {
 		String remoteChecksum = getRemoteChecksum(media.getId());
 
 		String fileChecksum = getChecksum(media);
-
+	
 		return fileChecksum.equals(remoteChecksum);
+	
 	};
 
 	public Media uploadImpl(Media media) ;

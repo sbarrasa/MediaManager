@@ -37,7 +37,7 @@ public class Media {
 	        byte[] bytes = bstream.toByteArray();
 	        this.lenght = bytes.length;
 	        this.stream = new ByteArrayInputStream(bytes);
-	        this.setStatus(MediaStatus.ok);
+	        this.setStatus(MediaStatus.streamLoaded);
         } catch (IOException e) {
             this.setStatus( MediaStatus.err(e));;
         }
