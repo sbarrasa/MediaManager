@@ -81,11 +81,8 @@ public interface MediaTemplate {
 
 	public default String getChecksum(Media media) {
 		CRC32 crc32 = new CRC32();
-		try {
-			crc32.update(media.getStream().readAllBytes());
-		} catch (IOException e) {
-			throw new MediaError(e);
-		}
+		crc32.update(media.getStream().readAllBytes());
+		media.getStream().reset();
 		return String.valueOf(crc32.getValue());
 	}
 

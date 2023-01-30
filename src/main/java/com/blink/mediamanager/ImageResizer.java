@@ -63,6 +63,7 @@ public class ImageResizer {
 
     	try {
 			BufferedImage image = toImage(mediaSource.getStream());
+            mediaSource.getStream().reset();
        
 	        widths.forEach(width -> { 
 	            Media mediaResized = new Media();
