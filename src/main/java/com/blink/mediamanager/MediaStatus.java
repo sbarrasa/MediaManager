@@ -3,7 +3,8 @@ package com.blink.mediamanager;
 
 public enum MediaStatus {
 	ok,
-	err;
+	err,
+	unknown;
 	
 	private Exception exception;
 	
@@ -21,10 +22,11 @@ public enum MediaStatus {
 	}
 
 	public String getMsg() {
-		switch (this) {
-			case ok: return "Ok";
-			case err: return "Err: "+exception.getMessage();
-		}
-		return null;	
+		String msg = this.name();
+		if(this == err
+			&& exception != null)
+			msg = msg + ": " +exception.getMessage();
+		
+		return msg;
 	}
 }

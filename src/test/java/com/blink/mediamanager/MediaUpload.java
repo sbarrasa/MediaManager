@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -34,31 +36,37 @@ public class MediaUpload {
 
 	}
 
-	@SuppressWarnings("static-method")
 	@Test
 	public void upload() throws IOException {
 
 		try (Stream<Path> files = Files.list(Path.of(localPath))) {
+			Collection<Media> medias = new ArrayList<>();
+			
 			files.forEach(path -> {
-
-				logger.info("Processing {}", path.getFileName());
+				logger.info("Getting {}", path.getFileName());
 				InputStream stream;
 				try {
 					stream = new FileInputStream(path.toFile());
 					Media media = new Media(path.getFileName().toString(), stream);
-					Collection<Media> medias = new ImageResizer(media, sizes).getAll();
-					medias.forEach(mediaL -> {
-						mediaTemplate.upload(mediaL);
-
-						logger.info("{}: {}", mediaL.getId(), mediaL.getStatus().getMsg());
-					});
-//					mediaTemplate.upload(medias, this::callback);
+					
+					try {
+						medias.addAll(new ImageResizer(media, sizes).getResizes());
+					} catch (MediaException e) {
+						media.setStatus(MediaStatus.err(e));
+						medias.add(media);
+					}
+	
 				} catch (FileNotFoundException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage());
 				}
 
 			});
-
+			
+			CompletableFuture<?> future = mediaTemplate.upload(medias, this::callback);
+			logger.info("End prepare upload");
+					
+			future.join();
+			
 		}
 		logger.info("End upload");
 	}
@@ -71,6 +79,10 @@ public class MediaUpload {
 		case err:
 			logger.info("Finished upload {} with error: {}", media.getId(),
 					media.getStatus().getException().getMessage());
+			break;
+		default:
+			logger.info("Unknown finish {} ", media.getId());
+
 			break;
 
 		}

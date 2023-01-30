@@ -11,35 +11,37 @@ import java.net.URL;
 public class Media {
     private String id;
     private InputStream stream;
-    private MediaStatus status;
+    private MediaStatus status = MediaStatus.unknown;
     private URL url;
+	private Integer lenght;
 
-    private ByteArrayInputStream bis;
-
+  
     public Media() {
 
     }
 
     public Media(String id, InputStream stream) {
         this.id = id;
-        this.stream = stream;
+        setStream(stream);
 
     }
 
-    public ByteArrayInputStream getStream() {
-        return bis;
+    public InputStream getStream() {
+        return stream;
     }
 
     public Media setStream(InputStream stream) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ByteArrayOutputStream bstream = new ByteArrayOutputStream();
         try {
-            IOUtils.copy(stream, baos);
+            IOUtils.copy(stream, bstream);
+	        byte[] bytes = bstream.toByteArray();
+	        this.lenght = bytes.length;
+	        this.stream = new ByteArrayInputStream(bytes);
+	        this.setStatus(MediaStatus.ok);
         } catch (IOException e) {
-            throw new MediaError(e);
+            this.setStatus( MediaStatus.err(e));;
         }
-        byte[] bytes = baos.toByteArray();
-
-        this.bis = new ByteArrayInputStream(bytes);
+        
         return this;
     }
 
@@ -60,7 +62,7 @@ public class Media {
         return status;
     }
 
-    void setStatus(MediaStatus status) {
+    public void setStatus(MediaStatus status) {
         this.status = status;
     }
 
@@ -71,5 +73,9 @@ public class Media {
     void setUrl(URL url) {
         this.url = url;
     }
+
+	public Integer lenght() {
+		return lenght;
+	}
 
 }

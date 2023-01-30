@@ -41,16 +41,16 @@ public class ImageResizer {
         return this;
     }
 
-    public Media getThumbnail() {
+    public Media getThumbnail() throws MediaException {
         return getMap().get(thumbnailSize);
     }
 
 
-    public Collection<Media> getAll() {
+    public Collection<Media> getResizes() throws MediaException {
         return getMap().values();
     }
 
-    public Map<Integer, Media> getMap() {
+    public Map<Integer, Media> getMap() throws MediaException {
         if (resizedMap == null)
             build();
 
@@ -58,30 +58,24 @@ public class ImageResizer {
 
     }
 
-    public ImageResizer build() {
+    public ImageResizer build() throws MediaException {
         this.resizedMap = new HashMap<>();
 
-    	try {
-			BufferedImage image = toImage(mediaSource.getStream());
-            mediaSource.getStream().reset();
+		BufferedImage image = toImage(mediaSource.getStream());
+        widths.forEach(width -> { 
+            Media mediaResized = new Media();
+            mediaResized.setId(buildId(mediaSource.getId(), width));
+
+            try {
+				mediaResized.setStream(toStream(resize(image, width)));
+	         	
+            } catch (MediaException e) {
+            	mediaResized.setStatus(MediaStatus.err(e));
+			}
+         	resizedMap.put(width, mediaResized);
+	   		   
+        });
        
-	        widths.forEach(width -> { 
-	            Media mediaResized = new Media();
-	            mediaResized.setId(buildId(mediaSource.getId(), width));
-	
-	            try {
-					mediaResized.setStream(toStream(resize(image, width)));
-		         	
-	            } catch (MediaException e) {
-	            	mediaResized.setStatus(MediaStatus.err(e));
-				}
-	         	resizedMap.put(width, mediaResized);
-		   		   
-	        });
-		} catch (MediaException e) {
-			mediaSource.setStatus( MediaStatus.err(e));
-		}
-    
         return this;
     }
 
@@ -102,20 +96,26 @@ public class ImageResizer {
 
 
     private static InputStream toStream(BufferedImage resizedImage) throws MediaException {
-    	ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    	ByteArrayOutputStream stream = new ByteArrayOutputStream();
         
         try {
-			ImageIO.write(resizedImage, "png", baos);
+			ImageIO.write(resizedImage, "png", stream);
 		} catch (IOException e) {
 			throw new MediaException(e);
 		}
-		return new ByteArrayInputStream(baos.toByteArray());
+		return new ByteArrayInputStream(stream.toByteArray());
 	}
 
 
 	private BufferedImage toImage(InputStream sourceStream) throws MediaException {
        try {
-    	 return ImageIO.read(sourceStream);
+    	   BufferedImage image = ImageIO.read(sourceStream);
+    	 	   
+    	   sourceStream.reset();
+    	   if(image == null)
+ 		      throw new MediaException(String.format("No image content for %s ", mediaSource.getId()));
+ 	
+    	   return image;
 	   } catch (IOException e) {
 	      throw new MediaException(String.format("%s is not an image", mediaSource.getId()));
 	   }

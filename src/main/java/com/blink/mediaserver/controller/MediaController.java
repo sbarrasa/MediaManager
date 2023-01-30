@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
+import java.util.Collection;
 
 @Controller
 public class MediaController implements MediaTemplate {
@@ -33,6 +33,12 @@ public class MediaController implements MediaTemplate {
     	return media.getUrl();
     }
 
+    @DeleteMapping("delete_all")
+    @ResponseBody
+    public void deleteAll() {
+        mediaTemplate.delete(mediaTemplate.listIDs());
+    }
+
     @DeleteMapping(MediaEndpoints.DELETE + "/{id}")
     @ResponseBody
     @Override
@@ -44,20 +50,20 @@ public class MediaController implements MediaTemplate {
     @GetMapping(MediaEndpoints.LISTALL_METADATA)
     @ResponseBody
     @Override
-    public List<?> listAllMetadata() {
+    public Collection<?> listAllMetadata() {
         return mediaTemplate.listAllMetadata();
     }
 
     @GetMapping(MediaEndpoints.LIST_URLs)
     @ResponseBody
-    public List<URL> listURLs() {
+    public Collection<URL> listURLs() {
         return mediaTemplate.listURLs();
     }
 
     @GetMapping(MediaEndpoints.LIST_IDS)
     @ResponseBody
     @Override
-    public List<String> listIDs() {
+    public Collection<String> listIDs() {
         return mediaTemplate.listIDs();
     }
 
@@ -70,7 +76,7 @@ public class MediaController implements MediaTemplate {
     }
 
     @Override
-    public Media uploadImpl(Media media) throws MediaException {
+    public Media uploadImpl(Media media) {
         return mediaTemplate.uploadImpl(media);
     }
 

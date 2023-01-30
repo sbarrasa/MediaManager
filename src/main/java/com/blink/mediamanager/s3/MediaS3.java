@@ -1,6 +1,5 @@
 package com.blink.mediamanager.s3;
 
-import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -11,10 +10,8 @@ import com.amazonaws.services.s3.model.*;
 import com.blink.mediamanager.Media;
 import com.blink.mediamanager.MediaError;
 import com.blink.mediamanager.MediaException;
+import com.blink.mediamanager.MediaStatus;
 import com.blink.mediamanager.MediaTemplate;
-import org.apache.commons.io.IOUtils;
-
-import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -82,9 +79,8 @@ public class MediaS3 implements MediaTemplate {
     public Media uploadImpl(Media media) {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.addUserMetadata("crc32", getChecksum(media));
-
-        PutObjectRequest request = new PutObjectRequest(BUCKET, media.getId(), media.getStream() , metadata);
-
+        metadata.setContentLength(media.lenght());
+        PutObjectRequest request = new PutObjectRequest( BUCKET, media.getId(), media.getStream() , metadata);
         amazonS3.putObject(request);
         return media;
     }

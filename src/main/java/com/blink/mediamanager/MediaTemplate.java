@@ -1,11 +1,8 @@
 package com.blink.mediamanager;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -13,33 +10,36 @@ import java.util.zip.CRC32;
 
 public interface MediaTemplate {
 
-	default public void upload(Media media, Consumer<Media> callback) {
-		CompletableFuture.runAsync(() -> {
-			URL url;
-			try {
-				upload(media);
-				callback.accept(media);
-			} catch (Exception e) {
-				callback.accept(media);
-			}
+	default public CompletableFuture<Media> upload(Media media, Consumer<Media> callback) {
+		return CompletableFuture.supplyAsync(() -> {
+			upload(media);
+			callback.accept(media);
+			return media;
 		});
 	}
 
-	default public void upload(Collection<Media> medias, Consumer<Media> callback) {
-		CompletableFuture.runAsync(() -> {
+	default public CompletableFuture<Collection<Media>> upload(Collection<Media> medias, Consumer<Media> callback) {
+		return CompletableFuture.supplyAsync(() ->  {
+			
 			medias.forEach(media -> {
-				upload(media);
-				callback.accept(media); 
+				if(media.getStatus() == MediaStatus.ok)
+					upload(media);
+				
+				callback.accept(media);
 			});
+			return medias;
 		});
 	}
 	
 	default public Media upload(Media media) {
+		media.setUrl(getURL(media.getId()));
+
 		if (!mediaInRemote(media)) {
+		
 			try {
-				uploadImpl(media);
-				media.setUrl(getURL(media.getId()));
-				media.setStatus(MediaStatus.ok);
+				if(media.getStatus() == MediaStatus.ok) 
+					uploadImpl(media);
+				
 			}catch(Exception e) {
 				media.setStatus(MediaStatus.err(e));
 			}
@@ -60,29 +60,31 @@ public interface MediaTemplate {
 
 	public void delete(String id) ;
 
-	default public void delete(List<Media> medias) {
-		medias.forEach( media -> delete(media));
-	}
 
-	default public void deleteIDs(List<String> ids) {
+	default public void delete(Collection<String> ids) {
 		ids.forEach( id -> delete(id));
 	}
 
-	default public List<URL> listURLs() {
+	default public Collection<URL> listURLs() {
 		return listIDs().stream().map(this::getURL).collect(Collectors.toList());
 
 	}
 
-	public List<String> listIDs();
+	public Collection<String> listIDs();
 
-	public List<?> listAllMetadata();
+	public Collection<?> listAllMetadata();
 
 	public URL getURL(String id);
 
 	public default String getChecksum(Media media) {
 		CRC32 crc32 = new CRC32();
-		crc32.update(media.getStream().readAllBytes());
-		media.getStream().reset();
+		try {
+			crc32.update(media.getStream().readAllBytes());
+			media.getStream().reset();
+			
+		} catch (IOException e) {
+			media.setStatus(MediaStatus.err(e));
+		}
 		return String.valueOf(crc32.getValue());
 	}
 
@@ -97,7 +99,7 @@ public interface MediaTemplate {
 		return fileChecksum.equals(remoteChecksum);
 	};
 
-	public Media uploadImpl(Media media) throws MediaException;
+	public Media uploadImpl(Media media) ;
 
 	public Media get(String id) throws MediaException;
 
