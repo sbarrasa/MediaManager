@@ -44,11 +44,11 @@ public class MediaUpload {
 			
 			files.forEach(path -> {
 				logger.info("Getting {}", path.getFileName());
-				InputStream stream;
 				try { 
-					stream = new FileInputStream(path.toFile());
-					Media media = new Media(path.getFileName().toString(), stream);
-					media.setContentType(Files.probeContentType(path));
+					Media media = new Media()
+										.setId(path.getFileName().toString())
+										.setStream(new FileInputStream(path.toFile()))
+										.setContentType(Files.probeContentType(path));
 					try {
 						medias.addAll(new ImageResizer(media, sizes).getResizes());
 					} catch (MediaException e) {
@@ -62,6 +62,7 @@ public class MediaUpload {
 			});
 			
 			CompletableFuture<Collection<Media>> future = mediaTemplate.upload(medias, this::callback);
+			
 			logger.info("End prepare upload");
 			
 			future.join();
@@ -77,6 +78,8 @@ public class MediaUpload {
 			break;
 		case remoteUploaded:
 			logger.info("{} {} URL={}", media.getId(), media.getStatus(), media.getUrl());
+			break;
+		default:
 			break;
 		}
 	

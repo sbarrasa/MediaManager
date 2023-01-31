@@ -88,8 +88,9 @@ public class Media {
 		return contentType;
 	}
 
-	public void setContentType(String contentType) {
+	public Media setContentType(String contentType) {
 		this.contentType = contentType;
+		return this;
 	}
 
 }
