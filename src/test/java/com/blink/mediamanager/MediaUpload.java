@@ -1,7 +1,6 @@
 package com.blink.mediamanager;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -26,7 +25,7 @@ public class MediaUpload {
 	private static final String s3Path = "s3.sa-east-1.amazonaws.com";
 	private static MediaTemplate mediaTemplate;
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	private final List<Integer> sizes = List.of(ImageResizer.sourceSize, ImageResizer.thumbnailSize, 400, 800);
+	private final List<Integer> sizes = List.of(ImageResizer.sourceWidth, ImageResizer.thumbnailWidth, 400, 800);
 
 	public MediaUpload() throws IOException {
 		((ch.qos.logback.classic.Logger) LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME))
@@ -46,17 +45,17 @@ public class MediaUpload {
 			files.forEach(path -> {
 				logger.info("Getting {}", path.getFileName());
 				InputStream stream;
-				try {
+				try { 
 					stream = new FileInputStream(path.toFile());
 					Media media = new Media(path.getFileName().toString(), stream);
-					
+					media.setContentType(Files.probeContentType(path));
 					try {
 						medias.addAll(new ImageResizer(media, sizes).getResizes());
 					} catch (MediaException e) {
 						medias.add(media);
 					}
 	
-				} catch (FileNotFoundException e) {
+				} catch (IOException e) {
 					logger.error(e.getMessage());
 				}
 

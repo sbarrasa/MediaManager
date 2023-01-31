@@ -14,18 +14,19 @@ import java.util.Map;
 public class ImageResizer {
     public Media mediaSource;
     public Map<Integer, Media> resizedMap;
-    public List<Integer> widths;
-    public static Integer thumbnailSize = 100;
-    public static final Integer sourceSize = -1;
-    public static final List<Integer> defaultSizes = List.of(sourceSize, thumbnailSize);
+    public Collection<Integer> widths;
+    public static Integer thumbnailWidth = 100;
+    public static final Integer sourceWidth = -1;
+    public static final Collection<Integer> defaultWidths = List.of(sourceWidth, thumbnailWidth);
+    public String ID_THUMBNAIL = "thmb";
     public String ID_POINT = ".";
     public String ID_PATTERN = "_";
     
     public ImageResizer(Media mediaSource) throws MediaException {
-       this(mediaSource, defaultSizes);
+       this(mediaSource, defaultWidths);
     }
 
-    public ImageResizer(Media mediaSource, List<Integer> widths) throws MediaException {
+    public ImageResizer(Media mediaSource, Collection<Integer> widths) throws MediaException {
     	this.mediaSource = mediaSource;
         
         setWidths(widths);
@@ -33,18 +34,14 @@ public class ImageResizer {
 
     }
 
-    public List<Integer> getWidths() {
+    public Collection<Integer> getWidths() {
         return widths;
     }
 
-    public ImageResizer setWidths(List<Integer> widths) {
+    public ImageResizer setWidths(Collection<Integer> widths) {
         this.widths = widths;
         this.resizedMap = null;
         return this;
-    }
-
-    public Media getThumbnail() throws MediaException {
-        return getMap().get(thumbnailSize);
     }
 
 
@@ -67,7 +64,7 @@ public class ImageResizer {
         widths.forEach(width -> { 
             Media mediaResized = new Media();
             mediaResized.setId(buildId(mediaSource.getId(), width));
-
+            mediaResized.setContentType(mediaSource.getContentType());
             try {
 				mediaResized.setStream(toStream(resize(image, width)));
 	         	
@@ -84,7 +81,7 @@ public class ImageResizer {
 
 
 	private static BufferedImage resize(BufferedImage image, Integer width) {
-        if(width == sourceSize)
+        if(width == sourceWidth)
         	return image;
         
         int height = (int) (image.getHeight() * ((double) width / image.getWidth()));
@@ -124,15 +121,21 @@ public class ImageResizer {
 	}
 
     private String buildId(String id, Integer width) {
-    	if(width == sourceSize)
+    	if(width == sourceWidth)
     		return id;
+    	
+    	String sufix ;
+    	if(width == thumbnailWidth)
+    		sufix = ID_THUMBNAIL;
+   		else
+        	sufix = width.toString();
     	
     	int pointPos = id.indexOf(ID_POINT);
     	
     	if(pointPos <= 0)
     		return id + ID_PATTERN + width;
     	
-    	return id.substring(0,pointPos ) + ID_PATTERN + width + id.substring(pointPos);
+    	return id.substring(0,pointPos ) + ID_PATTERN + sufix + id.substring(pointPos);
 
  	}
 	

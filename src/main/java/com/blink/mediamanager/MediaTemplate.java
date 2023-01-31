@@ -22,7 +22,7 @@ public interface MediaTemplate {
 	default public Media upload(Media media) {
 		media.setUrl(getURL(media.getId()));
 
-		if (mediaInRemote(media)) {
+		if (isInRemote(media)) {
 			media.setStatus(MediaStatus.remoteUnchanged);
 		}else {	
 			try {
@@ -91,7 +91,7 @@ public interface MediaTemplate {
 
 	public String getRemoteChecksum(String id);
 
-	default public boolean mediaInRemote(Media media) {
+	default public boolean isInRemote(Media media) {
 
 		String remoteChecksum = getRemoteChecksum(media.getId());
 
@@ -101,7 +101,7 @@ public interface MediaTemplate {
 	
 	};
 
-	public Media uploadImpl(Media media) ;
+	public Media uploadImpl(Media media) throws MediaException;
 
 	public Media get(String id) throws MediaException;
 

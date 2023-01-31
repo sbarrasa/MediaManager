@@ -11,6 +11,9 @@ public enum MediaStatus {
 	private Exception exception;
 	
 	public Exception getException() {
+		if(this == err
+			&& exception == null)
+			exception = new MediaException("Unknown error");
 		return exception;
 	}
 
@@ -23,9 +26,8 @@ public enum MediaStatus {
 
 	public String getMsg() {
 		String msg = this.name();
-		if(this == err
-			&& exception != null)
-			msg = msg + ": " +exception.getMessage();
+		if(this == err)
+			msg = msg + ": " +getException().getMessage();
 		
 		return msg;
 	}

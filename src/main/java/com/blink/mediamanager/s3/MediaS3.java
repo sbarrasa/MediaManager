@@ -10,7 +10,6 @@ import com.amazonaws.services.s3.model.*;
 import com.blink.mediamanager.Media;
 import com.blink.mediamanager.MediaError;
 import com.blink.mediamanager.MediaException;
-import com.blink.mediamanager.MediaStatus;
 import com.blink.mediamanager.MediaTemplate;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -76,10 +75,11 @@ public class MediaS3 implements MediaTemplate {
     }
 
     @Override
-    public Media uploadImpl(Media media) {
+    public Media uploadImpl(Media media) throws MediaException {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.addUserMetadata("crc32", getChecksum(media));
         metadata.setContentLength(media.lenght());
+        metadata.setContentType(media.getContentType());
         PutObjectRequest request = new PutObjectRequest( BUCKET, media.getId(), media.getStream() , metadata);
         amazonS3.putObject(request);
         return media;

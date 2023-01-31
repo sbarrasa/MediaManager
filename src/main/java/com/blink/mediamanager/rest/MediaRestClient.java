@@ -60,7 +60,7 @@ public class MediaRestClient implements MediaTemplate {
 	}
 
 	@Override
-	public Media uploadImpl(Media media) {
+	public Media uploadImpl(Media media) throws MediaException{
 		return rest.postForObject(MediaEndpoints.UPLOAD, media, Media.class);
 	}
 

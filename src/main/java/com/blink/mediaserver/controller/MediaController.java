@@ -12,11 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.blink.mediamanager.MediaTemplate;
 import com.blink.mediamanager.rest.MediaEndpoints;
 import com.blink.mediamanager.Media;
-import com.blink.mediamanager.MediaError;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 
@@ -76,7 +73,7 @@ public class MediaController implements MediaTemplate {
     }
 
     @Override
-    public Media uploadImpl(Media media) {
+    public Media uploadImpl(Media media) throws MediaException {
         return mediaTemplate.uploadImpl(media);
     }
 

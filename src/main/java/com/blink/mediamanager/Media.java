@@ -6,7 +6,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class Media {
     private String id;
@@ -14,14 +17,15 @@ public class Media {
     private MediaStatus status = MediaStatus.unknown;
     private URL url;
 	private Integer lenght;
+	private String contentType;
 
   
     public Media() {
-
     }
 
     public Media(String id, InputStream stream) {
-        this.id = id;
+        this();
+    	this.id = id;
         setStream(stream);
 
     }
@@ -50,11 +54,13 @@ public class Media {
     }
 
     public Media setId(String id) {
-        this.id = id;
+    	this.id = id;
         return this;
     }
 
-    public String toString() {
+    
+
+	public String toString() {
         return id;
     }
 
@@ -76,6 +82,14 @@ public class Media {
 
 	public Integer lenght() {
 		return lenght;
+	}
+
+	public String getContentType() {
+		return contentType;
+	}
+
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
 	}
 
 }
