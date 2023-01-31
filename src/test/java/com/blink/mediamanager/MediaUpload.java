@@ -1,87 +1,83 @@
 package com.blink.mediamanager;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.blink.mediamanager.s3.MediaS3;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
 
+import com.blink.mediamanager.local.MediaLocal;
+
+@SpringBootTest(classes = { com.blink.mediaserver.conf.MediaTemplateConfig.class} )
 public class MediaUpload {
-	private static final String localPath = "/home/zaiper/Blink/img";
-	private static final String accessKey = "AKIAXR53AKFBEO3LNYAC";
-	private static final String secretKey = "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";
-	private static final String region = "sa-east-1";
-	private static final String bucket = "test-blink";
-	private static final String s3Path = "s3.sa-east-1.amazonaws.com";
-	private static MediaTemplate mediaTemplate;
+	
+	@Value("${com.blink.mediamanager.source.path}")
+	private String sourcePath;
+
+	private MediaLocal mediaSource;
+
+	@Autowired
+	private MediaTemplate mediaTemplate;
+
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final List<Integer> sizes = List.of(ImageResizer.sourceWidth, ImageResizer.thumbnailWidth, 400, 800);
 
-	public MediaUpload() throws IOException {
-		((ch.qos.logback.classic.Logger) LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME))
-				.setLevel(ch.qos.logback.classic.Level.INFO);
-
-		mediaTemplate = new MediaS3(accessKey, secretKey, region, bucket, s3Path);
-
-	}
-
 	@Test
 	public void upload() throws IOException {
-		logger.info("Preparing upload");
-		
-		try (Stream<Path> files = Files.list(Path.of(localPath))) {
-			Collection<Media> medias = new ArrayList<>();
-			
-			files.forEach(path -> {
-				logger.info("Getting {}", path.getFileName());
-				try { 
-					Media media = new Media()
-										.setId(path.getFileName().toString())
-										.setStream(new FileInputStream(path.toFile()))
-										.setContentType(Files.probeContentType(path));
-					try {
-						medias.addAll(new ImageResizer(media, sizes).getResizes());
-					} catch (MediaException e) {
-						medias.add(media);
-					}
+		logger.info("Preparing upload using {}", mediaTemplate.getClass().getName());
+
+		mediaSource =  new MediaLocal(sourcePath);
+
 	
-				} catch (IOException e) {
-					logger.error(e.getMessage());
+		Collection<Media> medias = new ArrayList<>();
+		
+		mediaSource.listIDs().forEach(id -> {
+			logger.info("Getting {}", id);
+			try {	
+				Media media = mediaSource.get(id);
+				
+				try {
+					medias.addAll(new ImageResizer(media, sizes).getResizes());
+				} catch (MediaException e) {
+					medias.add(media);
 				}
 
-			});
+			} catch (MediaException e) {
+				logger.error(e.getMessage());
+			}
 			
-			CompletableFuture<Collection<Media>> future = mediaTemplate.upload(medias, this::callback);
-			
-			logger.info("End prepare upload");
-			
-			future.join();
-			
-		}
+
+		});
+		logger.info("Uploading");
+
+		CompletableFuture<Collection<Media>> future = mediaTemplate.upload(medias, this::callback);
+
+
+		future.join();
+
 		logger.info("End upload");
 	}
 
 	private void callback(Media media) {
-		switch(media.getStatus()) {
+		switch (media.getStatus()) {
 		case err:
 			logger.info("{} {}", media.getId(), media.getStatus().getMsg());
 			break;
-		case remoteUploaded:
+		case uploaded:
 			logger.info("{} {} URL={}", media.getId(), media.getStatus(), media.getUrl());
 			break;
 		default:
 			break;
 		}
-	
+
 	}
 }

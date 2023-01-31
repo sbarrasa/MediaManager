@@ -94,17 +94,32 @@ public class ImageResizer {
     }
 
 
-    private static InputStream toStream(BufferedImage resizedImage) throws MediaException {
+    private InputStream toStream(BufferedImage resizedImage) throws MediaException {
     	ByteArrayOutputStream stream = new ByteArrayOutputStream();
         
         try {
-			ImageIO.write(resizedImage, "png", stream);
+			ImageIO.write(resizedImage, getFormatName() , stream);
 		} catch (IOException e) {
 			throw new MediaException(e);
 		}
 		return new ByteArrayInputStream(stream.toByteArray());
 	}
 
+
+	private String getFormatName() {
+		switch(mediaSource.getContentType()) {
+		case "image/jpg":
+			return "jpeg";
+		case "image/jpeg":
+			return "jpeg";
+		case "image/png":
+			return  "png";
+		case "image/gif":
+			return  "gif";
+		}
+
+		return null;
+	}
 
 	private BufferedImage toImage(InputStream sourceStream) throws MediaException {
        try {
