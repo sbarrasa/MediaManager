@@ -31,7 +31,7 @@ public class MediaS3 implements MediaTemplate {
     		  System.getProperty("aws.secret.access.key"),
     		  System.getProperty("aws.s3.region"),
     		  System.getProperty("aws.s3.bucket.name"),
-    		  System.getProperty("com.blink.mediamanager.mediaserver.path"));
+    		  System.getProperty("com.blink.mediamanager.server.path"));
     }
 
     public MediaS3(String accessKey, 
@@ -105,7 +105,7 @@ public class MediaS3 implements MediaTemplate {
 
 
     @Override
-    public String getRemoteChecksum(String id) {
+    public String getServerChecksum(String id) {
         try {
             return amazonS3.getObject(BUCKET, id).getObjectMetadata().getUserMetadata().get("crc32");
         } catch (Exception e) {

@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import java.util.zip.CRC32;
 
 public interface MediaTemplate {
-
+	
 	default public CompletableFuture<Media> upload(Media media, Consumer<Media> callback) {
 		return CompletableFuture.supplyAsync(() -> {
 			upload(media);
@@ -20,19 +20,16 @@ public interface MediaTemplate {
 
 	
 	default public Media upload(Media media) {
-		media.setUrl(getURL(media.getId()));
-
-		if (isInRemote(media)) {
-			media.setStatus(MediaStatus.remoteUnchanged);
-		}else {	
-			try {
+		try {
+			media.setUrl(getURL(media.getId()));
+			if (inServer(media)) {
+				media.setStatus(MediaStatus.unchanged);
+			}else {	
 				uploadImpl(media);
-				media.setStatus(MediaStatus.remoteUploaded);
-						
-			}catch(Exception e) {
-				media.setStatus(MediaStatus.err(e));
+				media.setStatus(MediaStatus.uploaded);
 			}
-		
+		}catch(Exception e) {
+			media.setStatus(MediaStatus.err(e));
 		}
 		return media;
 
@@ -55,19 +52,30 @@ public interface MediaTemplate {
 		});
 	}
 
-	default public void delete(Media media) {
+	default public void delete(Media media) throws MediaException {
 		delete(media.getId());
 	}
 
-	public void delete(String id) ;
+	public void delete(String id) throws MediaException ;
 
 
 	default public void delete(Collection<String> ids) {
-		ids.forEach( id -> delete(id));
+		ids.forEach( id -> {
+			try {
+				delete(id);
+			} catch (MediaException e) {
+			}
+		});
 	}
 
 	default public Collection<URL> listURLs() {
-		return listIDs().stream().map(this::getURL).collect(Collectors.toList());
+		return listIDs().stream().map(id -> {
+			try {
+				return getURL(id);
+			} catch (MediaException e) {
+				return null;
+			}
+		}).collect(Collectors.toList());
 
 	}
 
@@ -75,7 +83,7 @@ public interface MediaTemplate {
 
 	public Collection<?> listAllMetadata();
 
-	public URL getURL(String id);
+	public URL getURL(String id) throws MediaException;
 
 	public default String getChecksum(Media media) {
 		CRC32 crc32 = new CRC32();
@@ -89,11 +97,11 @@ public interface MediaTemplate {
 		return String.valueOf(crc32.getValue());
 	}
 
-	public String getRemoteChecksum(String id);
+	public String getServerChecksum(String id);
 
-	default public boolean isInRemote(Media media) {
+	default public boolean inServer(Media media) {
 
-		String remoteChecksum = getRemoteChecksum(media.getId());
+		String remoteChecksum = getServerChecksum(media.getId());
 
 		String fileChecksum = getChecksum(media);
 	

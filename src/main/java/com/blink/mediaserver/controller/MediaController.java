@@ -14,6 +14,7 @@ import com.blink.mediamanager.rest.MediaEndpoints;
 import com.blink.mediamanager.Media;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 
@@ -39,7 +40,7 @@ public class MediaController implements MediaTemplate {
     @DeleteMapping(MediaEndpoints.DELETE + "/{id}")
     @ResponseBody
     @Override
-    public void delete(@PathVariable String id) {
+    public void delete(@PathVariable String id) throws MediaException {
         mediaTemplate.delete(id);
     }
 
@@ -68,7 +69,7 @@ public class MediaController implements MediaTemplate {
     @GetMapping(MediaEndpoints.REMOTE_URL + "/{id}")
     @ResponseBody
     @Override
-    public URL getURL(@PathVariable String id) {
+    public URL getURL(@PathVariable String id) throws MediaException {
         return mediaTemplate.getURL(id);
     }
 
@@ -86,7 +87,7 @@ public class MediaController implements MediaTemplate {
 
     @GetMapping(value=(MediaEndpoints.GET + "{id}"), produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @ResponseBody
-    public ResponseEntity<?> getEntity(@PathVariable String id) {
+    public ResponseEntity<?> getEntity(@PathVariable String id) throws MediaException {
         UrlResource resource;
         resource = new UrlResource(mediaTemplate.getURL(id));
         if(!resource.exists())
@@ -98,8 +99,8 @@ public class MediaController implements MediaTemplate {
     @GetMapping(MediaEndpoints.REMOTE_CHECKSUM + "{id}")
     @ResponseBody
     @Override
-    public String getRemoteChecksum(String id) {
-        return mediaTemplate.getRemoteChecksum(id);
+    public String getServerChecksum(String id) {
+        return mediaTemplate.getServerChecksum(id);
     }
 
     

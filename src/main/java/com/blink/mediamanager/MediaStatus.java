@@ -4,8 +4,8 @@ package com.blink.mediamanager;
 public enum MediaStatus {
 	unknown,
 	streamLoaded,
-	remoteUnchanged,
-	remoteUploaded,
+	unchanged,
+	uploaded,
 	err;
 	
 	private Exception exception;

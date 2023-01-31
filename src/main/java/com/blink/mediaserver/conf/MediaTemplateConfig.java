@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.blink.mediamanager.MediaError;
 import com.blink.mediamanager.MediaTemplate;
+import com.blink.mediamanager.local.MediaLocal;
 import com.blink.mediamanager.s3.MediaS3;
 
 @Configuration
@@ -16,17 +17,23 @@ public class MediaTemplateConfig {
 	
 	@SuppressWarnings("static-method")
 	@Bean
+	public MediaLocal localMedia(@Value("${com.blink.mediamanager.localserver.path}") String path) {
+		return new MediaLocal(path);
+	}
+	
+	@SuppressWarnings("static-method")
+	@Bean
     public MediaS3 s3(@Value("${aws.access.key.id}") String accessKey,
     	    @Value("${aws.secret.access.key}") String secretKey,
     	    @Value("${aws.s3.region}") String region,
     	    @Value("${aws.s3.bucket.name}") String bucket,
-    	    @Value("${com.blink.mediamanager.mediaserver.path}") String path) {
+    	    @Value("${com.blink.mediamanager.server.path}") 
+    		String path) {
 
 		return new MediaS3(accessKey, secretKey, region, bucket, path);
 		
 	}
 	
-    
 	
 	@Bean 
 	MediaTemplate mediaTemplate(@Value("${com.blink.mediamanager.class}") String className) {

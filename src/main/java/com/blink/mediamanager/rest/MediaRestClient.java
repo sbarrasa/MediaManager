@@ -55,7 +55,7 @@ public class MediaRestClient implements MediaTemplate {
 	}
 
 	@Override
-	public String getRemoteChecksum(String id) {
+	public String getServerChecksum(String id) {
 		return rest.getForObject(MediaEndpoints.REMOTE_CHECKSUM, String.class, id);
 	}
 
