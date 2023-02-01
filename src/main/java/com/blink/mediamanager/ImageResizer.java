@@ -19,7 +19,7 @@ public class ImageResizer {
     public static final Integer sourceWidth = -1;
     public static final Collection<Integer> defaultWidths = List.of(sourceWidth, thumbnailWidth);
     public String ID_THUMBNAIL = "thmb";
-    public String ID_POINT = ".";
+    public String TYPE_SEPARATOR = ".";
     public String ID_PATTERN = "_";
     
     public ImageResizer(Media mediaSource) throws MediaException {
@@ -98,7 +98,7 @@ public class ImageResizer {
     	ByteArrayOutputStream stream = new ByteArrayOutputStream();
         
         try {
-			ImageIO.write(resizedImage, getFormatName() , stream);
+			ImageIO.write(resizedImage, getType(mediaSource.getId()) , stream);
 		} catch (IOException e) {
 			throw new MediaException(e);
 		}
@@ -106,20 +106,6 @@ public class ImageResizer {
 	}
 
 
-	private String getFormatName() {
-		switch(mediaSource.getContentType()) {
-		case "image/jpg":
-			return "jpeg";
-		case "image/jpeg":
-			return "jpeg";
-		case "image/png":
-			return  "png";
-		case "image/gif":
-			return  "gif";
-		}
-
-		return null;
-	}
 
 	private BufferedImage toImage(InputStream sourceStream) throws MediaException {
        try {
@@ -145,14 +131,22 @@ public class ImageResizer {
    		else
         	sufix = width.toString();
     	
-    	int pointPos = id.indexOf(ID_POINT);
+    	int typeSeparatorPos = id.lastIndexOf(TYPE_SEPARATOR);
     	
-    	if(pointPos <= 0)
+    	if(typeSeparatorPos <= 0)
     		return id + ID_PATTERN + width;
     	
-    	return id.substring(0,pointPos ) + ID_PATTERN + sufix + id.substring(pointPos);
+    	return id.substring(0,typeSeparatorPos ) + ID_PATTERN + sufix + id.substring(typeSeparatorPos);
 
  	}
-	
+
+	private String getType(String id) {
+		int typeSeparatorPos = id.lastIndexOf(TYPE_SEPARATOR);
+		if (typeSeparatorPos > 0) 
+		    return id.substring(typeSeparatorPos +1);
+		return null;
+	}
+
+    
     
 }
