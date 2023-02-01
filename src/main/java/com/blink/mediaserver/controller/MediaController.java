@@ -14,7 +14,6 @@ import com.blink.mediamanager.rest.MediaEndpoints;
 import com.blink.mediamanager.Media;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 

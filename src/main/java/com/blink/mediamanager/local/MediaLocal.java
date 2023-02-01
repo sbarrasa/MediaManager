@@ -15,25 +15,34 @@ import com.blink.mediamanager.MediaException;
 import com.blink.mediamanager.MediaTemplate;
 
 public class MediaLocal implements MediaTemplate {
-	private String serverPath;
 	private Path path;
+	private String localProtocol = "file";
+	private String localHost = "localhost";
 
 	private Path getPath(String id) {
-		return Path.of(serverPath, id);
+		return Path.of(path.toString(), id);
 	}
 
 	private Path getPath() {
-		if(path == null)
-			path = Path.of(serverPath);
 		return path;
 	}
 	
 	public MediaLocal() {
-		  this(System.getProperty("com.blink.mediamanager.server.path"));
+		
 	}
 	
-	public MediaLocal(String serverPath) { 
-		this.serverPath = serverPath;
+	public MediaLocal(String pathStr) { 
+		setPath(pathStr);
+	}
+
+	public MediaLocal setPath(Path path) {
+		this.path = path;
+		return this;
+	}
+
+	public MediaLocal setPath(String pathStr) {
+		this.path = Path.of(pathStr);
+		return this;
 	}
 
 	@Override
@@ -67,7 +76,7 @@ public class MediaLocal implements MediaTemplate {
 	@Override
 	public URL getURL(String id) throws MediaException {
 		try {
-			return new URL("file", "localhost", getPath(id).toString());
+			return new URL(localProtocol, localHost, getPath(id).toString());
 		} catch (MalformedURLException e) {
 			throw new MediaException(e);
 		}

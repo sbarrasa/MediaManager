@@ -10,6 +10,11 @@ import java.util.zip.CRC32;
 
 public interface MediaTemplate {
 	
+	@SuppressWarnings("unused")
+	default public MediaTemplate setPath(String pathStr) {
+		return this;
+	}
+	
 	default public CompletableFuture<Media> upload(Media media, Consumer<Media> callback) {
 		return CompletableFuture.supplyAsync(() -> {
 			upload(media);

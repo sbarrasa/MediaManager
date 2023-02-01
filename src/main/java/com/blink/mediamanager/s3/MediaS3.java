@@ -19,40 +19,14 @@ import java.util.stream.Collectors;
 public class MediaS3 implements MediaTemplate {
 
 	
-    private String PATH; 
-
-    private String BUCKET;
-
+    private String path; 
+    private String bucket;
+    private String accessKey;
+    private String secretKey; 
+    private String region; 
+	
     private AmazonS3 amazonS3;
 
-    
-    public MediaS3() {
-    	this( System.getProperty("aws.access.key.id"),
-    		  System.getProperty("aws.secret.access.key"),
-    		  System.getProperty("aws.s3.region"),
-    		  System.getProperty("aws.s3.bucket.name"),
-    		  System.getProperty("com.blink.mediamanager.server.path"));
-    }
-
-    public MediaS3(String accessKey, 
-		    		String secretKey, 
-		    		String region, 
-		    		String bucket, 
-		    		String path) {
-
-    	this.BUCKET = bucket;
-    	this.PATH = path;
-    	
-    	AWSCredentials awsCredentials =
-                new BasicAWSCredentials(accessKey, secretKey);
-        
-    	amazonS3 = AmazonS3ClientBuilder
-                .standard()
-                .withRegion(region)
-                .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
-                .build();
-
-	}
 
 	@Override
     public List<String> listIDs() {
@@ -62,13 +36,13 @@ public class MediaS3 implements MediaTemplate {
 
     @Override
     public List<?> listAllMetadata() {
-        return amazonS3.listObjects(BUCKET).getObjectSummaries();
+        return getAmazonS3().listObjects(bucket).getObjectSummaries();
     }
 
     @Override
     public URL getURL(String id) {
         try {
-			return new URL(String.format("https://%s.%s/%s", BUCKET, PATH, id));
+			return new URL(String.format("https://%s.%s/%s", bucket, path, id));
 		} catch (MalformedURLException e) {
 			throw new MediaError(e);
 		}
@@ -80,8 +54,8 @@ public class MediaS3 implements MediaTemplate {
         metadata.addUserMetadata("crc32", getChecksum(media));
         metadata.setContentLength(media.lenght());
         metadata.setContentType(media.getContentType());
-        PutObjectRequest request = new PutObjectRequest( BUCKET, media.getId(), media.getStream() , metadata);
-        amazonS3.putObject(request);
+        PutObjectRequest request = new PutObjectRequest( bucket, media.getId(), media.getStream() , metadata);
+        getAmazonS3().putObject(request);
         return media;
     }
 
@@ -89,7 +63,7 @@ public class MediaS3 implements MediaTemplate {
     public Media get(String id) throws MediaException {
     	S3Object s3Object ;
     	try {
-            s3Object = amazonS3.getObject(BUCKET, id);
+            s3Object = getAmazonS3().getObject(bucket, id);
             
         } catch (SdkClientException e) {
             throw new MediaException(e);
@@ -100,20 +74,82 @@ public class MediaS3 implements MediaTemplate {
 
     @Override
     public void delete(String id) {
-       amazonS3.deleteObject(new DeleteObjectRequest(BUCKET, id));
+    	getAmazonS3().deleteObject(new DeleteObjectRequest(bucket, id));
     }
 
 
     @Override
     public String getServerChecksum(String id) {
         try {
-            return amazonS3.getObject(BUCKET, id).getObjectMetadata().getUserMetadata().get("crc32");
+            return getAmazonS3().getObject(bucket, id).getObjectMetadata().getUserMetadata().get("crc32");
         } catch (Exception e) {
             return null;
         }
     }
 
+	@Override
+	public MediaS3 setPath(String pathStr) {
+		this.path = pathStr;
+		return this;
+	}
 
+	public String getBucket() {
+		return bucket;
+	}
+
+	public MediaS3 setBucket(String bucket) {
+		this.bucket = bucket;
+		return this;
+	}
+
+	public String getAccessKey() {
+		return accessKey;
+	}
+
+	public MediaS3 setAccessKey(String accessKey) {
+		this.accessKey = accessKey;
+		return this;
+	}
+
+	public String getSecretKey() {
+		return secretKey;
+	}
+
+	public MediaS3 setSecretKey(String secretKey) {
+		this.secretKey = secretKey;
+		return this;
+	}
+
+	public String getRegion() {
+		return region;
+	}
+
+	public MediaS3 setRegion(String region) {
+		this.region = region;
+		return this;
+	}
+
+
+
+	public String getPath() {
+		return path;
+	}
+
+	public AmazonS3 getAmazonS3() {
+		if(amazonS3 == null)
+			amazonS3 = buildAmazonS3();
 		
-	
+		return amazonS3;
+	}
+
+	private AmazonS3 buildAmazonS3() {
+		AWSCredentials awsCredentials =
+            new BasicAWSCredentials(accessKey, secretKey);
+    
+		return AmazonS3ClientBuilder
+				.standard()
+				.withRegion(region)
+				.withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
+				.build();
+	}
 }

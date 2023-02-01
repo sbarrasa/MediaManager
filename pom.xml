@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>Blink</groupId>
-    <artifactId>s3</artifactId>
+    <artifactId>Media</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>s3api</name>
-    <description>s3api</description>
+    <name>MediaManager</name>
+    <description>Media manager</description>
     <properties>
         <java.version>11</java.version>
     </properties>
