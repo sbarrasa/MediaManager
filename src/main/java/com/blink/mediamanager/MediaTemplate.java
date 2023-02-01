@@ -117,5 +117,13 @@ public interface MediaTemplate {
 	public Media uploadImpl(Media media) throws MediaException;
 
 	public Media get(String id) throws MediaException;
+	
+	public static MediaTemplate buildMediaTemplate(String className) {
+		try {
+			return (MediaTemplate) Class.forName(className).getDeclaredConstructors()[0].newInstance();
+		}catch(Exception e) {
+			throw new MediaError(e);
+		}
+	}
 
 }
