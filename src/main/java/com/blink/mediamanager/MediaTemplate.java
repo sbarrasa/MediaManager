@@ -3,6 +3,7 @@ package com.blink.mediamanager;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.EnumMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -10,10 +11,8 @@ import java.util.zip.CRC32;
 
 public interface MediaTemplate {
 	
-	@SuppressWarnings("unused")
-	default public MediaTemplate setPath(String pathStr) {
-		return this;
-	}
+	public MediaTemplate setPath(String pathStr) ;
+	public String getPath() ;
 	
 	default public CompletableFuture<Media> upload(Media media, Consumer<Media> callback) {
 		return CompletableFuture.supplyAsync(() -> {
@@ -27,25 +26,36 @@ public interface MediaTemplate {
 	default public Media upload(Media media) {
 		try {
 			media.setUrl(getURL(media.getId()));
-			if (inServer(media)) {
+			String remoteChecksum = getServerChecksum(media.getId());
+
+			String fileChecksum = getChecksum(media);
+		
+			if(fileChecksum.equals(remoteChecksum)) {
 				media.setStatus(MediaStatus.unchanged);
-			}else {	
+			} else {	
+
 				uploadImpl(media);
-				media.setStatus(MediaStatus.uploaded);
+				if(remoteChecksum == null)
+					media.setStatus(MediaStatus.added);
+				else
+					media.setStatus(MediaStatus.updated);
 			}
 		}catch(Exception e) {
 			media.setStatus(MediaStatus.err(e));
 		}
+		incrementUploadResult(media.getStatus());
 		return media;
 
 	}
 
 	default public Collection<Media> upload(Collection<Media> medias) {
+		getUploadResult().clear();
 		medias.forEach(media -> upload(media));
 		return medias;
 	}
 
 	default public CompletableFuture<Collection<Media>> upload(Collection<Media> medias, Consumer<Media> callback) {
+		getUploadResult().clear();
 		return CompletableFuture.supplyAsync(() ->  {
 			
 			medias.forEach(media -> {
@@ -104,16 +114,6 @@ public interface MediaTemplate {
 
 	public String getServerChecksum(String id);
 
-	default public boolean inServer(Media media) {
-
-		String remoteChecksum = getServerChecksum(media.getId());
-
-		String fileChecksum = getChecksum(media);
-	
-		return fileChecksum.equals(remoteChecksum);
-	
-	};
-
 	public Media uploadImpl(Media media) throws MediaException;
 
 	public Media get(String id) throws MediaException;
@@ -124,6 +124,16 @@ public interface MediaTemplate {
 		}catch(Exception e) {
 			throw new MediaError(e);
 		}
+	}
+
+	public EnumMap<MediaStatus, Integer> getUploadResult();
+	
+	private Integer incrementUploadResult(MediaStatus status) {
+		Integer cnt = getUploadResult().get(status);
+		if(cnt== null)
+			cnt= 0;
+		getUploadResult().put(status, ++cnt);
+		return cnt;
 	}
 
 }

@@ -11,15 +11,16 @@ import com.blink.mediamanager.Media;
 import com.blink.mediamanager.MediaError;
 import com.blink.mediamanager.MediaException;
 import com.blink.mediamanager.MediaTemplate;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.blink.mediamanager.AbstractMediaTemplate;
 
-public class MediaS3 implements MediaTemplate {
+public class MediaS3 extends AbstractMediaTemplate {
 
 	
-    private String path; 
     private String bucket;
     private String accessKey;
     private String secretKey; 
@@ -27,6 +28,10 @@ public class MediaS3 implements MediaTemplate {
 	
     private AmazonS3 amazonS3;
 
+	@Override
+    public MediaS3 setPath(String pathStr) {
+		return (MediaS3) super.setPath(pathStr);
+	}
 
 	@Override
     public List<String> listIDs() {
@@ -42,7 +47,7 @@ public class MediaS3 implements MediaTemplate {
     @Override
     public URL getURL(String id) {
         try {
-			return new URL(String.format("https://%s.%s/%s", bucket, path, id));
+			return new URL(String.format("https://%s.%s/%s", bucket, getPath(), id));
 		} catch (MalformedURLException e) {
 			throw new MediaError(e);
 		}
@@ -87,11 +92,7 @@ public class MediaS3 implements MediaTemplate {
         }
     }
 
-	@Override
-	public MediaS3 setPath(String pathStr) {
-		this.path = pathStr;
-		return this;
-	}
+
 
 	public String getBucket() {
 		return bucket;
@@ -131,9 +132,7 @@ public class MediaS3 implements MediaTemplate {
 
 
 
-	public String getPath() {
-		return path;
-	}
+
 
 	public AmazonS3 getAmazonS3() {
 		if(amazonS3 == null)

@@ -2,10 +2,11 @@ package com.blink.mediamanager;
 
 
 public enum MediaStatus {
-	unknown,
-	streamLoaded,
+	empty,
+	updateable,
 	unchanged,
-	uploaded,
+	added,
+	updated,
 	err;
 	
 	private Exception exception;

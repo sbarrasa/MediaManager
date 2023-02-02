@@ -13,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.blink.mediaserver.conf.MediaConfig;
-
 
 @SpringBootTest(classes = { com.blink.mediaserver.conf.MediaConfig.class} )
 public class MediaUpload {
@@ -46,10 +44,8 @@ public class MediaUpload {
 		this.mediaTarget.setPath(targetPath);
 	}
 
-	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private final List<Integer> sizes = List.of(ImageResizer.sourceWidth, ImageResizer.thumbnailWidth, 400, 800);
-
 	
 	@Test
 	public void upload() throws IOException {
@@ -79,8 +75,9 @@ public class MediaUpload {
 
 		CompletableFuture<Collection<Media>> future = mediaTarget.upload(medias, this::callback);
 
-
 		future.join();
+		
+		logger.info("Result {}",mediaTarget.getUploadResult());
 
 		logger.info("End upload");
 	}
@@ -90,11 +87,13 @@ public class MediaUpload {
 		case err:
 			logger.info("{} {}", media.getId(), media.getStatus().getMsg());
 			break;
-		case uploaded:
+		case added:
+		case updated:
 			logger.info("{} {} URL={}", media.getId(), media.getStatus(), media.getUrl());
 			break;
 		default:
 			break;
+			
 		}
 
 	}

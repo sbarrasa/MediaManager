@@ -9,12 +9,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
+import com.blink.mediamanager.AbstractMediaTemplate;
 import com.blink.mediamanager.Media;
 import com.blink.mediamanager.MediaError;
 import com.blink.mediamanager.MediaException;
-import com.blink.mediamanager.MediaTemplate;
 
-public class MediaRestClient implements MediaTemplate {
+public class MediaRestClient extends AbstractMediaTemplate {
 	private RestTemplate rest;
 
 	@Value("${com.blink.mediamanager.path}")

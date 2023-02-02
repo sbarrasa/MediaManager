@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.blink.mediamanager.MediaTemplate;
 import com.blink.mediamanager.rest.MediaEndpoints;
+import com.blink.mediamanager.AbstractMediaTemplate;
 import com.blink.mediamanager.Media;
 
 import java.io.IOException;
@@ -18,7 +19,7 @@ import java.net.URL;
 import java.util.Collection;
 
 @Controller
-public class MediaController implements MediaTemplate {
+public class MediaController extends AbstractMediaTemplate {
 
     @Autowired
     private MediaTemplate mediaTemplate;

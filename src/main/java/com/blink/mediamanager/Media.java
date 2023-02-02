@@ -2,6 +2,7 @@ package com.blink.mediamanager;
 
 import org.apache.commons.io.IOUtils;
 
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -12,11 +13,12 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 public class Media {
     private String id;
     private InputStream stream;
-    private MediaStatus status = MediaStatus.unknown;
+    private MediaStatus status = MediaStatus.empty;
     private URL url;
 	private Integer lenght;
 	private String contentType;
@@ -60,7 +62,7 @@ public class Media {
 	        byte[] bytes = bstream.toByteArray();
 	        this.lenght = bytes.length;
 	        this.stream = new ByteArrayInputStream(bytes);
-	        this.setStatus(MediaStatus.streamLoaded);
+	        this.setStatus(MediaStatus.updateable);
         } catch (IOException e) {
             this.setStatus( MediaStatus.err(e));;
         }
@@ -85,11 +87,14 @@ public class Media {
     }
 
     public MediaStatus getStatus() {
-        return status;
+        if(status== null)
+        	this.status = MediaStatus.empty;
+
+    	return status;
     }
 
-    public void setStatus(MediaStatus status) {
-        this.status = status;
+    void setStatus(MediaStatus status) {
+       	this.status = status;
     }
 
     public URL getUrl() {
