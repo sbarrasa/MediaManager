@@ -41,9 +41,9 @@ public abstract class AbstractMediaTemplate implements MediaTemplate{
 		return future;
 	}
 	
-	public void syncUpdates() {
-		futures.forEach(future -> future.join());
-		futures.clear();
-	};
+	public List<CompletableFuture<?>> getFutures(){
+		return futures;
+	}
+	
 	
 }

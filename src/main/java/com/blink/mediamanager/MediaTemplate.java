@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -13,8 +14,7 @@ public interface MediaTemplate {
 	
 	public MediaTemplate setPath(String pathStr) ;
 	public String getPath() ;
-	
-	public void syncUpdates();
+	public List<CompletableFuture<?>> getFutures();
 	
 	default public CompletableFuture<?> upload(Media media, Consumer<Media> callback) {
 		return CompletableFuture.supplyAsync(() -> {
@@ -135,5 +135,10 @@ public interface MediaTemplate {
 		getUploadResult().put(status, ++cnt);
 		return cnt;
 	}
+
+	default public void syncUpdates() {
+		getFutures().forEach(future -> future.join());
+		getFutures().clear();
+	};
 
 }
