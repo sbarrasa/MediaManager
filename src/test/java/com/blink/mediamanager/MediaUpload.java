@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.blink.async.AsyncProcessor;
+
 
 @SpringBootTest(classes = { com.blink.mediaserver.conf.MediaConfig.class} )
 public class MediaUpload {
@@ -47,14 +49,17 @@ public class MediaUpload {
 	public void upload() {
 		logger.info("Preparing upload using {}", mediaTarget.getClass().getName());
 		
+		AsyncProcessor<Media> processor = new AsyncProcessor<>();
+		processor.setCallback(this::callback);
+		
 		mediaSource.listIDs().forEach(id -> {
 			logger.info("Getting {}", id);
 			try {	
 				Media media = mediaSource.get(id);
 				try {
-					mediaTarget.upload(new ImageResizer(media, sizes).getResizes(), this::callback);
+					processor.executeAsync(mediaTarget::upload, new ImageResizer(media, sizes).getResizes());
 				} catch (MediaException e) {
-					mediaTarget.upload(media, this::callback);
+					processor.executeAsync(mediaTarget::upload, media);
 				}
 
 			} catch (MediaException e) {
@@ -64,7 +69,7 @@ public class MediaUpload {
 		});
 
 	
-		mediaTarget.syncUpdates();
+		processor.syncAll();
 		logger.info("End upload {}",mediaTarget.getUploadResult());
 		
 	}

@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.EnumMap;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.zip.CRC32;
 
@@ -14,15 +11,7 @@ public interface MediaTemplate {
 	
 	public MediaTemplate setPath(String pathStr) ;
 	public String getPath() ;
-	public List<CompletableFuture<?>> getFutures();
 	
-	default public CompletableFuture<?> upload(Media media, Consumer<Media> callback) {
-		return CompletableFuture.supplyAsync(() -> {
-			upload(media);
-			callback.accept(media);
-			return media;
-		});
-	}
 
 	
 	default public Media upload(Media media) {
@@ -53,18 +42,6 @@ public interface MediaTemplate {
 	default public Collection<Media> upload(Collection<Media> medias) {
 		medias.forEach(media -> upload(media));
 		return medias;
-	}
-
-	default public CompletableFuture<?> upload(Collection<Media> medias, Consumer<Media> callback) {
-		return CompletableFuture.supplyAsync(() ->  {
-			
-			medias.forEach(media -> {
-				upload(media);
-				
-				callback.accept(media);
-			});
-			return medias;
-		});
 	}
 
 	default public void delete(Media media) throws MediaException {
@@ -136,9 +113,5 @@ public interface MediaTemplate {
 		return cnt;
 	}
 
-	default public void syncUpdates() {
-		getFutures().forEach(future -> future.join());
-		getFutures().clear();
-	};
-
+	
 }
