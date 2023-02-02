@@ -28,6 +28,7 @@ public class MediaS3 extends AbstractMediaTemplate {
 	
     private AmazonS3 amazonS3;
 
+
 	@Override
     public MediaS3 setPath(String pathStr) {
 		return (MediaS3) super.setPath(pathStr);
