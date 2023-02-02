@@ -28,7 +28,7 @@ public class MediaConfig {
     	    @Value("${aws.secret.access.key}") String secretKey,
     	    @Value("${aws.s3.region}") String region,
     	    @Value("${aws.s3.bucket.name}") String bucket,
-    	    @Value("${com.blink.mediamanager.server.path}") String path) {
+    	    @Value("${com.blink.mediamanager.path}") String path) {
 
 		return new MediaS3()
 					.setAccessKey(accessKey)
