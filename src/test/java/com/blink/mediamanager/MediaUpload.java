@@ -48,38 +48,29 @@ public class MediaUpload {
 	private final List<Integer> sizes = List.of(ImageResizer.sourceWidth, ImageResizer.thumbnailWidth, 400, 800);
 	
 	@Test
-	public void upload() throws IOException {
+	public void upload() {
 		logger.info("Preparing upload using {}", mediaTarget.getClass().getName());
-
-	
-		Collection<Media> medias = new ArrayList<>();
 		
 		mediaSource.listIDs().forEach(id -> {
 			logger.info("Getting {}", id);
 			try {	
 				Media media = mediaSource.get(id);
-				
 				try {
-					medias.addAll(new ImageResizer(media, sizes).getResizes());
+					mediaTarget.upload(new ImageResizer(media, sizes).getResizes(), this::callback);
 				} catch (MediaException e) {
-					medias.add(media);
+					mediaTarget.upload(media, this::callback);
 				}
 
 			} catch (MediaException e) {
 				logger.error(e.getMessage());
 			}
 			
-
 		});
-		logger.info("Uploading");
 
-		CompletableFuture<Collection<Media>> future = mediaTarget.upload(medias, this::callback);
-
-		future.join();
+	
+		mediaTarget.syncUpdates();
+		logger.info("End upload {}",mediaTarget.getUploadResult());
 		
-		logger.info("Result {}",mediaTarget.getUploadResult());
-
-		logger.info("End upload");
 	}
 
 	private void callback(Media media) {

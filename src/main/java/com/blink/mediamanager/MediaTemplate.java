@@ -14,7 +14,9 @@ public interface MediaTemplate {
 	public MediaTemplate setPath(String pathStr) ;
 	public String getPath() ;
 	
-	default public CompletableFuture<Media> upload(Media media, Consumer<Media> callback) {
+	public void syncUpdates();
+	
+	default public CompletableFuture<?> upload(Media media, Consumer<Media> callback) {
 		return CompletableFuture.supplyAsync(() -> {
 			upload(media);
 			callback.accept(media);
@@ -49,13 +51,11 @@ public interface MediaTemplate {
 	}
 
 	default public Collection<Media> upload(Collection<Media> medias) {
-		getUploadResult().clear();
 		medias.forEach(media -> upload(media));
 		return medias;
 	}
 
-	default public CompletableFuture<Collection<Media>> upload(Collection<Media> medias, Consumer<Media> callback) {
-		getUploadResult().clear();
+	default public CompletableFuture<?> upload(Collection<Media> medias, Consumer<Media> callback) {
 		return CompletableFuture.supplyAsync(() ->  {
 			
 			medias.forEach(media -> {
