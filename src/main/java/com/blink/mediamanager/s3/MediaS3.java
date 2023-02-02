@@ -10,7 +10,6 @@ import com.amazonaws.services.s3.model.*;
 import com.blink.mediamanager.Media;
 import com.blink.mediamanager.MediaError;
 import com.blink.mediamanager.MediaException;
-import com.blink.mediamanager.MediaTemplate;
 
 import java.net.MalformedURLException;
 import java.net.URL;
