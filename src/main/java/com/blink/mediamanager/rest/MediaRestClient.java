@@ -17,12 +17,10 @@ import com.blink.mediamanager.MediaException;
 public class MediaRestClient extends AbstractMediaTemplate {
 	private RestTemplate rest;
 
-	@Value("${com.blink.mediamanager.path}")
-	private String path;
 
 	public MediaRestClient() {
 		rest = new RestTemplate();
-		rest.setUriTemplateHandler(new DefaultUriBuilderFactory(path));
+		rest.setUriTemplateHandler(new DefaultUriBuilderFactory(getPath()));
 	}
 
 	public MediaRestClient(RestTemplate rest) {
@@ -48,7 +46,7 @@ public class MediaRestClient extends AbstractMediaTemplate {
 	@Override
 	public URL getURL(String id) {
 		try {
-			return new URL(String.format("%s%s%s", path,  MediaEndpoints.GET , id));
+			return new URL(String.format("%s%s%s", getPath(),  MediaEndpoints.GET , id));
 		} catch (MalformedURLException e) {
 			throw new MediaError(e);
 		}

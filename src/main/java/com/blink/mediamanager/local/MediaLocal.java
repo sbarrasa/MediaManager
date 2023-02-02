@@ -14,7 +14,6 @@ import java.util.stream.Stream;
 import com.blink.mediamanager.AbstractMediaTemplate;
 import com.blink.mediamanager.Media;
 import com.blink.mediamanager.MediaException;
-import com.blink.mediamanager.MediaTemplate;
 
 public class MediaLocal extends AbstractMediaTemplate {
 	private String localProtocol = "file";
@@ -24,7 +23,6 @@ public class MediaLocal extends AbstractMediaTemplate {
 		return Path.of(super.getPath(), id);
 	}
 
-	
 
 	public MediaLocal() {
 		setPath("./");
