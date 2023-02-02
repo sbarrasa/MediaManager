@@ -1,7 +1,10 @@
 package com.blink.mediaserver.controller;
 
 import com.blink.mediamanager.MediaException;
+import com.blink.mediamanager.MediaStatus;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.blink.mediamanager.MediaTemplate;
+import com.blink.mediamanager.MediaUploader;
 import com.blink.mediamanager.rest.MediaEndpoints;
 import com.blink.mediamanager.AbstractMediaTemplate;
 import com.blink.mediamanager.Media;
@@ -17,6 +21,9 @@ import com.blink.mediamanager.Media;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Controller
 public class MediaController extends AbstractMediaTemplate {
@@ -103,7 +110,23 @@ public class MediaController extends AbstractMediaTemplate {
         return mediaTemplate.getServerChecksum(id);
     }
 
-    
+    @ResponseBody
+    @PostMapping("/upload_all/")
+    public Map<MediaStatus, Integer> uploadAll(@Value("${com.blink.mediamanager.source.class}") String sourceClass,
+    								@Value("${com.blink.mediamanager.source.path}") String sourcePath,
+    								@Value("${com.blink.mediamanager.image.resizes}") Set<Integer> imageResizes){
+    								
+    		
+    	MediaTemplate mediaSource = MediaTemplate.buildMediaTemplate(sourceClass)
+				.setPath(sourcePath);
+    	
+    	return new MediaUploader()
+    		.setSource(mediaSource)
+    		.setTarget(mediaTemplate)
+    		.setImageResizes(imageResizes)
+    		.uploadAll();
+    	
+    }	
 
 
 }

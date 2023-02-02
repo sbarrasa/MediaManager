@@ -8,16 +8,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ImageResizer {
     public Media mediaSource;
     public Map<Integer, Media> resizedMap;
-    public Collection<Integer> widths;
+    public Set<Integer> widths;
     public static Integer thumbnailWidth = 100;
     public static final Integer sourceWidth = -1;
-    public static final Collection<Integer> defaultWidths = List.of(sourceWidth, thumbnailWidth);
+    public static final Set<Integer> defaultWidths = Set.of(sourceWidth, thumbnailWidth);
     public String ID_THUMBNAIL = "thmb";
     public String TYPE_SEPARATOR = ".";
     public String ID_PATTERN = "_";
@@ -26,7 +26,7 @@ public class ImageResizer {
        this(mediaSource, defaultWidths);
     }
 
-    public ImageResizer(Media mediaSource, Collection<Integer> widths) throws MediaException {
+    public ImageResizer(Media mediaSource, Set<Integer> widths) throws MediaException {
     	this.mediaSource = mediaSource;
         
         setWidths(widths);
@@ -38,7 +38,7 @@ public class ImageResizer {
         return widths;
     }
 
-    public ImageResizer setWidths(Collection<Integer> widths) {
+    public ImageResizer setWidths(Set<Integer> widths) {
         this.widths = widths;
         this.resizedMap = null;
         return this;

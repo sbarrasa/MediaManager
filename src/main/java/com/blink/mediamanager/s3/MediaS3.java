@@ -151,4 +151,7 @@ public class MediaS3 extends AbstractMediaTemplate {
 				.withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
 				.build();
 	}
+	
+	
+
 }
