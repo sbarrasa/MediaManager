@@ -1,7 +1,6 @@
 package com.blink.mediamanager;
 
-import java.net.URL;
-import java.util.Collection;
+
 import java.util.EnumMap;
 import java.util.Set;
 
@@ -49,7 +48,7 @@ public class MediaUploader {
 		});
 
 	
-		processor.syncAll();
+	//	processor.syncAll();
 		logger.info("End upload {}",mediaTarget.getUploadResult());
 		return mediaTarget.getUploadResult();
 		

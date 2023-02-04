@@ -73,10 +73,10 @@ public class MediaController extends AbstractMediaTemplate {
     }
 
 
-    @GetMapping(MediaEndpoints.REMOTE_URL + "/{id}")
+    @GetMapping(MediaEndpoints.URL + "/{id}")
     @ResponseBody
     @Override
-    public URL getURL(@PathVariable String id) throws MediaException {
+    public URL getURL(@PathVariable String id) {
         return mediaTemplate.getURL(id);
     }
 
@@ -103,7 +103,7 @@ public class MediaController extends AbstractMediaTemplate {
         return ResponseEntity.ok(resource);
     }
 
-    @GetMapping(MediaEndpoints.REMOTE_CHECKSUM + "{id}")
+    @GetMapping(MediaEndpoints.CHECKSUM + "{id}")
     @ResponseBody
     @Override
     public String getServerChecksum(String id) {
@@ -127,6 +127,5 @@ public class MediaController extends AbstractMediaTemplate {
     		.uploadAll();
     	
     }	
-
 
 }
