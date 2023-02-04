@@ -1,7 +1,6 @@
-package com.blink.mediaserver;
+package com.blink.mediaservice;
 
 
-import java.util.EnumMap;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -13,17 +12,17 @@ import com.blink.mediamanager.Media;
 import com.blink.mediamanager.MediaException;
 import com.blink.mediamanager.MediaStatus;
 import com.blink.mediamanager.MediaTemplate;
+import com.blink.mediamanager.ProcessResult;
 
 public class MediaUploader {
 	private MediaTemplate mediaSource;
 	private MediaTemplate mediaTarget;
+	private ProcessResult<MediaStatus> uploadResult;
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Value("${com.blink.mediamanager.imageresizer.widths}")
 	private Set<Integer> imageResizes;
-
-
 	
 	public MediaUploader() {
 		
@@ -34,20 +33,24 @@ public class MediaUploader {
 		this.mediaTarget = mediaTarget;
 	}
 	
-	public EnumMap<MediaStatus, Integer> uploadAll(){
-		logger.info("Preparing upload using {}", mediaTarget.getClass().getName());
+	public ProcessResult<MediaStatus> uploadAll(){
+		return uploadAll(mediaTarget.getProcessResult());
+	}
 		
+	public ProcessResult<MediaStatus> uploadAll(ProcessResult<MediaStatus> uploadResult){
+		this.uploadResult = uploadResult;
+		logger.info("Preparing upload using {}", mediaTarget.getClass().getName());
 		
 		mediaSource.listIDs().forEach(id -> {
 			logger.info("Getting {}", id);
 			try {	
 				Media media = mediaSource.get(id);
 				try {
-					mediaTarget.upload(new ImageResizer(media, imageResizes).getResizes());
+					new ImageResizer(media, imageResizes).getResizes()
+							.forEach(mediaR -> upload(mediaR));
 				} catch (MediaException e) {
-					mediaTarget.upload(media);
+					upload(media);
 				}
-				showUploadStatus(media);
 			} catch (MediaException e) {
 				logger.error(e.getMessage());
 			}
@@ -55,12 +58,22 @@ public class MediaUploader {
 		});
 
 	
-		logger.info("End upload {}",mediaTarget.getUploadResult());
-		return mediaTarget.getUploadResult();
+		logger.info("End upload {}",mediaTarget.getProcessResult());
+		return mediaTarget.getProcessResult();
 		
 	}
 
-	private void showUploadStatus(Media media) {
+	private Media upload(Media media) {
+		uploadResult.incToProcess();
+		mediaTarget.upload(media);
+		showStatus(media);
+		uploadResult.incProcessed(media.getStatus());
+	
+		return media;
+	}
+	
+	
+	private void showStatus(Media media) {
 		switch (media.getStatus()) {
 		case err:
 			logger.info("{} {}", media.getId(), media.getStatus().getMsg());

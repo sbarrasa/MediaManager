@@ -1,4 +1,4 @@
-package com.blink.mediaserver;
+package com.blink.mediaservice;
 
 import com.blink.mediamanager.MediaException;
 import com.blink.mediamanager.MediaStatus;
@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.blink.mediamanager.MediaTemplate;
+import com.blink.mediamanager.ProcessResult;
 import com.blink.mediamanager.rest.MediaEndpoints;
 import com.blink.mediamanager.AbstractMediaTemplate;
 import com.blink.mediamanager.Media;
@@ -21,13 +21,18 @@ import com.blink.mediamanager.Media;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 @Controller
 public class MediaController extends AbstractMediaTemplate {
-
+	private Map<String, ProcessResult<MediaStatus>> allProcessResult = new HashMap<>();
+   
+	@Autowired
+    private MediaConfig mediaConfig;
+    
     @Autowired
     private MediaTemplate mediaTemplate;
 
@@ -112,33 +117,33 @@ public class MediaController extends AbstractMediaTemplate {
 
     @ResponseBody
     @PostMapping("/upload_all/")
-    public Map<MediaStatus, Integer> uploadAll(@Value("${com.blink.mediamanager.source.class}") String sourceClass,
-    								@Value("${com.blink.mediamanager.source.path}") String sourcePath,
-    								@Value("${com.blink.mediamanager.imageresizer.widhts}") Set<Integer> widths){
-    								
+    public CompletableFuture<ProcessResult<MediaStatus>> uploadAll(
+    							@Value("${com.blink.mediamanager.source.class}") String sourceClass,
+    							@Value("${com.blink.mediamanager.source.path}") String sourcePath,
+    							@Value("${com.blink.mediamanager.imageresizer.widths}") Set<Integer> widths){
+ 		
+    	
+    	return CompletableFuture.supplyAsync(() -> {	 
+    		ProcessResult<MediaStatus> updateResult = new ProcessResult<>();
+        	allProcessResult.put(Thread.currentThread().getName(), updateResult);
+        	
+    		MediaTemplate mediaSource = mediaConfig.newMediaTemplate(sourceClass, sourcePath);
+   
+    		return new MediaUploader()
+	    		.setSource(mediaSource)
+	    		.setTarget(mediaTemplate)
+	    		.setImageResizes(widths)
+	    		.uploadAll(updateResult);
     		
-    	MediaTemplate mediaSource = MediaTemplate.buildMediaTemplate(sourceClass)
-				.setPath(sourcePath);
-    	
-    	return new MediaUploader()
-    		.setSource(mediaSource)
-    		.setTarget(mediaTemplate)
-    		.setImageResizes(widths)
-    		.uploadAll();
-    	
+    	});
     }	
     
     @ResponseBody
-    @PostMapping("/upload_status/")
-    public Map<MediaStatus, Integer> showUploadStatus(){
-    	return mediaTemplate.getUploadResult();
+    @PostMapping("/process_result/")
+    public Map<String, ProcessResult<MediaStatus>> showProcessResult(){
+    	return allProcessResult;
     }
 
-    @ResponseBody
-    @PostMapping("/upload_clear/")
-    public void clearUploadStatus(){
-    	mediaTemplate.getUploadResult().clear();
-    }
     		
 
 }
