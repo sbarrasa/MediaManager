@@ -1,4 +1,4 @@
-package com.blink.mediaserver.conf;
+package com.blink.mediaserver;
 
 
 import org.springframework.beans.factory.annotation.Autowired;

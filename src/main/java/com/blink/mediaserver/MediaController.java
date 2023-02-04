@@ -1,4 +1,4 @@
-package com.blink.mediaserver.controller;
+package com.blink.mediaserver;
 
 import com.blink.mediamanager.MediaException;
 import com.blink.mediamanager.MediaStatus;
@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.blink.mediamanager.MediaTemplate;
-import com.blink.mediamanager.MediaUploader;
 import com.blink.mediamanager.rest.MediaEndpoints;
 import com.blink.mediamanager.AbstractMediaTemplate;
 import com.blink.mediamanager.Media;
@@ -114,7 +114,7 @@ public class MediaController extends AbstractMediaTemplate {
     @PostMapping("/upload_all/")
     public Map<MediaStatus, Integer> uploadAll(@Value("${com.blink.mediamanager.source.class}") String sourceClass,
     								@Value("${com.blink.mediamanager.source.path}") String sourcePath,
-    								@Value("${com.blink.mediamanager.image.resizes}") Set<Integer> imageResizes){
+    								@Value("${com.blink.mediamanager.imageresizer.widhts}") Set<Integer> widths){
     								
     		
     	MediaTemplate mediaSource = MediaTemplate.buildMediaTemplate(sourceClass)
@@ -123,9 +123,22 @@ public class MediaController extends AbstractMediaTemplate {
     	return new MediaUploader()
     		.setSource(mediaSource)
     		.setTarget(mediaTemplate)
-    		.setImageResizes(imageResizes)
+    		.setImageResizes(widths)
     		.uploadAll();
     	
     }	
+    
+    @ResponseBody
+    @PostMapping("/upload_status/")
+    public Map<MediaStatus, Integer> showUploadStatus(){
+    	return mediaTemplate.getUploadResult();
+    }
+
+    @ResponseBody
+    @PostMapping("/upload_clear/")
+    public void clearUploadStatus(){
+    	mediaTemplate.getUploadResult().clear();
+    }
+    		
 
 }

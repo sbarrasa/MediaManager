@@ -1,4 +1,4 @@
-package com.blink.mediamanager;
+package com.blink.mediaserver;
 
 
 import java.util.EnumMap;
@@ -6,15 +6,24 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
-import com.blink.async.AsyncProcessor;
+import com.blink.mediamanager.ImageResizer;
+import com.blink.mediamanager.Media;
+import com.blink.mediamanager.MediaException;
+import com.blink.mediamanager.MediaStatus;
+import com.blink.mediamanager.MediaTemplate;
 
 public class MediaUploader {
 	private MediaTemplate mediaSource;
 	private MediaTemplate mediaTarget;
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	private Set<Integer> imageResizes =  ImageResizer.defaultWidths;
+	
+	@Value("${com.blink.mediamanager.imageresizer.widths}")
+	private Set<Integer> imageResizes;
+
+
 	
 	public MediaUploader() {
 		
@@ -28,19 +37,17 @@ public class MediaUploader {
 	public EnumMap<MediaStatus, Integer> uploadAll(){
 		logger.info("Preparing upload using {}", mediaTarget.getClass().getName());
 		
-		AsyncProcessor<Media> processor = new AsyncProcessor<>();
-		processor.setCallback(this::callback);
 		
 		mediaSource.listIDs().forEach(id -> {
 			logger.info("Getting {}", id);
 			try {	
 				Media media = mediaSource.get(id);
 				try {
-					processor.executeAsync(mediaTarget::upload, new ImageResizer(media, imageResizes).getResizes());
+					mediaTarget.upload(new ImageResizer(media, imageResizes).getResizes());
 				} catch (MediaException e) {
-					processor.executeAsync(mediaTarget::upload, media);
+					mediaTarget.upload(media);
 				}
-
+				showUploadStatus(media);
 			} catch (MediaException e) {
 				logger.error(e.getMessage());
 			}
@@ -48,13 +55,12 @@ public class MediaUploader {
 		});
 
 	
-	//	processor.syncAll();
 		logger.info("End upload {}",mediaTarget.getUploadResult());
 		return mediaTarget.getUploadResult();
 		
 	}
 
-	private void callback(Media media) {
+	private void showUploadStatus(Media media) {
 		switch (media.getStatus()) {
 		case err:
 			logger.info("{} {}", media.getId(), media.getStatus().getMsg());

@@ -1,11 +1,11 @@
-package com.blink.mediaserver.conf;
+package com.blink.mediaserver;
 
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import com.blink.mediamanager.MediaError;
 import com.blink.mediamanager.MediaTemplate;
 import com.blink.mediamanager.local.MediaLocal;
@@ -17,7 +17,7 @@ public class MediaConfig {
     private ApplicationContext applicationContext;
 	
 	@SuppressWarnings("static-method")
-	@Bean
+	@Bean 
 	public MediaLocal localMedia() {
 		return new MediaLocal();
 	}
@@ -41,18 +41,18 @@ public class MediaConfig {
 	
 	
 	@Bean 
-	public MediaTemplate mediaTemplate(@Value("${com.blink.mediamanager.class}") String className) {
+	public MediaTemplate mediaTemplate(@Value("${com.blink.mediamanager.class}") String className,
+									   @Value("${com.blink.mediamanager.path}") String path) {
 		try {
 			
-			return (MediaTemplate) applicationContext.getBean(Class.forName(className));
-			
+			MediaTemplate mediaTemplate =  (MediaTemplate) applicationContext.getBean(Class.forName(className));
+			mediaTemplate.setPath(path);
+			return mediaTemplate;
+
 		} catch (Exception e) {
 			throw new MediaError(String.format("Error when trying to instantiate MediaTemplate class %s", className));
 		}
 	}
-	
-	
-	
 	
 
 }
