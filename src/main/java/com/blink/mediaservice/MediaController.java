@@ -13,140 +13,127 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.blink.mediamanager.MediaTemplate;
-import com.blink.mediamanager.ProcessResult;
+import com.blink.async.AsyncProcessor;
+import com.blink.async.ProcessResult;
 import com.blink.mediamanager.rest.MediaEndpoints;
 import com.blink.mediamanager.Media;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 @Controller
 public class MediaController implements MediaTemplate {
-	private Map<String, ProcessResult<MediaStatus>> allProcessResult = new HashMap<>();
-   
+	private AsyncProcessor<MediaStatus> asyncProcessor = new AsyncProcessor<>();
+
 	@Autowired
-    private MediaConfig mediaConfig;
-    
-    @Autowired
-    private MediaTemplate mediaTemplate;
+	private MediaConfig mediaConfig;
 
-    @ResponseBody
-    @RequestMapping(path = MediaEndpoints.UPLOAD, method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public URL upload(@RequestPart() MultipartFile multipartFile) throws IOException {
-    	Media media = mediaTemplate.upload(new Media().setId(multipartFile.getOriginalFilename()).setStream(multipartFile.getInputStream()));
-    	return media.getUrl();
-    }
+	@Autowired
+	private MediaTemplate mediaTemplate;
 
-    @DeleteMapping("delete_all")
-    @ResponseBody
-    public void deleteAll() {
-        mediaTemplate.delete(mediaTemplate.listIDs());
-    }
+	@ResponseBody
+	@RequestMapping(path = MediaEndpoints.UPLOAD, method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public URL upload(@RequestPart() MultipartFile multipartFile) throws IOException {
+		Media media = mediaTemplate.upload(
+				new Media().setId(multipartFile.getOriginalFilename()).setStream(multipartFile.getInputStream()));
+		return media.getUrl();
+	}
 
-    @DeleteMapping(MediaEndpoints.DELETE + "/{id}")
-    @ResponseBody
-    @Override
-    public Media delete(@PathVariable String id) {
-        Media media = new Media(id);
-    	deleteImpl(media);
-    	return media;
-    }
+	@DeleteMapping(MediaEndpoints.DELETE + "/{id}")
+	@ResponseBody
+	@Override
+	public Media delete(@PathVariable String id) {
+		Media media = new Media(id);
+		deleteImpl(media);
+		return media;
+	}
 
+	public void deleteImpl(Media media) {
+		mediaTemplate.delete(media);
+	}
 
-    public void deleteImpl(Media media) {
-        mediaTemplate.delete(media);
-    }
+	@GetMapping(MediaEndpoints.LISTALL_METADATA)
+	@ResponseBody
+	@Override
+	public Collection<?> listAllMetadata() {
+		return mediaTemplate.listAllMetadata();
+	}
 
-    @GetMapping(MediaEndpoints.LISTALL_METADATA)
-    @ResponseBody
-    @Override
-    public Collection<?> listAllMetadata() {
-        return mediaTemplate.listAllMetadata();
-    }
+	@GetMapping(MediaEndpoints.LIST_URLs)
+	@ResponseBody
+	public Collection<URL> listURLs() {
+		return mediaTemplate.listURLs();
+	}
 
-    @GetMapping(MediaEndpoints.LIST_URLs)
-    @ResponseBody
-    public Collection<URL> listURLs() {
-        return mediaTemplate.listURLs();
-    }
+	@GetMapping(MediaEndpoints.LIST_IDS)
+	@ResponseBody
+	@Override
+	public Collection<String> listIDs() {
+		return mediaTemplate.listIDs();
+	}
 
-    @GetMapping(MediaEndpoints.LIST_IDS)
-    @ResponseBody
-    @Override
-    public Collection<String> listIDs() {
-        return mediaTemplate.listIDs();
-    }
+	@GetMapping(MediaEndpoints.URL + "/{id}")
+	@ResponseBody
+	@Override
+	public URL getURL(@PathVariable String id) {
+		return mediaTemplate.getURL(id);
+	}
 
+	@Override
+	public Media uploadImpl(Media media) throws MediaException {
+		return mediaTemplate.uploadImpl(media);
+	}
 
-    @GetMapping(MediaEndpoints.URL + "/{id}")
-    @ResponseBody
-    @Override
-    public URL getURL(@PathVariable String id) {
-        return mediaTemplate.getURL(id);
-    }
+	@GetMapping("/get/{id}")
+	@ResponseBody
+	@Override
+	public Media get(@PathVariable String id) throws MediaException {
+		return mediaTemplate.get(id);
+	}
 
-    @Override
-    public Media uploadImpl(Media media) throws MediaException {
-        return mediaTemplate.uploadImpl(media);
-    }
+	@GetMapping(value = (MediaEndpoints.GET + "{id}"), produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@ResponseBody
+	public ResponseEntity<?> getEntity(@PathVariable String id) throws MediaException {
+		UrlResource resource;
+		resource = new UrlResource(mediaTemplate.getURL(id));
+		if (!resource.exists())
+			return ResponseEntity.notFound().build();
 
-    @GetMapping("/get/{id}")
-    @ResponseBody
-    @Override
-    public Media get(@PathVariable String id) throws MediaException {
-        return mediaTemplate.get(id);
-    }
+		return ResponseEntity.ok(resource);
+	}
 
-    @GetMapping(value=(MediaEndpoints.GET + "{id}"), produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    @ResponseBody
-    public ResponseEntity<?> getEntity(@PathVariable String id) throws MediaException {
-        UrlResource resource;
-        resource = new UrlResource(mediaTemplate.getURL(id));
-        if(!resource.exists())
-            return ResponseEntity.notFound().build();
+	@GetMapping(MediaEndpoints.CHECKSUM + "{id}")
+	@ResponseBody
+	@Override
+	public String getServerChecksum(String id) {
+		return mediaTemplate.getServerChecksum(id);
+	}
 
-        return ResponseEntity.ok(resource);
-    }
+	@DeleteMapping("delete_all")
+	@ResponseBody
+	public CompletableFuture<ProcessResult<MediaStatus>> deleteAll() {
+		MediaUpdater mediaUpdater = new MediaUpdater().setTarget(mediaTemplate);
 
-    @GetMapping(MediaEndpoints.CHECKSUM + "{id}")
-    @ResponseBody
-    @Override
-    public String getServerChecksum(String id) {
-        return mediaTemplate.getServerChecksum(id);
-    }
+		return asyncProcessor.executeAsync("delete", mediaUpdater::deleteAll);
+	}
 
-    @ResponseBody
-    @PostMapping("/upload_all/")
-    public CompletableFuture<ProcessResult<MediaStatus>> uploadAll(
-    							@Value("${com.blink.mediamanager.source.class}") String sourceClass,
-    							@Value("${com.blink.mediamanager.source.path}") String sourcePath,
-    							@Value("${com.blink.mediamanager.imageresizer.widths}") Set<Integer> widths){
- 		
-    	
-    	return CompletableFuture.supplyAsync(() -> {	 
-    		ProcessResult<MediaStatus> updateResult = new ProcessResult<>();
-        	allProcessResult.put(Thread.currentThread().getName(), updateResult);
-        	
-    		MediaTemplate mediaSource = mediaConfig.newMediaTemplate(sourceClass, sourcePath);
-   
-    		return new MediaUpdater()
-	    		.setTarget(mediaTemplate)
-	    		.setImageResizes(widths)
-	    		.uploadFrom(mediaSource, updateResult);
-    		
-    	});
-    }	
-    
-    @ResponseBody
-    @PostMapping("/process_result/")
-    public Map<String, ProcessResult<MediaStatus>> showProcessResult(){
-    	return allProcessResult;
-    }
+	@ResponseBody
+	@PostMapping("/upload_all/")
+	public CompletableFuture<ProcessResult<MediaStatus>> uploadAll(
+			@Value("${com.blink.mediamanager.source.class}") String sourceClass,
+			@Value("${com.blink.mediamanager.source.path}") String sourcePath,
+			@Value("${com.blink.mediamanager.imageresizer.widths}") Set<Integer> widths) {
+
+		MediaUpdater mediaUpdater = new MediaUpdater().setSource(mediaConfig.newMediaTemplate(sourceClass, sourcePath))
+				.setTarget(mediaTemplate).setImageResizes(widths);
+
+		return asyncProcessor.executeAsync("upload", mediaUpdater::uploadAll);
+
+	}
 
 	@Override
 	public MediaTemplate setPath(String pathStr) {
@@ -158,8 +145,17 @@ public class MediaController implements MediaTemplate {
 		return null;
 	}
 
+	@ResponseBody
+	@GetMapping("/process/result/")
+	public Map<String, ProcessResult<MediaStatus>> showProcessResult() {
+		return asyncProcessor.getAllProcessResult();
+	}
 
 
-    		
+	@ResponseBody
+	@PostMapping("/process/cleanCompleted")
+	public Map<String, ProcessResult<MediaStatus>> cleanComplete() {
+		return asyncProcessor.cleanComleted();
+	}
 
 }

@@ -1,64 +1,37 @@
 package com.blink.async;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
-public class AsyncProcessor<T> {
+
+public class AsyncProcessor<T extends Enum<T>> {
 	
-	private List<CompletableFuture<?>> futures = new ArrayList<>();
-	private Consumer<T> callback;
+	private Map<String, ProcessResult<T>> allProcessResult = new HashMap<>();
 	
 	public AsyncProcessor() {
-		
 	}
 
-	public AsyncProcessor(Consumer<T> callback) {
-		setCallback(callback);
+	public CompletableFuture<ProcessResult<T>> executeAsync(String label, Function<ProcessResult<T>, ProcessResult<T>> method){
+ 		return CompletableFuture.supplyAsync(
+				() -> {
+				ProcessResult<T> processResult = new ProcessResult<>();
+	    		allProcessResult.put(label+"-"+Thread.currentThread().getId(), processResult);
+
+	    		return method.apply(processResult);
+		});
 	}
 
-	private T execute(Function<T, T> method, T param){
-		T result = method.apply(param);
-		callback.accept(result);
-		return result;
-		
-	}
 
-	public CompletableFuture<T> executeAsync(Function<T, T> method, T param){
-		CompletableFuture<T> future = CompletableFuture.supplyAsync(
-				() -> execute(method, param));
-		
-		futures.add(future);
-		return future;
+
+	public Map<String, ProcessResult<T>> getAllProcessResult() {
+		return allProcessResult;
 	}
   
-	
-	public CompletableFuture<Collection<T>> executeAsync(Function<T, T> method, Collection<T> params ){
-		CompletableFuture<Collection<T>> future = CompletableFuture.supplyAsync(() -> {
-			Collection<T> results = new ArrayList<>();
-			params.forEach(param -> results.add(execute(method, param)));
-			return results;
-		});
-		
-		futures.add(future);
-		return future;
+	public Map<String, ProcessResult<T>> cleanComleted(){
+		allProcessResult.entrySet().removeIf(e -> e.getValue().getCompleted());
+		return allProcessResult;
 	}
 
-	public void syncAll() {
-		getFutures().forEach(future -> future.join());
-		getFutures().clear();
-	}
-	
-	public List<CompletableFuture<?>> getFutures(){
-		return futures;
-	}
-	
-	public AsyncProcessor<T> setCallback(Consumer<T> callback) {
-		this.callback = callback;
-		return this;
-	}
 }
