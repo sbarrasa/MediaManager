@@ -1,6 +1,7 @@
 package com.blink.mediaservice;
 
 
+import java.util.Collection;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -14,8 +15,7 @@ import com.blink.mediamanager.MediaStatus;
 import com.blink.mediamanager.MediaTemplate;
 import com.blink.mediamanager.ProcessResult;
 
-public class MediaUploader {
-	private MediaTemplate mediaSource;
+public class MediaUpdater {
 	private MediaTemplate mediaTarget;
 	private ProcessResult<MediaStatus> uploadResult;
 	
@@ -24,33 +24,36 @@ public class MediaUploader {
 	@Value("${com.blink.mediamanager.imageresizer.widths}")
 	private Set<Integer> imageResizes;
 	
-	public MediaUploader() {
+	public MediaUpdater() {
 		
 	}
 		
-	public MediaUploader(MediaTemplate mediaSource, MediaTemplate mediaTarget) {
-		this.mediaSource = mediaSource;
-		this.mediaTarget = mediaTarget;
-	}
 	
-	public ProcessResult<MediaStatus> uploadAll(){
-		return uploadAll(mediaTarget.getProcessResult());
-	}
 		
-	public ProcessResult<MediaStatus> uploadAll(ProcessResult<MediaStatus> uploadResult){
+	public ProcessResult<MediaStatus> uploadFrom(MediaTemplate mediaSource, ProcessResult<MediaStatus> uploadResult){
 		this.uploadResult = uploadResult;
 		logger.info("Preparing upload using {}", mediaTarget.getClass().getName());
 		
-		mediaSource.listIDs().forEach(id -> {
+		
+		Collection<String> mediaIds = mediaSource.listIDs();
+		
+		uploadResult.setTotal(mediaIds.size());
+		
+		mediaIds.forEach(id -> {
 			logger.info("Getting {}", id);
 			try {	
 				Media media = mediaSource.get(id);
 				try {
 					new ImageResizer(media, imageResizes).getResizes()
-							.forEach(mediaR -> upload(mediaR));
+							.forEach(mediaR -> {
+								uploadResult.incTotal();
+								upload(mediaR);
+							});
 				} catch (MediaException e) {
 					upload(media);
 				}
+				uploadResult.incProcessed(media.getStatus());
+				
 			} catch (MediaException e) {
 				logger.error(e.getMessage());
 			}
@@ -58,13 +61,12 @@ public class MediaUploader {
 		});
 
 	
-		logger.info("End upload {}",mediaTarget.getProcessResult());
-		return mediaTarget.getProcessResult();
+		logger.info("End upload {}",uploadResult);
+		return uploadResult;
 		
 	}
 
 	private Media upload(Media media) {
-		uploadResult.incToProcess();
 		mediaTarget.upload(media);
 		showStatus(media);
 		uploadResult.incProcessed(media.getStatus());
@@ -93,18 +95,13 @@ public class MediaUploader {
 		return imageResizes;
 	}
 
-	public MediaUploader setImageResizes(Set<Integer> resizes) {
+	public MediaUpdater setImageResizes(Set<Integer> resizes) {
 		this.imageResizes = resizes;
 		return this;
 	}
 
 
-	public MediaUploader setSource(MediaTemplate mediaSource) {
-		this.mediaSource = mediaSource;
-		return this;
-	}
-	
-	public MediaUploader setTarget(MediaTemplate mediaTarget) {
+	public MediaUpdater setTarget(MediaTemplate mediaTarget) {
 		this.mediaTarget = mediaTarget;
 		return this;
 	}

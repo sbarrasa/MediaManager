@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.blink.mediamanager.MediaTemplate;
 import com.blink.mediamanager.ProcessResult;
 import com.blink.mediamanager.rest.MediaEndpoints;
-import com.blink.mediamanager.AbstractMediaTemplate;
 import com.blink.mediamanager.Media;
 
 import java.io.IOException;
@@ -27,7 +26,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 @Controller
-public class MediaController extends AbstractMediaTemplate {
+public class MediaController implements MediaTemplate {
 	private Map<String, ProcessResult<MediaStatus>> allProcessResult = new HashMap<>();
    
 	@Autowired
@@ -52,10 +51,16 @@ public class MediaController extends AbstractMediaTemplate {
     @DeleteMapping(MediaEndpoints.DELETE + "/{id}")
     @ResponseBody
     @Override
-    public void delete(@PathVariable String id) throws MediaException {
-        mediaTemplate.delete(id);
+    public Media delete(@PathVariable String id) {
+        Media media = new Media(id);
+    	deleteImpl(media);
+    	return media;
     }
 
+
+    public void deleteImpl(Media media) {
+        mediaTemplate.delete(media);
+    }
 
     @GetMapping(MediaEndpoints.LISTALL_METADATA)
     @ResponseBody
@@ -129,11 +134,10 @@ public class MediaController extends AbstractMediaTemplate {
         	
     		MediaTemplate mediaSource = mediaConfig.newMediaTemplate(sourceClass, sourcePath);
    
-    		return new MediaUploader()
-	    		.setSource(mediaSource)
+    		return new MediaUpdater()
 	    		.setTarget(mediaTemplate)
 	    		.setImageResizes(widths)
-	    		.uploadAll(updateResult);
+	    		.uploadFrom(mediaSource, updateResult);
     		
     	});
     }	
@@ -143,6 +147,18 @@ public class MediaController extends AbstractMediaTemplate {
     public Map<String, ProcessResult<MediaStatus>> showProcessResult(){
     	return allProcessResult;
     }
+
+	@Override
+	public MediaTemplate setPath(String pathStr) {
+		return null;
+	}
+
+	@Override
+	public String getPath() {
+		return null;
+	}
+
+
 
     		
 
