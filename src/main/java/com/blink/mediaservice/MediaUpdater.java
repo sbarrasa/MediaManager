@@ -63,12 +63,15 @@ public class MediaUpdater {
 		
 	}
 
-	private Media upload(Media media, ProcessResult<MediaStatus> processResult) {
+	public ProcessResult<MediaStatus> upload(Media media, ProcessResult<MediaStatus> processResult) {
+		if(processResult.getTotal() == null)
+			processResult.setTotal(1);
+		
 		mediaTarget.upload(media);
 		showStatus(media);
 		processResult.incProcessed(media.getStatus());
 	
-		return media;
+		return processResult;
 	}
 	
 	

@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class ProcessResult<T extends Enum<T>>{
-	private Integer cntTotal = 0;
+	private Integer cntTotal ;
 	private Integer cntProcessed = 0;
 	private Boolean completed = false;
 	private Map<T, Integer> ProcessStatus = new HashMap<>();
@@ -35,6 +35,7 @@ public class ProcessResult<T extends Enum<T>>{
 				cnt= 0;
 			
 		getProcessStatus().put(key, ++cnt);
+		
 		cntProcessed++;
 		
 		return cnt;

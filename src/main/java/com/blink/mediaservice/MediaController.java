@@ -27,7 +27,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Controller
 public class MediaController implements MediaTemplate {
-	private AsyncProcessor<MediaStatus> asyncProcessor = new AsyncProcessor<>();
+	private AsyncProcessor<Media, MediaStatus> asyncProcessor = new AsyncProcessor<>();
 
 	@Autowired
 	private MediaConfig mediaConfig;
@@ -38,8 +38,13 @@ public class MediaController implements MediaTemplate {
 	@ResponseBody
 	@RequestMapping(path = MediaEndpoints.UPLOAD, method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public URL upload(@RequestPart() MultipartFile multipartFile) throws IOException {
-		Media media = mediaTemplate.upload(
-				new Media().setId(multipartFile.getOriginalFilename()).setStream(multipartFile.getInputStream()));
+		
+		Media media = new Media().setId(multipartFile.getOriginalFilename()).setStream(multipartFile.getInputStream());
+
+		MediaUpdater mediaUpdater = new MediaUpdater().setTarget(mediaTemplate);
+		
+		asyncProcessor.executeAsync("upload", mediaUpdater::upload, media); 
+				
 		return media.getUrl();
 	}
 
