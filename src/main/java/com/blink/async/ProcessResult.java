@@ -7,7 +7,7 @@ public class ProcessResult<T extends Enum<T>>{
 	private Integer cntTotal ;
 	private Integer cntProcessed = 0;
 	private Boolean completed = false;
-	private Map<T, Integer> ProcessStatus = new HashMap<>();
+	private Map<T, Integer> processStatus = new HashMap<>();
 	
 
 	public Integer getTotal() {
@@ -19,7 +19,7 @@ public class ProcessResult<T extends Enum<T>>{
 	}
 	
 	public Map<T, Integer> getProcessStatus(){
-		return ProcessStatus;
+		return processStatus;
 	}
 	
 	public ProcessResult<T> setTotal(Integer value) {
