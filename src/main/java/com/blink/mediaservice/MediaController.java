@@ -122,7 +122,7 @@ public class MediaController implements MediaTemplate {
 	@ResponseBody
 	public CompletableFuture<ProcessResult<MediaStatus>> deleteAll() {
 		MediaUpdater mediaUpdater = new MediaUpdater().setTarget(mediaTemplate);
-
+		
 		return asyncProcessor.executeAsync("delete", mediaUpdater::deleteAll);
 	}
 
