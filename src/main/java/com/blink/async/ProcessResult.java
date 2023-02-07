@@ -30,17 +30,21 @@ public class ProcessResult<T extends Enum<T>>{
 	
 	
 	public Integer incProcessed(T key) {
-		Integer cnt = getProcessStatus().get(key);
-			if(cnt== null)
-				cnt= 0;
-			
-		getProcessStatus().put(key, ++cnt);
-		
+		incStatus(key);
 		cntProcessed++;
 		
 		return cnt;
 	}
 	
+	private void incStatus(T key) {
+		Integer cnt = getProcessStatus().get(key);
+		if(cnt== null)
+			cnt= 0;
+		
+		getProcessStatus().put(key, ++cnt);
+
+	}
+
 	public String toString() {
 		return String.format("Total: %d, Processed: %d, Status: %s", 
 				getTotal(),
