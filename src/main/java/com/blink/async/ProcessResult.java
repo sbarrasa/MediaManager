@@ -33,7 +33,7 @@ public class ProcessResult<T extends Enum<T>>{
 		incStatus(key);
 		cntProcessed++;
 		
-		return cnt;
+		return cntProcessed;
 	}
 	
 	private void incStatus(T key) {
