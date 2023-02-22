@@ -33,3 +33,4 @@ build/
 .vscode/
 /bin/
 /pom.xml
+!/src/main/resources/ulises.properties
