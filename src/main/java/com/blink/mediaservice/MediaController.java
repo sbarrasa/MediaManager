@@ -163,4 +163,9 @@ public class MediaController implements MediaTemplate {
 		return asyncProcessor.cleanComleted();
 	}
 
+	@Override
+	public boolean validateURL(URL url) throws MediaException {
+		return mediaTemplate.validateURL(url);
+	}
+
 }

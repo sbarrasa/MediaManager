@@ -20,7 +20,7 @@ public class MediaServer {
 	private static Properties staticProperties() {
 		Properties properties = new Properties();
 		properties.put("spring.application.name","MediaServer");
-		properties.put("spring.application.version","1.0.1");
+		properties.put("spring.application.version","1.0.14");
 		return properties;
 	}
 }
