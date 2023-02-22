@@ -91,6 +91,7 @@ public class MediaController implements MediaTemplate {
 	}
 
 	@Override
+	@RequestMapping(path = MediaEndpoints.UPLOAD+"_impl", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public Media uploadImpl(Media media) throws MediaException {
 		return mediaTemplate.uploadImpl(media);
 	}
