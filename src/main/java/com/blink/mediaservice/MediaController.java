@@ -3,7 +3,6 @@ package com.blink.mediaservice;
 import com.blink.mediamanager.MediaException;
 import com.blink.mediamanager.MediaStatus;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
@@ -99,17 +98,6 @@ public class MediaController implements MediaTemplate {
         return mediaTemplate.uploadImpl(media);
     }
 
-    @RequestMapping(path = MediaEndpoints.UPLOAD + "_impl", method = RequestMethod.POST)
-    public JSONObject uploadImpl(JSONObject object) throws MediaException {
-        InputStream is = new ByteArrayInputStream(object.get("stream").toString().getBytes());
-        Media media = new Media()
-                .setId(object.getString("id"))
-                .setStream(is)
-                .setContentType(object.getString("contentType"));
-
-        mediaTemplate.uploadImpl(media);
-        return object;
-    }
 
 
     @GetMapping("/get/{id}")
