@@ -78,7 +78,7 @@ public class MediaUpdater {
 	private void showStatus(Media media) {
 		switch (media.getStatus()) {
 		case err:
-			logger.info("{} {}", media.getId(), media.getStatus().getMsg());
+			logger.info("{} {}", media.getId(), media.getStatus());
 			break;
 		case added:
 		case updated:
