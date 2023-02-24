@@ -18,9 +18,7 @@ import com.blink.async.ProcessResult;
 import com.blink.mediamanager.rest.MediaEndpoints;
 import com.blink.mediamanager.Media;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Map;
