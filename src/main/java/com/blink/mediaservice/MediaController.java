@@ -37,7 +37,7 @@ public class MediaController implements MediaTemplate {
 
     @ResponseBody
     @RequestMapping(path = MediaEndpoints.UPLOAD, method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public URL upload(@RequestPart() MultipartFile multipartFile) throws IOException {
+    public URL upload(@RequestParam("file") MultipartFile multipartFile) throws IOException {
 
         Media media = new Media()
                 .setId(multipartFile.getOriginalFilename())
