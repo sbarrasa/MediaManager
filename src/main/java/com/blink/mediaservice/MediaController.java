@@ -146,6 +146,12 @@ public class MediaController implements MediaTemplate {
     }
 
     @Override
+    @PostMapping(MediaEndpoints.VALIDATE_URL + "/{URL}")
+    public void validateURL(URL url) throws MediaException {
+        mediaTemplate.validateURL(url);
+    }
+    
+    @Override
     public MediaTemplate setPath(String pathStr) {
         return null;
     }
@@ -168,9 +174,6 @@ public class MediaController implements MediaTemplate {
         return asyncProcessor.cleanComleted();
     }
 
-    @Override
-    public boolean validateURL(URL url) throws MediaException {
-        return mediaTemplate.validateURL(url);
-    }
+    
 
 }
