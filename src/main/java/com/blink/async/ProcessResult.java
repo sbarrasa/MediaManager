@@ -9,7 +9,6 @@ public class ProcessResult<T extends Enum<T>>{
 	private Boolean completed = false;
 	private Map<T, Integer> processStatus = new HashMap<>();
 	
-
 	public Integer getTotal() {
 		return cntTotal;
 	}
